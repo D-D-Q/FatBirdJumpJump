@@ -7,12 +7,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 import com.pending.game.GameConfig;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.components.TransformComponent;
@@ -46,24 +43,12 @@ public class PhysicsManager {
 	public World world;
 	
 	/**
-	 * 保证同一个精灵身上的刚体没有碰撞，非线程安全
-	 * groupIndex 取值范围[-1, -32768]
-	 */
-	private short maxGroupIndex = Short.MIN_VALUE; // -32768
-	
-	/**
-	 * 防止groupIndex重复
-	 */
-	private Array<Short> groupIndexArray;
-	
-	/**
 	 * 物理引擎debug绘制对象
 	 */
 	private Box2DDebugRenderer debugRenderer;
 	
 	public PhysicsManager() {
-		world = new World(new Vector2(0, 0), true);  // 参数：无重力和休眠;
-		groupIndexArray = new Array<Short>(false, 100);
+		world = new World(new Vector2(0, 0), true);  // 参数：无重力, 休眠;
 		if(GameConfig.physicsdebug)
 			debugRenderer = new Box2DDebugRenderer();
 	}
@@ -89,16 +74,34 @@ public class PhysicsManager {
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
 		
-		CircleShape circle = new CircleShape(); // 圆形
-		circle.setRadius(physicsComponent.radius);
-		
-		Body body = createSensor(BodyType.KinematicBody, circle,
+		Body body = create(physicsComponent.bodyType, physicsComponent.shape,
 				new Vector2(transformComponent.position.x, transformComponent.position.y));
 		body.setUserData(entity); // 刚体携带实体
 		
 		physicsComponent.rigidBody = body;
 		
-		circle.dispose();
+		physicsComponent.shape.dispose();
+	}
+	
+	/**
+	 * 添加传感器
+	 * categoryBits是默认值0x0001
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	public void addSensorRigidBody(Entity entity){
+		
+		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
+		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
+		
+		Body body = createSensor(physicsComponent.bodyType, physicsComponent.shape,
+				new Vector2(transformComponent.position.x, transformComponent.position.y));
+		body.setUserData(entity); // 刚体携带实体
+		
+		physicsComponent.rigidBody = body;
+		
+		physicsComponent.shape.dispose();
 	}
 	
 	/**
@@ -201,11 +204,6 @@ public class PhysicsManager {
 		
 		if(body == null)
 			return;
-		
-		// 销毁前 移出已占用组号
-		Array<Fixture> fixtureList = body.getFixtureList();
-		if(fixtureList != null && fixtureList.size != 0)
-			groupIndexArray.removeValue(fixtureList.get(0).getFilterData().groupIndex, true);
 		
 		world.destroyBody(body);
 	}

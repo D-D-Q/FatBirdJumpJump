@@ -43,46 +43,46 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 		
 		physicsManager.world.setContactListener(this); // 碰撞监听
 		
-		InputManager.instance.addProcessor(new InputAdapter(){
-			
-			private Vector2 from = new Vector2();
-			private Vector2 to = new Vector2();
-			
-			Body body = null;
-			
-			@Override
-			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-				
-				Vector3 vector3 = GAME.gameViewport.getCamera().unproject(new Vector3(screenX, screenY, 0));
-				from.set(vector3.x, vector3.y);
-				
-				return true;
-			}
-			
-			@Override
-			public boolean touchDragged(int screenX, int screenY, int pointer) {
-				
-				Vector3 vector3 = GAME.gameViewport.getCamera().unproject(new Vector3(screenX, screenY, 0));
-				to.set(vector3.x, vector3.y);
-				
-				physicsManager.world.rayCast(new RayCastCallback() {
-					
-					@Override
-					public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-						
-//						physicsManager.disposeBody(fixture.getBody());
-						body = fixture.getBody();
-						return fraction;
-					}
-				}, from, to);
-
-				from.set(to);
-				
-				physicsManager.disposeBody(body);
-				
-				return true;
-			}
-		});
+//		InputManager.instance.addProcessor(new InputAdapter(){
+//			
+//			private Vector2 from = new Vector2();
+//			private Vector2 to = new Vector2();
+//			
+//			Body body = null;
+//			
+//			@Override
+//			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+//				
+//				Vector3 vector3 = GAME.gameViewport.getCamera().unproject(new Vector3(screenX, screenY, 0));
+//				from.set(vector3.x, vector3.y);
+//				
+//				return true;
+//			}
+//			
+//			@Override
+//			public boolean touchDragged(int screenX, int screenY, int pointer) {
+//				
+//				Vector3 vector3 = GAME.gameViewport.getCamera().unproject(new Vector3(screenX, screenY, 0));
+//				to.set(vector3.x, vector3.y);
+//				
+//				physicsManager.world.rayCast(new RayCastCallback() {
+//					
+//					@Override
+//					public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
+//						
+////						physicsManager.disposeBody(fixture.getBody());
+//						body = fixture.getBody();
+//						return fraction;
+//					}
+//				}, from, to);
+//
+//				from.set(to);
+//				
+//				physicsManager.disposeBody(body);
+//				
+//				return true;
+//			}
+//		});
 	}
 	
 	/**
@@ -185,6 +185,24 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	 */
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) {
+		
+		Entity entityA = (Entity)contact.getFixtureA().getBody().getUserData();
+		Entity entityB = (Entity)contact.getFixtureB().getBody().getUserData();
+		
+		if(entityA != null){
+			// 转发事件
+			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entityA);
+			if(scriptComponent != null){
+				scriptComponent.script.preSolve(contact, oldManifold, entityB); // 普通碰撞检测事件
+			}
+		}
+		if(entityB != null){
+			// 转发事件
+			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entityB);
+			if(scriptComponent != null){
+				scriptComponent.script.preSolve(contact, oldManifold, entityA); // 普通碰撞检测事件
+			}
+		}
 	}
 
 	/**
@@ -193,5 +211,23 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	 */
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
+		
+		Entity entityA = (Entity)contact.getFixtureA().getBody().getUserData();
+		Entity entityB = (Entity)contact.getFixtureB().getBody().getUserData();
+		
+		if(entityA != null){
+			// 转发事件
+			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entityA);
+			if(scriptComponent != null){
+				scriptComponent.script.postSolve(contact, impulse, entityB); // 普通碰撞检测事件
+			}
+		}
+		if(entityB != null){
+			// 转发事件
+			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entityB);
+			if(scriptComponent != null){
+				scriptComponent.script.postSolve(contact, impulse, entityA); // 普通碰撞检测事件
+			}
+		}
 	}
 }

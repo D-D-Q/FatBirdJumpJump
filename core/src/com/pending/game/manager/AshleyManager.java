@@ -3,8 +3,10 @@ package com.pending.game.manager;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.InputProcessor;
 import com.pending.game.EntityDao;
 import com.pending.game.components.PhysicsComponent;
+import com.pending.game.components.ScriptComponent;
 import com.pending.game.systems.PhysicsSystem;
 import com.pending.game.tools.MapperTools;
 
@@ -94,6 +96,13 @@ public class AshleyManager{
 			if(MapperTools.physicsCM.get(entity) != null){
 				physicsSystem.physicsManager.addPhysicsRigidBody(entity);
 			}
+			
+			// 脚本组件
+			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
+			if(scriptComponent != null){
+				if(scriptComponent.script instanceof InputProcessor)
+					InputManager.instance.addProcessor((InputProcessor)scriptComponent.script); // 输入事件
+			}
 		}
 
 		@Override
@@ -108,6 +117,13 @@ public class AshleyManager{
 			PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 			if(physicsComponent != null){
 				physicsSystem.physicsManager.disposeBody(physicsComponent.rigidBody);
+			}
+			
+			// 脚本组件，移出输入监听
+			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
+			if(scriptComponent != null){
+				if(scriptComponent.script instanceof InputProcessor)
+					InputManager.instance.removeProcessor((InputProcessor)scriptComponent.script);
 			}
 			
 		}

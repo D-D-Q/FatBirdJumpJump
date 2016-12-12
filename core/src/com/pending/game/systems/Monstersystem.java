@@ -49,7 +49,7 @@ public class Monstersystem extends EntitySystem {
 		
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		
-		Entity entity = ashleyManager.entityDao.createCharactersEntity(520, 2080);
+		Entity entity = ashleyManager.entityDao.createEntity2(520, 2080);
 		ashleyManager.engine.addEntity(entity);
 		
 		return false;

@@ -2,11 +2,12 @@ package com.pending.game.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
 /**
  * 物理组件。
- * 精灵本身的刚体，通常和精灵一样大小
  * 
  * @author D
  * @date 2016年10月13日 下午10:28:35
@@ -21,7 +22,17 @@ public class PhysicsComponent  implements Component, Poolable {
 	/**
 	 * 范围半径
 	 */
-	public float radius;
+//	public float radius;
+	
+	/**
+	 * 类型
+	 */
+	public BodyType bodyType;
+	
+	/**
+	 * 形状
+	 */
+	public Shape shape;
 	
 	/** 
 	 * 对象池回收组件调用
@@ -29,6 +40,6 @@ public class PhysicsComponent  implements Component, Poolable {
 	 */
 	@Override
 	public void reset() {
-		radius = 0f;
+//		radius = 0f;
 	}
 }	

@@ -80,7 +80,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 		
 		TextureComponent textureComponent = MapperTools.textureCM.get(entity);
 		if(textureComponent.textureRegion == null){
-			Gdx.app.log(this.toString(), "textureRegion is null");
+//			Gdx.app.log(this.toString(), "textureRegion is null");
 			return;
 		}
 		

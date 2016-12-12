@@ -2,6 +2,8 @@ package com.pending.game;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Manifold;
 
 /**
  * 实体脚本的基类
@@ -17,20 +19,6 @@ public class EntityScript  {
 	public Entity entity;
 	
 	/**
-	 * 消息事件
-	 * 
-	 * @param messageType 消息类型
-	 * @param sender 发送者
-	 * @param extraInfo 携带对象，可能是null
-	 * @return true处理完成
-	 */
-	public boolean message(int messageType, Entity sender, Object extraInfo){
-		
-		return true;
-	}
-	
-	
-	/**
 	 * CollisionComponent碰撞事件
 	 * 
 	 * @param contact 碰撞类
@@ -40,7 +28,6 @@ public class EntityScript  {
 	public boolean beginContact(Contact contact, Entity target){
 		return true;
 	}
-	
 	
 	/**
 	 * CollisionComponent结束碰撞事件
@@ -54,47 +41,17 @@ public class EntityScript  {
 	}
 	
 	/**
-	 * 进入攻击范围
+	 * 新碰撞点, 已碰撞之后的移动会触发
+	 * 只给碰撞检测(CollisionComponent)刚体的实体转发碰撞事件
 	 * 
-	 * @param contact 碰撞类
-	 * @param target 目标实体
-	 * @return true 继续执行默认组件的操作
 	 */
-	public boolean enterATKRange(Contact contact, Entity target) {
-		return true;
+	public void preSolve(Contact contact, Manifold oldManifold, Entity target) {
 	}
-	
+
 	/**
-	 * 离开攻击范围
-	 * 
-	 * @param contact 碰撞类
-	 * @param target 目标实体
-	 * @return true 继续执行默认组件的操作
+	 * 碰撞点产生力, 已碰撞之后的移动会触发
 	 */
-	public boolean leaveATKRange(Contact contact, Entity target) {
-		return true;
-	}
-	
-	/**
-	 * 进入攻击距离
-	 * 
-	 * @param contact
-	 * @param target
-	 * @return true 继续执行默认组件的操作
-	 */
-	public boolean enterATKDistance(Contact contact, Entity target) {
-		return true;
-	}
-	
-	/**
-	 * 离开攻击距离
-	 * 
-	 * @param contact
-	 * @param target
-	 * @return true 继续执行默认组件的操作
-	 */
-	public boolean leaveATKDistance(Contact contact, Entity target) {
-		return true;
+	public void postSolve(Contact contact, ContactImpulse impulse, Entity target) {
 	}
 	
 	/**

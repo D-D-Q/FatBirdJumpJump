@@ -48,19 +48,22 @@ public class GameScreen extends ScreenAdapter {
 		ashleyManager.engine.addSystem(new RenderingSystem(50));
 		
 		// 英雄
-		Entity hero = ashleyManager.entityDao.createHeroEntity(GAME.position.x, GAME.position.y); // 创建英雄
+		Entity hero = ashleyManager.entityDao.createEntity(GAME.position.x, GAME.position.y); // 创建英雄
 		ashleyManager.engine.addEntity(hero);
+		
+//		Entity entity = ashleyManager.entityDao.createEntity2(GAME.position.x, GAME.position.y - 25);
+//		ashleyManager.engine.addEntity(entity);
 		
 		// UI
 		initUI();
 		
 		InputManager.instance.addProcessor(UIstage); // UI事件
 		
-		int height = Gdx.graphics.getHeight(); // 设备高
-		float offset = height * (0.618f - 0.5f); // 0.618是黄金分割点
+//		int height = Gdx.graphics.getHeight(); // 设备高
+//		float offset = height * (0.618f - 0.5f); // 0.618是黄金分割点
 		
 		// 初始化相机位置, 该位置会在屏幕中心
-		GAME.gameViewport.getCamera().position.set(GAME.position.x, GAME.position.y - offset, 0);  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
+		GAME.gameViewport.getCamera().position.set(GAME.position.x, GAME.position.y, 0);  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
 	}
 	
 	/**
