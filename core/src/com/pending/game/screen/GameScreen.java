@@ -51,8 +51,11 @@ public class GameScreen extends ScreenAdapter {
 		Entity hero = ashleyManager.entityDao.createEntity(GAME.position.x, GAME.position.y); // 创建英雄
 		ashleyManager.engine.addEntity(hero);
 		
-//		Entity entity = ashleyManager.entityDao.createEntity2(GAME.position.x, GAME.position.y - 25);
-//		ashleyManager.engine.addEntity(entity);
+		Entity entity = ashleyManager.entityDao.createEntity2(GAME.position.x, GAME.position.y - 25);
+		ashleyManager.engine.addEntity(entity);
+		
+		entity = ashleyManager.entityDao.createEntity2(GAME.position.x, GAME.position.y + 40);
+		ashleyManager.engine.addEntity(entity);
 		
 		// UI
 		initUI();

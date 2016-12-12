@@ -1,6 +1,7 @@
 package com.pending.game.entityscript;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -19,8 +20,16 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	
 	private boolean isStart = false;
 	
+	private Vector2 impulse = new Vector2();
+	
 	@Override
 	public boolean beginContact(Contact contact, Entity target) {
+		
+		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
+		if(physicsComponent.rigidBody.getLinearVelocity().y <= 0){
+			physicsComponent.rigidBody.setLinearVelocity(Vector2.Zero);
+			physicsComponent.rigidBody.applyLinearImpulse(impulse, physicsComponent.rigidBody.getWorldCenter(), true);
+		}
 		
 		return true;
 	}
@@ -61,7 +70,11 @@ public class HeroScript extends EntityScript implements InputProcessor{
 			return false;
 		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
-		physicsComponent.rigidBody.setLinearVelocity(0, 100);
+		
+		impulse.set(0, physicsComponent.rigidBody.getMass() * 40);
+		
+		physicsComponent.rigidBody.applyLinearImpulse(impulse, physicsComponent.rigidBody.getWorldCenter(), true);
+		
 		isStart = true;
 		
 		return true;
