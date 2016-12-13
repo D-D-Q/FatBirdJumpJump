@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.pending.game.EntityScript;
 import com.pending.game.components.PhysicsComponent;
+import com.pending.game.manager.PhysicsManager;
 import com.pending.game.tools.MapperTools;
 
 /**
@@ -20,15 +21,19 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	
 	private boolean isStart = false;
 	
-	private Vector2 impulse = new Vector2();
+	
+	private float maxSpeed = PhysicsManager.TIME_STEP * 2;
+	
+	private float time = 0.5f;
 	
 	@Override
 	public boolean beginContact(Contact contact, Entity target) {
 		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
-		if(physicsComponent.rigidBody.getLinearVelocity().y <= 0){
-			physicsComponent.rigidBody.setLinearVelocity(Vector2.Zero);
-			physicsComponent.rigidBody.applyLinearImpulse(impulse, physicsComponent.rigidBody.getWorldCenter(), true);
+		if(isStart && physicsComponent.rigidBody.getLinearVelocity().y <= 0){
+			
+			
+//			physicsComponent.rigidBody.setLinearVelocity(0, 2 * 120 / 0.5f);
 		}
 		
 		return true;
@@ -66,20 +71,16 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		
-		if(isStart)
-			return false;
+//		if(isStart)
+//			return false;
 		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		
 //		(v2-v1)/t = g
 //		2h=t*t*g
 //		2h = (v2-v1)*t
-		
-//		impulse.set(0, physicsComponent.rigidBody.getMass() * (20f * 2)/(0.5f * 0.5f));
-		physicsComponent.rigidBody.applyForceToCenter(impulse, true);
-//		physicsComponent.rigidBody.applyForceToCenter(0, 10000000f, true);
-//		physicsComponent.rigidBody.applyLinearImpulse(impulse, physicsComponent.rigidBody.getWorldCenter(), true);
-		physicsComponent.rigidBody.setLinearVelocity(0, 40);
+		float v = 2 * 60 / 0.2f;
+		physicsComponent.rigidBody.setLinearVelocity(0, v);
 		
 		isStart = true;
 		
@@ -105,7 +106,6 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	public void update(float deltaTime) {
 		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
-		physicsComponent.rigidBody.applyForceToCenter(0, physicsComponent.rigidBody.getMass() * 9.81f, true);
 		if(!physicsComponent.rigidBody.getLinearVelocity().isZero())
 			Gdx.app.log("", physicsComponent.rigidBody.getLinearVelocity().toString());
 	}

@@ -96,7 +96,7 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	    accumulator += frameTime;
 	    
 	    while (accumulator >= PhysicsManager.TIME_STEP) {
-	    	physicsManager.world.step(PhysicsManager.TIME_STEP, PhysicsManager.VELOCITY_ITERATIONS, PhysicsManager.POSITION_ITERATIONS); // 更新
+	    	physicsManager.world.step(1/PhysicsManager.TIME_STEP, PhysicsManager.VELOCITY_ITERATIONS, PhysicsManager.POSITION_ITERATIONS); // 更新
 	    	accumulator -= PhysicsManager.TIME_STEP;
 	    }
 	    

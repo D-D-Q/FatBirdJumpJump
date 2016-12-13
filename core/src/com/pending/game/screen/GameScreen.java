@@ -55,8 +55,7 @@ public class GameScreen extends ScreenAdapter {
 		// 英雄
 		Entity hero = ashleyManager.entityDao.createEntity(GAME.position.x, GAME.position.y); // 创建英雄 314.15927
 		ashleyManager.engine.addEntity(hero);
-		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(hero);
-		physicsComponent.rigidBody.getWorld().setGravity(new Vector2(0, physicsComponent.rigidBody.getMass() * -9.81f));
+		MapperTools.physicsCM.get(hero).rigidBody.setBullet(true);
 		
 		Entity entity = ashleyManager.entityDao.createEntity2(GAME.position.x, GAME.position.y - 25);
 		ashleyManager.engine.addEntity(entity);

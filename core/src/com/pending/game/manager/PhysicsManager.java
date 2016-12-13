@@ -27,9 +27,9 @@ public class PhysicsManager {
 //	public static PhysicsManager instance = new PhysicsManager();
 	
 	/**
-	 * 物理世界频率, 每秒60
+	 * 物理世界频率, 每秒
 	 */
-	public static final float TIME_STEP = 1/300f;
+	public static final float TIME_STEP = 300f;
 	
 	/**
 	 * 物理世界速度和位置的计算。数值越大，效果越细腻，计算量也就越大，最高不要超过10 
@@ -48,7 +48,7 @@ public class PhysicsManager {
 	private Box2DDebugRenderer debugRenderer;
 	
 	public PhysicsManager() {
-		world = new World(new Vector2(0, 0), true);  // 参数：无重力, 休眠;
+		world = new World(new Vector2(0, -1200), true);  // 参数：无重力, 休眠;
 		if(GameConfig.physicsdebug)
 			debugRenderer = new Box2DDebugRenderer();
 	}
