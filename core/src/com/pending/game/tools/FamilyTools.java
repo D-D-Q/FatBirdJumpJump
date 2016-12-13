@@ -2,6 +2,7 @@ package com.pending.game.tools;
 
 import com.badlogic.ashley.core.Family;
 import com.pending.game.components.PhysicsComponent;
+import com.pending.game.components.ScriptComponent;
 import com.pending.game.components.TextureComponent;
 import com.pending.game.components.TransformComponent;
 
@@ -13,6 +14,7 @@ import com.pending.game.components.TransformComponent;
  */
 public class FamilyTools {
 
+	public static final Family generalF = Family.one(ScriptComponent.class).get();
 	public static final Family renderingF = Family.all(TextureComponent.class, TransformComponent.class).get();
 	public static final Family physicsF = Family.all(TransformComponent.class).one(PhysicsComponent.class).get();
 }

@@ -45,7 +45,7 @@ public class EntityDao {
 		
 		PhysicsComponent physicsComponent = ashleyManager.engine.createComponent(PhysicsComponent.class);
 		CircleShape circle = new CircleShape(); // 圆形
-		circle.setRadius(20);
+		circle.setRadius(10);
 		physicsComponent.shape = circle;
 		physicsComponent.bodyType = BodyType.DynamicBody;
 		entity.add(physicsComponent);
@@ -81,7 +81,7 @@ public class EntityDao {
 		
 		PhysicsComponent physicsComponent = ashleyManager.engine.createComponent(PhysicsComponent.class);
 		PolygonShape polygon = new PolygonShape();
-		polygon.setAsBox(50, 5);
+		polygon.setAsBox(50, 10);
 		physicsComponent.shape = polygon;
 		physicsComponent.bodyType = BodyType.StaticBody;
 		entity.add(physicsComponent);
