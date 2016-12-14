@@ -3,13 +3,12 @@ package com.pending.game.screen;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.pending.game.Assets;
 import com.pending.game.GAME;
 import com.pending.game.GameConfig;
-import com.pending.game.components.PhysicsComponent;
 import com.pending.game.manager.AshleyManager;
 import com.pending.game.manager.InputManager;
 import com.pending.game.support.GlobalInline;
@@ -53,15 +52,18 @@ public class GameScreen extends ScreenAdapter {
 		ashleyManager.engine.addSystem(new RenderingSystem(20));
 		
 		// 英雄
-		Entity hero = ashleyManager.entityDao.createEntity(GAME.position.x, GAME.position.y); // 创建英雄 314.15927
+		Entity hero = ashleyManager.entityDao.createEntity(GAME.position.x, GAME.position.y, 10, 20);
 		ashleyManager.engine.addEntity(hero);
 		MapperTools.physicsCM.get(hero).rigidBody.setBullet(true);
 		
-		Entity entity = ashleyManager.entityDao.createEntity2(GAME.position.x, GAME.position.y - 25);
-		ashleyManager.engine.addEntity(entity);
-		
-		entity = ashleyManager.entityDao.createEntity2(GAME.position.x, GAME.position.y + 40);
-		ashleyManager.engine.addEntity(entity);
+		float cur = 0;
+		for(int i = 0; i < 100; ++i){
+			
+			Entity entity = ashleyManager.entityDao.createEntity2(MathUtils.random(0, GameConfig.width - 108), cur, 108, 10);
+			ashleyManager.engine.addEntity(entity);
+			
+			cur += MathUtils.random(10, 100);
+		}
 		
 		// UI
 		initUI();

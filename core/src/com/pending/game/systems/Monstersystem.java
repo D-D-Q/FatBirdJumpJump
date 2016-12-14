@@ -46,11 +46,10 @@ public class Monstersystem extends EntitySystem {
 	 */
 	protected boolean updateInterval (){
 		
-		
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		
-		Entity entity = ashleyManager.entityDao.createEntity2(520, 2080);
-		ashleyManager.engine.addEntity(entity);
+//		Entity entity = ashleyManager.entityDao.createEntity2(520, 2080);
+//		ashleyManager.engine.addEntity(entity);
 		
 		return false;
 	}

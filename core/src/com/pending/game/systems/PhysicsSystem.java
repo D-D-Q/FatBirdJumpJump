@@ -2,21 +2,14 @@ package com.pending.game.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
-import com.pending.game.GAME;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.components.ScriptComponent;
 import com.pending.game.components.TransformComponent;
-import com.pending.game.manager.InputManager;
 import com.pending.game.manager.PhysicsManager;
 import com.pending.game.tools.FamilyTools;
 import com.pending.game.tools.MapperTools;
@@ -33,6 +26,8 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	 * 更新物理引擎的时间量
 	 */
 	private float accumulator;
+	
+	private float TIME_STEP = 1/PhysicsManager.PYHSICS_FPS;
 	
 	public PhysicsManager physicsManager = new PhysicsManager();
 
@@ -95,9 +90,9 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 		float frameTime = Math.min(deltaTime, 0.25f); // 最大帧间隔时间0.25，防止死亡螺旋（spiral of death）
 	    accumulator += frameTime;
 	    
-	    while (accumulator >= PhysicsManager.TIME_STEP) {
-	    	physicsManager.world.step(1/PhysicsManager.TIME_STEP, PhysicsManager.VELOCITY_ITERATIONS, PhysicsManager.POSITION_ITERATIONS); // 更新
-	    	accumulator -= PhysicsManager.TIME_STEP;
+	    while (accumulator >= TIME_STEP) {
+	    	physicsManager.world.step(TIME_STEP, PhysicsManager.VELOCITY_ITERATIONS, PhysicsManager.POSITION_ITERATIONS); // 更新
+	    	accumulator -= TIME_STEP;
 	    }
 	    
 	    super.update(deltaTime); // 更新精灵实体

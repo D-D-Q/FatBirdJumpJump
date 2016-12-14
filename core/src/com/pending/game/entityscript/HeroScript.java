@@ -3,11 +3,17 @@ package com.pending.game.entityscript;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.pending.game.EntityScript;
+import com.pending.game.GAME;
+import com.pending.game.GameConfig;
 import com.pending.game.components.PhysicsComponent;
+import com.pending.game.components.TransformComponent;
 import com.pending.game.manager.PhysicsManager;
 import com.pending.game.tools.MapperTools;
 
@@ -21,19 +27,42 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	
 	private boolean isStart = false;
 	
+	/**
+	 * 物理引擎支持的最大速度
+	 */
+	private float maxSpeed = PhysicsManager.PYHSICS_FPS * 2;
 	
-	private float maxSpeed = PhysicsManager.TIME_STEP * 2;
+	/**
+	 * 跳跃高度
+	 */
+	private float height = 100;
 	
-	private float time = 0.5f;
+	/**
+	 * 跳跃上升时间
+	 */
+	private float time = 0.34f;
+	
+	/**
+	 * 起跳速度 = 2 * height / time
+	 */
+	private float speed = 0;
+	
+	/**
+	 * 手指位置
+	 */
+	private Vector3 touchPosition;
+	
+	/**
+	 * 跟随左右滑动的偏移位置
+	 */
+	private float offetX = 0;;
 	
 	@Override
 	public boolean beginContact(Contact contact, Entity target) {
 		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
-		if(isStart && physicsComponent.rigidBody.getLinearVelocity().y <= 0){
-			
-			
-//			physicsComponent.rigidBody.setLinearVelocity(0, 2 * 120 / 0.5f);
+		if(isStart && contact.isEnabled()){
+			physicsComponent.rigidBody.setLinearVelocity(0, speed);
 		}
 		
 		return true;
@@ -43,8 +72,15 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	public void preSolve(Contact contact, Manifold oldManifold, Entity target) {
 		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
-		if(physicsComponent.rigidBody.getLinearVelocity().y > 0){
-			contact.setEnabled(false); // 向上禁用当前碰撞
+		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
+		Vector2 position = physicsComponent.rigidBody.getPosition();
+		
+		PhysicsComponent targetPhysicsComponent = MapperTools.physicsCM.get(target);
+		TransformComponent targetTransformComponent = MapperTools.transformCM.get(target);
+		Vector2 targetPosition = targetPhysicsComponent.rigidBody.getPosition();
+		
+		if(position.y - transformComponent.height/2 < targetPosition.y + targetTransformComponent.height/2){ // 精灵底部 < 台阶顶部
+			contact.setEnabled(false); // 禁用当前碰撞
 		}
 	}
 	
@@ -65,31 +101,44 @@ public class HeroScript extends EntityScript implements InputProcessor{
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return false;
+		
+		touchPosition = GAME.gameViewport.getCamera().unproject(new Vector3(screenX, screenY, 0));
+		return true;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		
-//		if(isStart)
-//			return false;
+		if(isStart)
+			return false;
 		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		
-//		(v2-v1)/t = g
-//		2h=t*t*g
-//		2h = (v2-v1)*t
-		float v = 2 * 60 / 0.2f;
-		physicsComponent.rigidBody.setLinearVelocity(0, v);
+		/* *
+		 * (v2-v1)/t = g
+		 * 2h=t*t*g
+		 * 2h = (v2-v1)*t
+		 * */
+		speed = 2 * height / time;
+		physicsComponent.rigidBody.getWorld().setGravity(new Vector2(0, -speed/time));
+		physicsComponent.rigidBody.setLinearVelocity(0, speed);
 		
 		isStart = true;
+		
+		if(speed > maxSpeed)
+			Gdx.app.error("", "速度大于极限速度");
 		
 		return true;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return false;
+		
+		Vector3 newTouchPosition = GAME.gameViewport.getCamera().unproject(new Vector3(screenX, screenY, 0));
+		offetX = newTouchPosition.x - touchPosition.x;
+		touchPosition = newTouchPosition;
+		
+		return true;
 	}
 
 	@Override
@@ -106,7 +155,21 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	public void update(float deltaTime) {
 		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
+		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
+		
+		// 根据滑动更新x轴位置
+		Vector2 entityPosition = physicsComponent.rigidBody.getPosition();
+		float newX = MathUtils.clamp(entityPosition.x + offetX,0 + transformComponent.width / 2, GameConfig.width - transformComponent.width / 2);
+		physicsComponent.rigidBody.setTransform(newX, entityPosition.y, 0); 
+		offetX = 0;
+		
+		// 更新摄像机y轴位置
+		Camera camera = GAME.gameViewport.getCamera();
+		float y = entityPosition.y - camera.position.y;
+		if(y > 0) // 英雄最高位置与摄像机的距离 暂时0
+			camera.position.y += y;
+		
 		if(!physicsComponent.rigidBody.getLinearVelocity().isZero())
-			Gdx.app.log("", physicsComponent.rigidBody.getLinearVelocity().toString());
+			Gdx.app.debug("速度", physicsComponent.rigidBody.getLinearVelocity().toString());
 	}
 }
