@@ -116,7 +116,7 @@ public class AshleyManager{
 			// 添加碰撞检测
 			PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 			if(physicsComponent != null){
-				physicsSystem.physicsManager.disposeBody(physicsComponent.rigidBody);
+				physicsSystem.physicsManager.addDisposeBody(physicsComponent.rigidBody);
 			}
 			
 			// 脚本组件，移出输入监听

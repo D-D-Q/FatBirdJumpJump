@@ -1,6 +1,9 @@
 package com.pending.game.manager;
 
+import java.util.Iterator;
+
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -8,8 +11,10 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.pending.game.GameConfig;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.components.TransformComponent;
@@ -42,13 +47,16 @@ public class PhysicsManager {
 	 */
 	public World world;
 	
+	private Array<Body> disableBody;
+	
 	/**
 	 * 物理引擎debug绘制对象
 	 */
 	private Box2DDebugRenderer debugRenderer;
-	
+
 	public PhysicsManager() {
 		world = new World(new Vector2(0, 0), true);  // 参数：无重力, 休眠;
+		disableBody = new Array<>(false, 10);
 		if(GameConfig.physicsdebug)
 			debugRenderer = new Box2DDebugRenderer();
 	}
@@ -196,16 +204,38 @@ public class PhysicsManager {
 	}
 	
 	/**
+	 * 将刚体加入等待销毁集合
+	 * 
+	 * @param body
+	 */
+	public void addDisposeBody(Body body){
+		
+		if(body != null)
+			disableBody.add(body);
+	}
+	
+	/**
 	 * 销毁刚体
 	 * 
 	 * @param body
 	 */
-	public void disposeBody(Body body){
+	public void disposeBody(){
 		
-		if(body == null)
+		if(world.isLocked())
 			return;
 		
-		world.destroyBody(body);
+		Iterator<Body> iterator = disableBody.iterator();
+		while(iterator.hasNext()){
+			
+			Body body = iterator.next();
+			body.setUserData(null);
+			final Array<JointEdge> list = body.getJointList();
+            while (list.size > 0) {
+            	world.destroyJoint(list.get(0).joint);
+            }
+			world.destroyBody(body);
+			iterator.remove();
+		}
 	}
 	
 	/**

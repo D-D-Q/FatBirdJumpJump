@@ -94,6 +94,7 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	    	physicsManager.world.step(TIME_STEP, PhysicsManager.VELOCITY_ITERATIONS, PhysicsManager.POSITION_ITERATIONS); // 更新
 	    	accumulator -= TIME_STEP;
 	    }
+	    physicsManager.disposeBody();
 	    
 	    super.update(deltaTime); // 更新精灵实体
 	}
@@ -117,7 +118,7 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	}
 	
 	/**
-	 * 进入碰撞
+	 * 进入碰撞，最先调用
 	 * 只给碰撞检测(CollisionComponent)刚体的实体转发碰撞事件
 	 * 
 	 * @see com.badlogic.gdx.physics.box2d.ContactListener#beginContact(com.badlogic.gdx.physics.box2d.Contact)
@@ -140,6 +141,60 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entityB);
 			if(scriptComponent != null){
 				scriptComponent.script.beginContact(contact, entityA); // 普通碰撞检测事件
+			}
+		}
+	}
+	
+	/**
+	 * 计算碰撞之前调用。未产生效果和力, 通常用来改变效果和力
+	 * 只给碰撞检测(CollisionComponent)刚体的实体转发碰撞事件
+	 * 
+	 * @see com.badlogic.gdx.physics.box2d.ContactListener#preSolve(com.badlogic.gdx.physics.box2d.Contact, com.badlogic.gdx.physics.box2d.Manifold)
+	 */
+	@Override
+	public void preSolve(Contact contact, Manifold oldManifold) {
+		
+		Entity entityA = (Entity)contact.getFixtureA().getBody().getUserData();
+		Entity entityB = (Entity)contact.getFixtureB().getBody().getUserData();
+		
+		if(entityA != null){
+			// 转发事件
+			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entityA);
+			if(scriptComponent != null){
+				scriptComponent.script.preSolve(contact, oldManifold, entityB); // 普通碰撞检测事件
+			}
+		}
+		if(entityB != null){
+			// 转发事件
+			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entityB);
+			if(scriptComponent != null){
+				scriptComponent.script.preSolve(contact, oldManifold, entityA); // 普通碰撞检测事件
+			}
+		}
+	}
+
+	/**
+	 * 计算碰撞之后调用。已产生效果和力，通常用来使用效果和力
+	 * @see com.badlogic.gdx.physics.box2d.ContactListener#postSolve(com.badlogic.gdx.physics.box2d.Contact, com.badlogic.gdx.physics.box2d.ContactImpulse)
+	 */
+	@Override
+	public void postSolve(Contact contact, ContactImpulse impulse) {
+		
+		Entity entityA = (Entity)contact.getFixtureA().getBody().getUserData();
+		Entity entityB = (Entity)contact.getFixtureB().getBody().getUserData();
+		
+		if(entityA != null){
+			// 转发事件
+			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entityA);
+			if(scriptComponent != null){
+				scriptComponent.script.postSolve(contact, impulse, entityB); // 普通碰撞检测事件
+			}
+		}
+		if(entityB != null){
+			// 转发事件
+			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entityB);
+			if(scriptComponent != null){
+				scriptComponent.script.postSolve(contact, impulse, entityA); // 普通碰撞检测事件
 			}
 		}
 	}
@@ -168,60 +223,6 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entityB);
 			if(scriptComponent != null){
 				scriptComponent.script.endContact(contact, entityA); // 普通碰撞检测事件
-			}
-		}
-	}
-
-	/**
-	 * 新碰撞点, 已碰撞之后的移动会触发
-	 * 只给碰撞检测(CollisionComponent)刚体的实体转发碰撞事件
-	 * 
-	 * @see com.badlogic.gdx.physics.box2d.ContactListener#preSolve(com.badlogic.gdx.physics.box2d.Contact, com.badlogic.gdx.physics.box2d.Manifold)
-	 */
-	@Override
-	public void preSolve(Contact contact, Manifold oldManifold) {
-		
-		Entity entityA = (Entity)contact.getFixtureA().getBody().getUserData();
-		Entity entityB = (Entity)contact.getFixtureB().getBody().getUserData();
-		
-		if(entityA != null){
-			// 转发事件
-			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entityA);
-			if(scriptComponent != null){
-				scriptComponent.script.preSolve(contact, oldManifold, entityB); // 普通碰撞检测事件
-			}
-		}
-		if(entityB != null){
-			// 转发事件
-			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entityB);
-			if(scriptComponent != null){
-				scriptComponent.script.preSolve(contact, oldManifold, entityA); // 普通碰撞检测事件
-			}
-		}
-	}
-
-	/**
-	 * 碰撞点产生力, 已碰撞之后的移动会触发
-	 * @see com.badlogic.gdx.physics.box2d.ContactListener#postSolve(com.badlogic.gdx.physics.box2d.Contact, com.badlogic.gdx.physics.box2d.ContactImpulse)
-	 */
-	@Override
-	public void postSolve(Contact contact, ContactImpulse impulse) {
-		
-		Entity entityA = (Entity)contact.getFixtureA().getBody().getUserData();
-		Entity entityB = (Entity)contact.getFixtureB().getBody().getUserData();
-		
-		if(entityA != null){
-			// 转发事件
-			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entityA);
-			if(scriptComponent != null){
-				scriptComponent.script.postSolve(contact, impulse, entityB); // 普通碰撞检测事件
-			}
-		}
-		if(entityB != null){
-			// 转发事件
-			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entityB);
-			if(scriptComponent != null){
-				scriptComponent.script.postSolve(contact, impulse, entityA); // 普通碰撞检测事件
 			}
 		}
 	}

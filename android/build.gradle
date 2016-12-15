@@ -1,7 +1,7 @@
 android {
 //    buildToolsVersion "23.0.1"
     buildToolsVersion "24.0.1"
-    compileSdkVersion 20
+    compileSdkVersion 22
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -17,8 +17,8 @@ android {
     }
     defaultConfig {
         applicationId "com.pending.game"
-        minSdkVersion 8
-        targetSdkVersion 20
+        minSdkVersion 15
+        targetSdkVersion 22
 
         // 后加的 支持jdk .18
         jackOptions {
@@ -99,8 +99,8 @@ eclipse {
     }
 
     jdt {
-        sourceCompatibility = 1.6
-        targetCompatibility = 1.6
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
 
     classpath {

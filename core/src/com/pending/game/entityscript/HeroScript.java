@@ -58,17 +58,6 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	private float offetX = 0;;
 	
 	@Override
-	public boolean beginContact(Contact contact, Entity target) {
-		
-		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
-		if(isStart && contact.isEnabled()){
-			physicsComponent.rigidBody.setLinearVelocity(0, speed);
-		}
-		
-		return true;
-	}
-	
-	@Override
 	public void preSolve(Contact contact, Manifold oldManifold, Entity target) {
 		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
@@ -81,6 +70,9 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		
 		if(position.y - transformComponent.height/2 < targetPosition.y + targetTransformComponent.height/2){ // 精灵底部 < 台阶顶部
 			contact.setEnabled(false); // 禁用当前碰撞
+		}
+		else if(isStart){
+			physicsComponent.rigidBody.setLinearVelocity(0, speed);
 		}
 	}
 	
