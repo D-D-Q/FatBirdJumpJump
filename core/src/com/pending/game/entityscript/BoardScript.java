@@ -38,10 +38,5 @@ public class BoardScript extends EntityScript{
 	@Override
 	public void update(float deltaTime) {
 		
-		if(isDispose){
-			PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
-			PhysicsSystem physicsSystem = GlobalInline.instance.getAshleyManager().engine.getSystem(PhysicsSystem.class);
-			physicsSystem.physicsManager.disposeBody(physicsComponent.rigidBody);
-		}
 	}
 }

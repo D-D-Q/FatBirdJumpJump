@@ -12,9 +12,15 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.pending.game.EntityScript;
 import com.pending.game.GAME;
 import com.pending.game.GameConfig;
+import com.pending.game.GameMain;
+import com.pending.game.Setting;
+import com.pending.game.assets.GameScreenAssets;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.components.TransformComponent;
 import com.pending.game.manager.PhysicsManager;
+import com.pending.game.screen.GameScreen;
+import com.pending.game.support.GlobalInline;
+import com.pending.game.support.SwitchScreen;
 import com.pending.game.tools.MapperTools;
 
 /**
@@ -50,7 +56,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	/**
 	 * 手指位置
 	 */
-	private Vector3 touchPosition;
+	private Vector3 touchPosition = new Vector3();
 	
 	/**
 	 * 跟随左右滑动的偏移位置
@@ -72,6 +78,12 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	public void preSolve(Contact contact, Manifold oldManifold, Entity target) {
 		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
+		
+		if(physicsComponent.rigidBody.getLinearVelocity().y > 0){ // 上升过程
+			contact.setEnabled(false);
+			return;
+		}
+		
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
 		Vector2 position = physicsComponent.rigidBody.getPosition();
 		
@@ -102,7 +114,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		
-		touchPosition = GAME.gameViewport.getCamera().unproject(new Vector3(screenX, screenY, 0));
+		GAME.gameViewport.getCamera().unproject(touchPosition.set(screenX, screenY, 0));
 		return true;
 	}
 
@@ -131,12 +143,14 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		return true;
 	}
 
+	private Vector3 touchDraggedVector = new Vector3();
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		
-		Vector3 newTouchPosition = GAME.gameViewport.getCamera().unproject(new Vector3(screenX, screenY, 0));
-		offetX = newTouchPosition.x - touchPosition.x;
-		touchPosition = newTouchPosition;
+		GAME.gameViewport.getCamera().unproject(touchDraggedVector.set(screenX, screenY, 0));
+		
+		offetX = (touchDraggedVector.x - touchPosition.x) * Setting.sensitivity;
+		touchPosition.set(touchDraggedVector);
 		
 		return true;
 	}
@@ -171,5 +185,11 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		
 		if(!physicsComponent.rigidBody.getLinearVelocity().isZero())
 			Gdx.app.debug("速度", physicsComponent.rigidBody.getLinearVelocity().toString());
+		
+		// 游戏结束
+		if(entityPosition.y < camera.position.y - GameConfig.hieght/2){
+			GameMain game = GlobalInline.instance.getGlobal("game");
+			game.switchScreen = new SwitchScreen(game, GameScreen.class, GameScreenAssets.class);
+		}
 	}
 }
