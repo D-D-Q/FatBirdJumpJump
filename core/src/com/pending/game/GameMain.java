@@ -3,6 +3,7 @@ package com.pending.game;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,6 +21,11 @@ public class GameMain extends Game {
 	 */
 	FPSLogger fpsLog;
 	
+	/**
+	 * 因为EMS系统的各系统顺序执行无法中断，所以要切换的Screen标示在此
+	 */
+	public Screen switchScreen = null;
+	
 	@Override
 	public void create () {
 		
@@ -36,6 +42,8 @@ public class GameMain extends Game {
 		
 		GAME.UIViewport = new FillViewport(GameConfig.width, GameConfig.hieght);
 		
+		GlobalInline.instance.putGlobal("game", this);
+		
 		setScreen(new SwitchScreen(this, GameScreen.class, GameScreenAssets.class));
 	}
 
@@ -45,6 +53,12 @@ public class GameMain extends Game {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		super.render();
+		
+		// 切换屏幕
+		if(switchScreen != null){
+			setScreen(switchScreen);
+			switchScreen = null;
+		}
 		
 		if(GameConfig.fpsDebug)
 			fpsLog.log();

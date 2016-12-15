@@ -51,7 +51,7 @@ public class GlobalInline<T> {
 	public void enter(T domain){
 		
 		if(domainStack.size != 0 && domainStack.peek() == domain){
-			Gdx.app.log(this.toString(), "重复当前：未压入" + domain);
+			Gdx.app.log(this.toString(), "重复进入当前域" + domain);
 			return;
 		}
 		domainStack.add(domain);
@@ -145,6 +145,8 @@ public class GlobalInline<T> {
 			
 			iterator.remove();
 		}
+		
+		globalMap.clear();
 		
 		Gdx.app.log(this.toString(), "dispose all");
 	}

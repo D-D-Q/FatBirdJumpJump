@@ -93,7 +93,7 @@ public class ScreenProxy{
 		
 		public void setScreen(Class<? extends Screen> screenClass){
 			
-			GlobalInline.instance.enter(screenClass); // 压入全局变量的key
+			GlobalInline.instance.enter(screenClass); 
 			
 			try {
 				this.screen = screenClass.newInstance(); // 构造方法
@@ -104,7 +104,7 @@ public class ScreenProxy{
 				Gdx.app.exit();
 			}
 			
-			GlobalInline.instance.exit(); // 移除全局变量的Key
+			GlobalInline.instance.exit();
 		}
 
 		/**
@@ -113,11 +113,11 @@ public class ScreenProxy{
 		@Override
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 			
-			GlobalInline.instance.enter(screen.getClass()); // 压入全局变量的key
+			GlobalInline.instance.enter(screen.getClass()); 
 			
 			Object object = method.invoke(screen, args); // 目标方法。使用真实对象执行
 			
-			GlobalInline.instance.exit(); // 移除全局变量的Key
+			GlobalInline.instance.exit();
 			
 			return object;
 		}
