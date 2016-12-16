@@ -21,6 +21,7 @@ import com.pending.game.manager.PhysicsManager;
 import com.pending.game.screen.GameScreen;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.support.SwitchScreen;
+import com.pending.game.systems.PhysicsSystem;
 import com.pending.game.tools.MapperTools;
 
 /**
@@ -44,9 +45,9 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	private float height = 100;
 	
 	/**
-	 * 跳跃上升时间
+	 * 跳跃上升时间 0.34
 	 */
-	private float time = 0.34f;
+	private float time = 0.5f;
 	
 	/**
 	 * 起跳速度 = 2 * height / time
@@ -85,6 +86,8 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		}
 		else if(isStart){
 			physicsComponent.rigidBody.setLinearVelocity(0, speed);
+			
+			GlobalInline.instance.put("jumPBoardY", targetPhysicsComponent.rigidBody.getPosition().y);
 		}
 	}
 	
@@ -171,8 +174,8 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		
 		// 更新摄像机y轴位置
 		Camera camera = GAME.gameViewport.getCamera();
-		float y = entityPosition.y - camera.position.y;
-		if(y > 0) // 英雄最高位置与摄像机的距离 暂时0
+		float y = GameConfig.cameraOffset - (camera.position.y - entityPosition.y); 
+		if(y > 0) // 英雄最高位置与摄像机的距离小于cameraOffset
 			camera.position.y += y;
 		
 		if(!physicsComponent.rigidBody.getLinearVelocity().isZero())

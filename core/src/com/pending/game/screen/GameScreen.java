@@ -70,11 +70,8 @@ public class GameScreen extends ScreenAdapter {
 		
 		InputManager.instance.addProcessor(UIstage); // UI事件
 		
-//		int height = Gdx.graphics.getHeight(); // 设备高
-//		float offset = height * (0.618f - 0.5f); // 0.618是黄金分割点
-		
 		// 初始化相机位置, 该位置会在屏幕中心
-		GAME.gameViewport.getCamera().position.set(GAME.position.x, GAME.position.y, 0);  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
+		GAME.gameViewport.getCamera().position.set(GAME.position.x, GAME.position.y + GameConfig.cameraOffset, 0);  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
 	}
 	
 	/**

@@ -1,5 +1,7 @@
 package com.pending.game;
 
+import com.badlogic.gdx.Gdx;
+
 public class GameConfig {
 
 	/**
@@ -7,6 +9,8 @@ public class GameConfig {
 	 */
 	public final static int width = 540;
 	public final static int hieght = 960;
+	
+	public final static float cameraOffset = Gdx.graphics.getHeight() * (0.618f - 0.5f);  // 0.618是黄金分割点
 	
 	/**
 	 * UI边距，不同手机屏幕比例不同，没有边距会显示不全
