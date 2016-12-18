@@ -3,7 +3,6 @@ package com.pending.game.manager;
 import java.util.Iterator;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -42,6 +41,11 @@ public class PhysicsManager {
 	public static final int VELOCITY_ITERATIONS = 6;
 	public static final int POSITION_ITERATIONS = 2;
 
+	/**
+	 * 物理引擎支持的最大速度
+	 */
+	public static final float MAX_SPEED = PhysicsManager.PYHSICS_FPS * 2;
+	
 	/**
 	 * box2d的物理世界
 	 */

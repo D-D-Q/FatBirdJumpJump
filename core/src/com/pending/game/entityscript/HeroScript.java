@@ -35,19 +35,14 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	private boolean isStart = false;
 	
 	/**
-	 * 物理引擎支持的最大速度
-	 */
-	private float maxSpeed = PhysicsManager.PYHSICS_FPS * 2;
-	
-	/**
 	 * 跳跃高度
 	 */
-	private float height = 100;
+	private float jumpHeight = 100;
 	
 	/**
 	 * 跳跃上升时间 0.34
 	 */
-	private float time = 0.5f;
+	private float jumpTime = 0.5f;
 	
 	/**
 	 * 起跳速度 = 2 * height / time
@@ -63,6 +58,10 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	 * 跟随左右滑动的偏移位置
 	 */
 	private float offetX = 0;;
+	
+	
+	private int num = 0;
+	private float time = 1;
 	
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold, Entity target) {
@@ -88,6 +87,8 @@ public class HeroScript extends EntityScript implements InputProcessor{
 			physicsComponent.rigidBody.setLinearVelocity(0, speed);
 			
 			GlobalInline.instance.put("jumPBoardY", targetPhysicsComponent.rigidBody.getPosition().y);
+			
+			++num;
 		}
 	}
 	
@@ -126,13 +127,13 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		 * 2h=t*t*g
 		 * 2h = (v2-v1)*t
 		 * */
-		speed = 2 * height / time;
-		physicsComponent.rigidBody.getWorld().setGravity(new Vector2(0, -speed/time));
+		speed = 2 * jumpHeight / jumpTime;
+		physicsComponent.rigidBody.getWorld().setGravity(new Vector2(0, -speed/jumpTime));
 		physicsComponent.rigidBody.setLinearVelocity(0, speed);
 		
 		isStart = true;
 		
-		if(speed > maxSpeed)
+		if(speed > PhysicsManager.MAX_SPEED)
 			Gdx.app.error("", "速度大于极限速度");
 		
 		return true;
@@ -171,6 +172,17 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		float newX = MathUtils.clamp(entityPosition.x + offetX,0 + transformComponent.width / 2, GameConfig.width - transformComponent.width / 2);
 		physicsComponent.rigidBody.setTransform(newX, entityPosition.y, 0); 
 		offetX = 0;
+		
+		if(num > 20){
+			if(time >= deltaTime){
+				physicsComponent.rigidBody.setLinearVelocity(0, PhysicsManager.MAX_SPEED);
+				time -= deltaTime;
+			}
+			else{
+				num = 0;
+				time = 1;
+			}
+		}
 		
 		// 更新摄像机y轴位置
 		Camera camera = GAME.gameViewport.getCamera();

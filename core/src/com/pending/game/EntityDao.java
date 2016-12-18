@@ -92,7 +92,8 @@ public class EntityDao {
 		PolygonShape polygon = new PolygonShape();
 		polygon.setAsBox(width/2, height/2);
 		physicsComponent.shape = polygon;
-		physicsComponent.bodyType = BodyType.StaticBody;
+//		physicsComponent.bodyType = BodyType.StaticBody;
+		physicsComponent.bodyType = BodyType.DynamicBody;
 		entity.add(physicsComponent);
 		
 		ScriptComponent scriptComponent = ashleyManager.engine.createComponent(ScriptComponent.class);

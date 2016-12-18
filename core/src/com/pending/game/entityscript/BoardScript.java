@@ -1,8 +1,15 @@
 package com.pending.game.entityscript;
 
 import com.pending.game.EntityScript;
+import com.pending.game.GAME;
+import com.pending.game.GameConfig;
+import com.pending.game.GameMain;
+import com.pending.game.assets.GameScreenAssets;
 import com.pending.game.components.PhysicsComponent;
+import com.pending.game.manager.PhysicsManager;
+import com.pending.game.screen.GameScreen;
 import com.pending.game.support.GlobalInline;
+import com.pending.game.support.SwitchScreen;
 import com.pending.game.tools.MapperTools;
 
 /**
@@ -21,7 +28,13 @@ public class BoardScript extends EntityScript{
 		Float boardMax = GlobalInline.instance.get("jumPBoardY");
 		
 		if(boardMax !=null && physicsComponent.rigidBody.getPosition().y <= boardMax){
-			GlobalInline.instance.getAshleyManager().engine.removeEntity(entity);
+			
+			if(physicsComponent.rigidBody.getPosition().y < GAME.gameViewport.getCamera().position.y - GameConfig.hieght/2){
+				GlobalInline.instance.getAshleyManager().engine.removeEntity(entity);
+			}
+			else{
+				physicsComponent.rigidBody.setLinearVelocity(0, -PhysicsManager.MAX_SPEED);
+			}
 		}
 	}
 }
