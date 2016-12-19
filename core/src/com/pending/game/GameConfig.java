@@ -29,7 +29,7 @@ public class GameConfig {
 	/**
 	 * 游戏速度
 	 */
-	public final static float gameSpeed = 1;
+	public static float gameSpeed = 1;
 	
 	/**
 	 * UI的debug模式

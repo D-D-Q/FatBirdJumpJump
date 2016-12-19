@@ -3,7 +3,6 @@ package com.pending.game.screen;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,6 +15,7 @@ import com.pending.game.manager.AshleyManager;
 import com.pending.game.manager.InputManager;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.systems.GeneralSystem;
+import com.pending.game.systems.Monstersystem;
 import com.pending.game.systems.PhysicsSystem;
 import com.pending.game.systems.RenderingSystem;
 import com.pending.game.tools.MapperTools;
@@ -53,7 +53,8 @@ public class GameScreen extends ScreenAdapter {
 		
 		ashleyManager.engine.addSystem(new GeneralSystem(0));
 		ashleyManager.engine.addSystem(new PhysicsSystem(10));
-		ashleyManager.engine.addSystem(new RenderingSystem(20));
+		ashleyManager.engine.addSystem(new Monstersystem(20));
+		ashleyManager.engine.addSystem(new RenderingSystem(30));
 		
 		// 英雄
 		Entity hero = ashleyManager.entityDao.createEntity(GAME.position.x, GAME.position.y, 10, 20);
@@ -61,15 +62,15 @@ public class GameScreen extends ScreenAdapter {
 		MapperTools.physicsCM.get(hero).rigidBody.setBullet(true);
 		GlobalInline.instance.put("hero", hero);
 		
-		float cur = GAME.position.y;
-		for(int i = 0; i < 200; ++i){
-			
-			Entity entity = ashleyManager.entityDao.createEntity2(MathUtils.random(0, GameConfig.width - 108), cur, 100, 10);
-			ashleyManager.engine.addEntity(entity);
-			MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
-			
-			cur += MathUtils.random(10, 100);
-		}
+//		float cur = GAME.position.y;
+//		for(int i = 0; i < 200; ++i){
+//			
+//			Entity entity = ashleyManager.entityDao.createEntity2(MathUtils.random(0, GameConfig.width - 108), cur, 100, 10);
+//			ashleyManager.engine.addEntity(entity);
+//			MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
+//			
+//			cur += MathUtils.random(10, 100);
+//		}
 		
 		// UI
 		initUI();

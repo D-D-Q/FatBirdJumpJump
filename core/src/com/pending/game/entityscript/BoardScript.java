@@ -3,13 +3,8 @@ package com.pending.game.entityscript;
 import com.pending.game.EntityScript;
 import com.pending.game.GAME;
 import com.pending.game.GameConfig;
-import com.pending.game.GameMain;
-import com.pending.game.assets.GameScreenAssets;
 import com.pending.game.components.PhysicsComponent;
-import com.pending.game.manager.PhysicsManager;
-import com.pending.game.screen.GameScreen;
 import com.pending.game.support.GlobalInline;
-import com.pending.game.support.SwitchScreen;
 import com.pending.game.tools.MapperTools;
 
 /**
@@ -33,7 +28,9 @@ public class BoardScript extends EntityScript{
 				GlobalInline.instance.getAshleyManager().engine.removeEntity(entity);
 			}
 			else{
-				physicsComponent.rigidBody.setLinearVelocity(0, -PhysicsManager.MAX_SPEED);
+//				physicsComponent.rigidBody.setLinearVelocity(0, -PhysicsManager.MAX_SPEED);
+				physicsComponent.rigidBody.setAwake(true);
+				physicsComponent.rigidBody.setGravityScale(1);
 			}
 		}
 	}

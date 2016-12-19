@@ -21,7 +21,6 @@ import com.pending.game.manager.PhysicsManager;
 import com.pending.game.screen.GameScreen;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.support.SwitchScreen;
-import com.pending.game.systems.PhysicsSystem;
 import com.pending.game.tools.MapperTools;
 
 /**
@@ -60,8 +59,11 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	private float offetX = 0;;
 	
 	
+	private final float superJumpTime = 2.5f;
+	private final int superJumpNum = 10;
+	
 	private int num = 0;
-	private float time = 1;
+	private float time = superJumpTime;
 	
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold, Entity target) {
@@ -173,14 +175,16 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		physicsComponent.rigidBody.setTransform(newX, entityPosition.y, 0); 
 		offetX = 0;
 		
-		if(num > 20){
+		if(num > superJumpNum){
 			if(time >= deltaTime){
+				GameConfig.gameSpeed = 2f;
 				physicsComponent.rigidBody.setLinearVelocity(0, PhysicsManager.MAX_SPEED);
 				time -= deltaTime;
 			}
 			else{
+				GameConfig.gameSpeed = 1f;
 				num = 0;
-				time = 1;
+				time = superJumpTime;
 			}
 		}
 		
