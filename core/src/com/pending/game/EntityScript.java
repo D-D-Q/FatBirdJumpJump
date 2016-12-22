@@ -1,6 +1,7 @@
 package com.pending.game;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
@@ -17,6 +18,20 @@ public class EntityScript  {
 	 * 该脚本属于的实体
 	 */
 	public Entity entity;
+	
+	/**
+	 * 消息事件
+	 * 
+	 * @param messageType 消息类型
+	 * @param sender 发送者，可能是null
+	 * @param extraInfo 携带对象，可能是null
+	 * @param msg 消息对象
+	 * @return true处理完成
+	 */
+	public boolean message(int messageType, Entity sender, Object extraInfo, Telegram msg){
+		
+		return true;
+	}
 	
 	/**
 	 * CollisionComponent碰撞事件

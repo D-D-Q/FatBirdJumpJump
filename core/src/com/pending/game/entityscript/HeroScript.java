@@ -17,11 +17,13 @@ import com.pending.game.Setting;
 import com.pending.game.assets.GameScreenAssets;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.components.TransformComponent;
+import com.pending.game.manager.MsgManager;
 import com.pending.game.manager.PhysicsManager;
 import com.pending.game.screen.GameScreen;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.support.SwitchScreen;
 import com.pending.game.tools.MapperTools;
+import com.pending.game.ui.GameScreenUI1;
 
 /**
  * 英雄脚本
@@ -60,7 +62,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	
 	
 	private final float superJumpTime = 2.5f;
-	private final int superJumpNum = 10;
+	public final static int superJumpNum = 30;
 	
 	private int num = 0;
 	private float time = superJumpTime;
@@ -87,10 +89,10 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		}
 		else if(isStart){
 			physicsComponent.rigidBody.setLinearVelocity(0, speed);
-			
 			GlobalInline.instance.put("jumPBoardY", targetPhysicsComponent.rigidBody.getPosition().y);
-			
 			++num;
+			
+			MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_ADD_SCORE, (long)position.y/100);
 		}
 	}
 	
@@ -180,6 +182,8 @@ public class HeroScript extends EntityScript implements InputProcessor{
 				GameConfig.gameSpeed = 2f;
 				physicsComponent.rigidBody.setLinearVelocity(0, PhysicsManager.MAX_SPEED);
 				time -= deltaTime;
+				
+				MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_SET_POWER, superJumpNum * time/superJumpTime); // 更新UI
 			}
 			else{
 				GameConfig.gameSpeed = 1f;
@@ -187,12 +191,17 @@ public class HeroScript extends EntityScript implements InputProcessor{
 				time = superJumpTime;
 			}
 		}
+		else{
+			MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_SET_POWER, (float)num); // 更新UI
+		}
 		
 		// 更新摄像机y轴位置
 		Camera camera = GAME.gameViewport.getCamera();
 		float y = GameConfig.cameraOffset - (camera.position.y - entityPosition.y); 
 		if(y > 0) // 英雄最高位置与摄像机的距离小于cameraOffset
 			camera.position.y += y;
+		
+		
 		
 		if(!physicsComponent.rigidBody.getLinearVelocity().isZero())
 			Gdx.app.debug("速度", physicsComponent.rigidBody.getLinearVelocity().toString());

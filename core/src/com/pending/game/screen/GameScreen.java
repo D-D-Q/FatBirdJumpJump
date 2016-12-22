@@ -6,11 +6,15 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.pending.game.Assets;
 import com.pending.game.GAME;
 import com.pending.game.GameConfig;
+import com.pending.game.assets.GameScreenAssets;
 import com.pending.game.manager.AshleyManager;
 import com.pending.game.manager.InputManager;
 import com.pending.game.support.GlobalInline;
@@ -19,6 +23,7 @@ import com.pending.game.systems.Monstersystem;
 import com.pending.game.systems.PhysicsSystem;
 import com.pending.game.systems.RenderingSystem;
 import com.pending.game.tools.MapperTools;
+import com.pending.game.ui.GameScreenUI1;
 
 /**
  * 游戏主屏幕
@@ -43,10 +48,14 @@ public class GameScreen extends ScreenAdapter {
 		GAME.gameViewport.getCamera().position.set(GAME.position.x, GAME.position.y, 0);
 		
 		// 资源
-//		GAME.i18NBundle = Assets.instance.get(GameScreenAssets.i18NBundle , I18NBundle.class); // 获得国际化
-//		GAME.skin = Assets.instance.get(GameScreenAssets.default_skin, Skin.class); // 获得皮肤
-		UIstage = new Stage(GAME.UIViewport, GAME.batch); // 创建UI根节点，注意它会重置相机的位置到(设计分辨率宽/2, 设计分辨率高/2)
+		GAME.i18NBundle = Assets.instance.get(GameScreenAssets.i18NBundle , I18NBundle.class); // 获得国际化
+		GAME.skin = Assets.instance.get(GameScreenAssets.default_skin, Skin.class); // 获得皮肤
 		
+		// UI
+		UIstage = new Stage(GAME.UIViewport, GAME.batch); // 创建UI根节点，注意它会重置相机的位置到(设计分辨率宽/2, 设计分辨率高/2)
+		initUI();
+		InputManager.instance.addProcessor(UIstage); // UI事件
+				
 		// ECS系统
 		AshleyManager ashleyManager = new AshleyManager();
 		GlobalInline.instance.putAshleyManager(ashleyManager);
@@ -72,18 +81,22 @@ public class GameScreen extends ScreenAdapter {
 //			cur += MathUtils.random(10, 100);
 //		}
 		
-		// UI
-		initUI();
 		
-		InputManager.instance.addProcessor(UIstage); // UI事件
 	}
 	
 	/**
 	 * 创建UI
 	 */
-	
 	private void initUI(){
 		
+		Table defaultTable = new Table();
+		defaultTable.setFillParent(true);
+		defaultTable.defaults().size(GAME.UIViewport.getScreenWidth(), GAME.UIViewport.getScreenHeight()).center();
+		defaultTable.defaults().size(500, 500).center();
+		
+		defaultTable.add(new GameScreenUI1(GAME.skin, GAME.i18NBundle));
+		
+		UIstage.addActor(defaultTable);
 	}
 	
 	@Override
