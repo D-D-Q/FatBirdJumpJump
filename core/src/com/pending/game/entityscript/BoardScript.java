@@ -24,7 +24,7 @@ public class BoardScript extends EntityScript{
 		
 		if(boardMax !=null && physicsComponent.rigidBody.getPosition().y <= boardMax){
 			
-			if(physicsComponent.rigidBody.getPosition().y < GAME.gameViewport.getCamera().position.y - GameConfig.hieght/2){
+			if(physicsComponent.rigidBody.getPosition().y < GAME.gameViewport.getCamera().position.y - GameConfig.height/2){
 				GlobalInline.instance.getAshleyManager().engine.removeEntity(entity);
 			}
 			else{

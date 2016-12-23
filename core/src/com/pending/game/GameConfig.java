@@ -5,8 +5,8 @@ public class GameConfig {
 	/**
 	 * 游戏设计分辨率
 	 */
-	public final static int width = 540;
-	public final static int hieght = 960;
+	public final static float width = 540;
+	public final static float height = 960;
 	
 	public static float cameraOffset = 0;
 	

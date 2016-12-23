@@ -36,10 +36,10 @@ public class Monstersystem extends EntitySystem {
 			getEngine().addEntityListener(new MonstersystemEntityListener());
 		}
 				
-		if(positionY - heroY >= GameConfig.hieght)
+		if(positionY - heroY >= GameConfig.height)
 			return;
 		
-		float maxPositionY = heroY + GameConfig.hieght;
+		float maxPositionY = heroY + GameConfig.height;
 		
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 				

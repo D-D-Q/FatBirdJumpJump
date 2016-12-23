@@ -40,7 +40,7 @@ public class GameMain extends Game {
 		
 		Gdx.input.setInputProcessor(InputManager.instance.inputMultiplexer); // 监听输入事件
 		
-		GAME.UIViewport = new FillViewport(GameConfig.width, GameConfig.hieght);
+		GAME.UIViewport = new FillViewport(GameConfig.width, GameConfig.height);
 		
 		GlobalInline.instance.putGlobal("game", this);
 		

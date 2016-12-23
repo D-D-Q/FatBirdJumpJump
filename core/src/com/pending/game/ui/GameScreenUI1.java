@@ -56,11 +56,11 @@ public class GameScreenUI1 extends Table implements Telegraph {
 		
 		
 		// TODO 替换资源
-		Pixmap pixmap1 = new Pixmap(1, 80, Format.RGB888);
+		Pixmap pixmap1 = new Pixmap(1, 8, Format.RGB888);
 		pixmap1.setColor(Color.WHITE);
 		pixmap1.fill();
 		
-		Pixmap pixmap2 = new Pixmap(1, 80, Format.RGB888);
+		Pixmap pixmap2 = new Pixmap(1, 8, Format.RGB888);
 		pixmap2.setColor(Color.BLUE);
 		pixmap2.fill();
 		

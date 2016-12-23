@@ -12,16 +12,12 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.pending.game.EntityScript;
 import com.pending.game.GAME;
 import com.pending.game.GameConfig;
-import com.pending.game.GameMain;
 import com.pending.game.Setting;
-import com.pending.game.assets.GameScreenAssets;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.components.TransformComponent;
 import com.pending.game.manager.MsgManager;
 import com.pending.game.manager.PhysicsManager;
-import com.pending.game.screen.GameScreen;
 import com.pending.game.support.GlobalInline;
-import com.pending.game.support.SwitchScreen;
 import com.pending.game.tools.MapperTools;
 import com.pending.game.ui.GameScreenUI1;
 
@@ -34,6 +30,9 @@ import com.pending.game.ui.GameScreenUI1;
 public class HeroScript extends EntityScript implements InputProcessor{
 	
 	private boolean isStart = false;
+	
+	private boolean isContinue = false;
+	private float continueHeight = 0;
 	
 	/**
 	 * 跳跃高度
@@ -177,23 +176,23 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		physicsComponent.rigidBody.setTransform(newX, entityPosition.y, 0); 
 		offetX = 0;
 		
-		if(num > superJumpNum){
-			if(time >= deltaTime){
-				GameConfig.gameSpeed = 2f;
-				physicsComponent.rigidBody.setLinearVelocity(0, PhysicsManager.MAX_SPEED);
-				time -= deltaTime;
-				
-				MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_SET_POWER, superJumpNum * time/superJumpTime); // 更新UI
-			}
-			else{
-				GameConfig.gameSpeed = 1f;
-				num = 0;
-				time = superJumpTime;
-			}
-		}
-		else{
-			MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_SET_POWER, (float)num); // 更新UI
-		}
+//		if(num > superJumpNum){
+//			if(time >= deltaTime){
+//				GameConfig.gameSpeed = 2f;
+//				physicsComponent.rigidBody.setLinearVelocity(0, PhysicsManager.MAX_SPEED);
+//				time -= deltaTime;
+//				
+//				MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_SET_POWER, superJumpNum * time/superJumpTime); // 更新UI
+//			}
+//			else{
+//				GameConfig.gameSpeed = 1f;
+//				num = 0;
+//				time = superJumpTime;
+//			}
+//		}
+//		else{
+//			MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_SET_POWER, (float)num); // 更新UI
+//		}
 		
 		// 更新摄像机y轴位置
 		Camera camera = GAME.gameViewport.getCamera();
@@ -201,15 +200,35 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		if(y > 0) // 英雄最高位置与摄像机的距离小于cameraOffset
 			camera.position.y += y;
 		
-		
-		
 		if(!physicsComponent.rigidBody.getLinearVelocity().isZero())
 			Gdx.app.debug("速度", physicsComponent.rigidBody.getLinearVelocity().toString());
 		
 		// 游戏结束
-		if(entityPosition.y < camera.position.y - GameConfig.hieght/2){
-			GameMain game = GlobalInline.instance.getGlobal("game");
-			game.switchScreen = new SwitchScreen(game, GameScreen.class, GameScreenAssets.class);
+		if(entityPosition.y < camera.position.y - GameConfig.height/2 - transformComponent.height){
+			
+			physicsComponent.rigidBody.setGravityScale(0);
+			continueHeight = camera.position.y;
+			
+			// 继续游戏
+//			physicsComponent.rigidBody.setLinearVelocity(0, 60);
+			isContinue = true;
+			
+			// 重新开始
+//			GameMain game = GlobalInline.instance.getGlobal("game");
+//			game.switchScreen = new SwitchScreen(game, GameScreen.class, GameScreenAssets.class);
 		}
+		
+		if(isContinue){
+			
+			if(entityPosition.y >= continueHeight){
+				
+				physicsComponent.rigidBody.setGravityScale(1);
+				isContinue = false;
+			}
+			else{
+				physicsComponent.rigidBody.setLinearVelocity(0, PhysicsManager.MAX_SPEED);
+			}
+		}
+		
 	}
 }

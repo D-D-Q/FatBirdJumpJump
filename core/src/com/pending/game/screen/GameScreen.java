@@ -44,7 +44,7 @@ public class GameScreen extends ScreenAdapter {
 		// TODO 可以添加语言切换功能
 		
 		// 游戏视口，分辨率匹配
-		GAME.gameViewport = new ScalingViewport(Scaling.fillX, GameConfig.width, GameConfig.hieght); // 默认扩大显示
+		GAME.gameViewport = new ScalingViewport(Scaling.fillX, GameConfig.width, GameConfig.height); // 默认扩大显示
 		GAME.gameViewport.getCamera().position.set(GAME.position.x, GAME.position.y, 0);
 		
 		// 资源
@@ -80,8 +80,6 @@ public class GameScreen extends ScreenAdapter {
 //			
 //			cur += MathUtils.random(10, 100);
 //		}
-		
-		
 	}
 	
 	/**
@@ -91,8 +89,15 @@ public class GameScreen extends ScreenAdapter {
 		
 		Table defaultTable = new Table();
 		defaultTable.setFillParent(true);
-		defaultTable.defaults().size(GAME.UIViewport.getScreenWidth(), GAME.UIViewport.getScreenHeight()).center();
-		defaultTable.defaults().size(500, 500).center();
+		
+		// ScreenX和ScreenY谁是0，谁就是可以全部显示的
+		float scale = GAME.UIViewport.getScreenX() == 0 ? GAME.UIViewport.getScreenWidth()/GameConfig.width : GAME.UIViewport.getScreenHeight()/GameConfig.height; //
+		
+		// 实际屏幕上能显示出来的宽高
+		float displayWidth = (GAME.UIViewport.getScreenWidth() - Math.abs(GAME.UIViewport.getScreenX()) * 2) / scale;
+		float displayHeight = (GAME.UIViewport.getScreenHeight() - Math.abs(GAME.UIViewport.getScreenY()) * 2) / scale;
+		
+		defaultTable.defaults().size(displayWidth, displayHeight).center();
 		
 		defaultTable.add(new GameScreenUI1(GAME.skin, GAME.i18NBundle));
 		
@@ -122,7 +127,7 @@ public class GameScreen extends ScreenAdapter {
 		GAME.gameViewport.update(width, height, false); // 设置屏幕宽高。必须！
 		
 		Vector3 offset = GAME.gameViewport.getCamera().unproject(new Vector3(0, Gdx.graphics.getHeight() * 0.618f, 0)); // 0.618是黄金分割点
-		GameConfig.cameraOffset = GameConfig.hieght/2 - offset.y; // 相机和英雄的距离
+		GameConfig.cameraOffset = GameConfig.height/2 - offset.y; // 相机和英雄的距离
 		
 		Entity hero = GlobalInline.instance.get("hero");
 		Vector2 position = MapperTools.physicsCM.get(hero).rigidBody.getPosition();

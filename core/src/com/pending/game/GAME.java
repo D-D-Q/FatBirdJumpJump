@@ -39,5 +39,5 @@ public class GAME {
 	 */
 	public static Skin skin;
 
-	public final static Vector2 position = new Vector2(GameConfig.width/2, GameConfig.hieght/2);
+	public final static Vector2 position = new Vector2(GameConfig.width/2, GameConfig.height/2);
 }
