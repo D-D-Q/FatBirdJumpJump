@@ -3,7 +3,6 @@ package com.pending.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.pending.game.GameConfig;
 
 /**
  * 变换组件
@@ -14,11 +13,6 @@ import com.pending.game.GameConfig;
  */
 public class TransformComponent implements Component, Poolable  {
 
-	/**
-	 * 在tiled地图上的位置 
-	 */
-	private final Vector2 mapPosition = new Vector2();
-	
 	/**
 	 * 绘制位置信息
 	 * x轴和y轴 屏幕左下为原点
@@ -73,23 +67,6 @@ public class TransformComponent implements Component, Poolable  {
 	public boolean isHidden = false;
 	
 //-------------------------------------------------------------暂时没用end
-	
-	/**
-	 * 设置角色在地图的位置，按tiled块算
-	 * 
-	 * @param x
-	 * @param y
-	 * @return
-	 */
-	public void setMapPosition(int x, int y) {
-		mapPosition.set(x, y);
-		position.set(x * GameConfig.characterTileSize + GameConfig.characterTileSize/2, 
-				y * GameConfig.characterTileSize + GameConfig.characterTileSize/2);
-	}
-	
-	public Vector2 getMapPosition() {
-		return mapPosition;
-	}
 	
 	/**
 	 * 获得绘制位置X

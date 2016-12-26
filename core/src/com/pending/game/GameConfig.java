@@ -8,23 +8,10 @@ public class GameConfig {
 	public final static float width = 540;
 	public final static float height = 960;
 	
+	/**
+	 * 相机和角色的高度距离
+	 */
 	public static float cameraOffset = 0;
-	
-	/**
-	 * UI边距，不同手机屏幕比例不同，没有边距会显示不全
-	 */
-	public final static byte UIpad = 35;
-	
-	/**
-	 * 地图图块大小
-	 */
-	public final static byte tileSize = 32; 
-	
-	/**
-	 * 角色占用大小，4个图块
-	 */
-	public final static byte characterTileSize = 64; 
-	
 	
 	/**
 	 * 游戏速度

@@ -42,7 +42,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	/**
 	 * 跳跃上升时间 0.34
 	 */
-	private float jumpTime = 0.5f;
+	private float jumpTime = 0.34f;
 	
 	/**
 	 * 起跳速度 = 2 * height / time
@@ -91,7 +91,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 			GlobalInline.instance.put("jumPBoardY", targetPhysicsComponent.rigidBody.getPosition().y);
 			++num;
 			
-			MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_ADD_SCORE, (long)position.y/100);
+			MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_ADD_SCORE, (long)position.y/100); // 高度
 		}
 	}
 	

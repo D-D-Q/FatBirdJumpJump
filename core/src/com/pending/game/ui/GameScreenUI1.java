@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.I18NBundle;
-import com.pending.game.GAME;
 import com.pending.game.GameConfig;
 import com.pending.game.entityscript.HeroScript;
 import com.pending.game.manager.MsgManager;
@@ -102,5 +101,14 @@ public class GameScreenUI1 extends Table implements Telegraph {
 		}
 		
 		return false;
+	}
+	
+	@Override
+	public Table center() {
+		
+		MsgManager.instance.removeListener(this, MSG_ADD_SCORE);
+		MsgManager.instance.removeListener(this, MSG_SET_POWER);
+		
+		return super.center();
 	}
 }

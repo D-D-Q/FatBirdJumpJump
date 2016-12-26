@@ -14,6 +14,15 @@ import com.pending.game.tools.MapperTools;
  * 
  * @author D
  * @date 2016年11月29日 下午8:52:18
+ * 
+ * 平台高度
+ * 平台间隔
+ * 跳跃时间  
+ * 	0.2秒的话 最高是60 起跳速度是极限600 
+ *  0.3秒的话 最高时90 起跳速度是极限600 最慢0.5秒
+ *  
+ * 1000高度 算一关, 提升一个难度, 总100关
+ * 
  */
 public class Monstersystem extends EntitySystem {
 	
@@ -45,10 +54,10 @@ public class Monstersystem extends EntitySystem {
 				
 		while(positionY < maxPositionY){
 			
-			Entity entity = ashleyManager.entityDao.createEntity2(MathUtils.random(100, GameConfig.width - 100), positionY, 100, 10);
+			Entity entity = ashleyManager.entityDao.createEntity2(MathUtils.random(100, GameConfig.width - 100), positionY, MathUtils.random(30, 30), 10);
 			ashleyManager.engine.addEntity(entity);
 			
-			positionY += MathUtils.random(10, 100);
+			positionY += MathUtils.random(90, 90);
 		}
 	}
 	
