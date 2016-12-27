@@ -70,7 +70,7 @@ public class EntityDao {
 	/**
 	 * 创建角色实体
 	 * 
-	 * @param template
+	 * @param
 	 * @return
 	 */
 	public Entity createEntity2(float positionX, float positionY, float width, float height){

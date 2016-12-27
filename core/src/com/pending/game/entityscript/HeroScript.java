@@ -37,12 +37,12 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	/**
 	 * 跳跃高度
 	 */
-	private float jumpHeight = 100;
+	private float jumpHeight = 90;
 	
 	/**
 	 * 跳跃上升时间 0.34
 	 */
-	private float jumpTime = 0.34f;
+	private float jumpTime = 0.3f;
 	
 	/**
 	 * 起跳速度 = 2 * height / time

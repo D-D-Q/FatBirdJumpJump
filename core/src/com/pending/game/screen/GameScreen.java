@@ -66,7 +66,7 @@ public class GameScreen extends ScreenAdapter {
 		ashleyManager.engine.addSystem(new RenderingSystem(30));
 		
 		// 英雄
-		Entity hero = ashleyManager.entityDao.createEntity(GAME.position.x, GAME.position.y, 10, 20);
+		Entity hero = ashleyManager.entityDao.createEntity(GAME.position.x, GAME.position.y, 20, 30);
 		ashleyManager.engine.addEntity(hero);
 		MapperTools.physicsCM.get(hero).rigidBody.setBullet(true);
 		GlobalInline.instance.put("hero", hero);
