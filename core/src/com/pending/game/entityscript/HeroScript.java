@@ -18,6 +18,7 @@ import com.pending.game.components.TransformComponent;
 import com.pending.game.manager.MsgManager;
 import com.pending.game.manager.PhysicsManager;
 import com.pending.game.support.GlobalInline;
+import com.pending.game.systems.Monstersystem;
 import com.pending.game.tools.MapperTools;
 import com.pending.game.ui.GameScreenUI1;
 
@@ -91,7 +92,11 @@ public class HeroScript extends EntityScript implements InputProcessor{
 			GlobalInline.instance.put("jumPBoardY", targetPhysicsComponent.rigidBody.getPosition().y);
 			++num;
 			
-			MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_ADD_SCORE, (long)position.y/100); // 高度
+			long score = (long)position.y/100;
+			MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_ADD_SCORE, score); // 高度
+			MsgManager.instance.dispatchMessage(Monstersystem.MSG_LEVEL_UP, score); // 关卡
+			
+			jumpTime = 0.5f - (0.5f-0.3f)/Monstersystem.maxLevel * Monstersystem.getLevel();
 		}
 	}
 	

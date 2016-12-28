@@ -86,7 +86,8 @@ public class GameScreenUI1 extends Table implements Telegraph {
 		switch (msg.message) {
 		
 		case MSG_ADD_SCORE:{
-			score += (long)msg.extraInfo;
+//			score += (long)msg.extraInfo;
+			score = (long)msg.extraInfo;
 			scoreLabel.setText(String.valueOf(score));
 		}
 		break;
