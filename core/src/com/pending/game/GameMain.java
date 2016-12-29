@@ -1,6 +1,5 @@
 package com.pending.game;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -29,7 +28,7 @@ public class GameMain extends Game {
 	@Override
 	public void create () {
 		
-		Gdx.app.setLogLevel(Application.LOG_INFO); // 日志级别
+		Gdx.app.setLogLevel(GameConfig.logLevel); // 日志级别
 		
 		if(GameConfig.fpsDebug)
 			fpsLog = new FPSLogger();

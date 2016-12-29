@@ -4,8 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ai.msg.Telegram;
-import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
@@ -13,7 +11,6 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.pending.game.GameConfig;
 import com.pending.game.manager.AshleyManager;
-import com.pending.game.manager.MsgManager;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.tools.MapperTools;
 
@@ -39,9 +36,7 @@ import com.pending.game.tools.MapperTools;
  * @date 2016年11月29日 下午8:52:18
  * 
  */
-public class Monstersystem extends EntitySystem implements Telegraph {
-	
-	public final static int MSG_LEVEL_UP = 20001;
+public class Monstersystem extends EntitySystem{
 	
 	/**
 	 * 最高关, 从0开始
@@ -54,27 +49,31 @@ public class Monstersystem extends EntitySystem implements Telegraph {
 	private final static int levelRange = 5;
 	
 	private final static float[] boardWidth = {100, 85, 70, 55, 40}; // 跳台宽度
-	private final static float[] boardWidthOffset = {54, 108, 162, 216f, 270}; // 跳台宽间隔
-	private final static float[] boardHeightOffset = {40, 51, 62, 73, 84}; // 跳台高间隔
+//	private final static float[] boardWidthOffset = {54, 108, 162, 216f, 270}; // 跳台宽间隔
+	
+	private final static float minBoardHeightOffset = 40; // 跳台高间隔最小值
+	private final static float maxBoardHeightOffset = 84; // 跳台高间隔最大值
+	
+	private static float[] boardHeightOffset; // 难度阶数数组
+	static{
+		boardHeightOffset = new float[levelRange];
+		float step = (maxBoardHeightOffset-minBoardHeightOffset) / (levelRange-1);
+		for(int i=0; i<levelRange; ++i){
+			boardHeightOffset[i] = minBoardHeightOffset + step * i;
+		}
+	}
 	
 	/**
-	 * 每关的分数
+	 * 当前关卡, 从0开始，显示的时候+1
 	 */
-	private final static int levelUpScore = 30;
+	private int level = 1;
 	
-	/**
-	 * 关卡, 从0开始，先是的时候+1
-	 */
-	private static int level = 0;
-	
-	private Pool<Board> boardPool = Pools.get(Board.class, 40);
+	private Pool<Board> boardPool = Pools.get(Board.class, 100);
 	
 	private final Vector2 curPosition = new Vector2();
 
 	public Monstersystem (int priority) {
 		super(priority);
-		
-		MsgManager.instance.addListener(this, MSG_LEVEL_UP);
 	}
 
 	@Override
@@ -113,6 +112,7 @@ public class Monstersystem extends EntitySystem implements Telegraph {
 			ashleyManager.engine.addEntity(entity);
 			
 			curPosition.set(board.x, board.y);
+			boardPool.free(board);
 		}
 	}
 	
@@ -168,31 +168,27 @@ public class Monstersystem extends EntitySystem implements Telegraph {
 		index = MathUtils.clamp(index, 0, levelRange - 1);
 		board.y = curPosition.y + MathUtils.random((index == 0 ? Board.height : boardHeightOffset[index-1]), boardHeightOffset[index]);
 		
+		Gdx.app.log(this.toString(), "boardPool free:" + boardPool.getFree());
+		
 		return board;
 	}
 	
-	@Override
-	public boolean handleMessage(Telegram msg) {
+	/**
+	 * 关卡提升
+	 */
+	public void levelUp(){
 		
-		switch (msg.message) {
-		case MSG_LEVEL_UP:{
-			
-			// 关卡提升
-			if(level < maxLevel && (long)msg.extraInfo > levelUpScore * (level+1)){
-				 ++level;
-				 Gdx.app.log(this.toString(), "level up:" + level);
-			}
+		if(level < maxLevel){
+			 ++level;
+			 Gdx.app.log(this.toString(), "level up:" + level);
 		}
-		break;
-
-		default:
-			break;
-		}
-		
-		return true;
 	}
 	
-	public static int getLevel(){
+	public void setlevel(int level){
+		if(level >= 0 && level <= maxLevel) this.level = level;
+	}
+	
+	public int getLevel(){
 		return level;
 	}
 	

@@ -1,5 +1,7 @@
 package com.pending.game;
 
+import com.badlogic.gdx.Application;
+
 public class GameConfig {
 
 	/**
@@ -17,6 +19,11 @@ public class GameConfig {
 	 * 游戏速度
 	 */
 	public static float gameSpeed = 1;
+	
+	/**
+	 * 日志级别
+	 */
+	public static int logLevel = Application.LOG_INFO;
 	
 	/**
 	 * UI的debug模式

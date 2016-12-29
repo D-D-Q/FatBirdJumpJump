@@ -38,17 +38,27 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	/**
 	 * 跳跃高度
 	 */
-	private float jumpHeight = 90;
+	private final float jumpHeight = 100;
 	
 	/**
-	 * 跳跃上升时间 0.34
+	 * 最长跳跃上升时间
 	 */
-	private float jumpTime = 0.3f;
+	private final float maxJumpTime = 0.5f;
+	
+	/**
+	 * 最短跳跃上升时间
+	 */
+	private final float minJumpTime = 0.34f;
+	
+	/**
+	 * 当前跳跃上升时间
+	 */
+	private float jumpTime;
 	
 	/**
 	 * 起跳速度 = 2 * height / time
 	 */
-	private float speed = 0;
+	private float speed;
 	
 	/**
 	 * 手指位置
@@ -60,12 +70,28 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	 */
 	private float offetX = 0;;
 	
+	/**
+	 * 分数
+	 */
+	private long score;
 	
+	/**
+	 * 提升关卡需要增长的分数
+	 */
+	private final static int levelUpScore = 30;
+	
+	// 超级跳，暂时不用了
 	private final float superJumpTime = 2.5f;
 	public final static int superJumpNum = 30;
 	
 	private int num = 0;
 	private float time = superJumpTime;
+	
+	public HeroScript() {
+		
+		Monstersystem monstersystem = GlobalInline.instance.getAshleyManager().engine.getSystem(Monstersystem.class);
+		jumpTime = maxJumpTime - (maxJumpTime-minJumpTime)/Monstersystem.maxLevel * monstersystem.getLevel();
+	}
 	
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold, Entity target) {
@@ -92,11 +118,21 @@ public class HeroScript extends EntityScript implements InputProcessor{
 			GlobalInline.instance.put("jumPBoardY", targetPhysicsComponent.rigidBody.getPosition().y);
 			++num;
 			
-			long score = (long)position.y/100;
-			MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_ADD_SCORE, score); // 高度
-			MsgManager.instance.dispatchMessage(Monstersystem.MSG_LEVEL_UP, score); // 关卡
+			score = (long)position.y/100;
 			
-			jumpTime = 0.5f - (0.5f-0.3f)/Monstersystem.maxLevel * Monstersystem.getLevel();
+			Monstersystem monstersystem = GlobalInline.instance.getAshleyManager().engine.getSystem(Monstersystem.class);
+			
+			// 关卡
+			if(score > levelUpScore * (monstersystem.getLevel() + 1)){
+				
+				monstersystem.levelUp();
+				
+				jumpTime = maxJumpTime - (maxJumpTime-minJumpTime)/Monstersystem.maxLevel * monstersystem.getLevel();
+				speed = 2 * jumpHeight / jumpTime;
+				physicsComponent.rigidBody.getWorld().setGravity(new Vector2(0, -speed/jumpTime));
+			}
+			
+			MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_ADD_SCORE, score); // 高度
 		}
 	}
 	
