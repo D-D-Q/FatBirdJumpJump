@@ -104,18 +104,17 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		}
 		
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
-		Vector2 position = physicsComponent.rigidBody.getPosition();
+		Vector2 position = transformComponent.position;
 		
-		PhysicsComponent targetPhysicsComponent = MapperTools.physicsCM.get(target);
 		TransformComponent targetTransformComponent = MapperTools.transformCM.get(target);
-		Vector2 targetPosition = targetPhysicsComponent.rigidBody.getPosition();
+		Vector2 targetPosition = targetTransformComponent.position;
 		
 		if(position.y - transformComponent.height/2 < targetPosition.y + targetTransformComponent.height/2){ // 精灵底部 < 台阶顶部
 			contact.setEnabled(false); // 禁用当前碰撞
 		}
 		else if(isStart){
 			physicsComponent.rigidBody.setLinearVelocity(0, speed);
-			GlobalInline.instance.put("jumPBoardY", targetPhysicsComponent.rigidBody.getPosition().y);
+			GlobalInline.instance.put("jumPBoardY", targetPosition.y);
 			++num;
 			
 			score = (long)position.y/100;
@@ -212,10 +211,11 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
 		
 		// 根据滑动更新x轴位置
-		Vector2 entityPosition = physicsComponent.rigidBody.getPosition();
+		Vector2 entityPosition = transformComponent.position;
 		float newX = MathUtils.clamp(entityPosition.x + offetX,0 + transformComponent.width / 2, GameConfig.width - transformComponent.width / 2);
-		physicsComponent.rigidBody.setTransform(newX, entityPosition.y, 0); 
 		offetX = 0;
+		Vector2 rigidBodyPosition = physicsComponent.rigidBody.getPosition();
+		physicsComponent.rigidBody.setTransform(PhysicsManager.pixelToMeter(newX), rigidBodyPosition.y, 0); 
 		
 //		if(num > superJumpNum){
 //			if(time >= deltaTime){

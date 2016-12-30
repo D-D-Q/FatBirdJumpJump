@@ -10,6 +10,7 @@ import com.pending.game.components.TransformComponent;
 import com.pending.game.entityscript.BoardScript;
 import com.pending.game.entityscript.HeroScript;
 import com.pending.game.manager.AshleyManager;
+import com.pending.game.manager.PhysicsManager;
 import com.pending.game.support.GlobalInline;
 
 /**
@@ -51,7 +52,7 @@ public class EntityDao {
 //		circle.setRadius(10);
 //		physicsComponent.shape = circle;
 		PolygonShape polygon = new PolygonShape();
-		polygon.setAsBox(width/2, height/2);
+		polygon.setAsBox(PhysicsManager.pixelToMeter(width/2), PhysicsManager.pixelToMeter(height/2));
 		physicsComponent.shape = polygon;
 		
 		physicsComponent.bodyType = BodyType.DynamicBody;
@@ -90,7 +91,7 @@ public class EntityDao {
 		
 		PhysicsComponent physicsComponent = ashleyManager.engine.createComponent(PhysicsComponent.class);
 		PolygonShape polygon = new PolygonShape();
-		polygon.setAsBox(width/2, height/2);
+		polygon.setAsBox(PhysicsManager.pixelToMeter(width/2), PhysicsManager.pixelToMeter(height/2));
 		physicsComponent.shape = polygon;
 //		physicsComponent.bodyType = BodyType.StaticBody;
 		physicsComponent.bodyType = BodyType.DynamicBody;

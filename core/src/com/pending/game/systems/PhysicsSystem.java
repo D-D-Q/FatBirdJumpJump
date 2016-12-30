@@ -112,8 +112,8 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 		if(physicsComponent != null){
 			
 			Vector2 position = physicsComponent.rigidBody.getPosition();
-			transformComponent.position.x = position.x;
-			transformComponent.position.y = position.y;
+			transformComponent.position.x = PhysicsManager.meterToPixel(position.x);
+			transformComponent.position.y = PhysicsManager.meterToPixel(position.y);
 		}
 	}
 	

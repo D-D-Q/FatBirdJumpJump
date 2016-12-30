@@ -30,8 +30,6 @@ import com.pending.game.tools.MapperTools;
  * 		0.2秒的话 最高是60 起跳速度是极限600 
  *  	0.3秒的话 最高时90 起跳速度是极限600 最慢0.5秒 *
  *  
- * 
- * 
  * @author D
  * @date 2016年11月29日 下午8:52:18
  * 
@@ -48,11 +46,12 @@ public class Monstersystem extends EntitySystem{
 	 */
 	private final static int levelRange = 5;
 	
-	private final static float[] boardWidth = {100, 85, 70, 55, 40}; // 跳台宽度
+//	private final static float[] boardWidth = {100, 85, 70, 55, 40}; // 跳台宽度
+	private final static float[] boardWidth = {200, 170, 140, 110, 80}; // 跳台宽度
 //	private final static float[] boardWidthOffset = {54, 108, 162, 216f, 270}; // 跳台宽间隔
 	
-	private final static float minBoardHeightOffset = 40; // 跳台高间隔最小值
-	private final static float maxBoardHeightOffset = 84; // 跳台高间隔最大值
+	private final static float minBoardHeightOffset = 80; // 跳台高间隔最小值
+	private final static float maxBoardHeightOffset = 168; // 跳台高间隔最大值
 	
 	private static float[] boardHeightOffset; // 难度阶数数组
 	static{
@@ -68,8 +67,14 @@ public class Monstersystem extends EntitySystem{
 	 */
 	private int level = 1;
 	
-	private Pool<Board> boardPool = Pools.get(Board.class, 100);
+	/**
+	 * 不必总new新的Board
+	 */
+	private Pool<Board> boardPool = Pools.get(Board.class, 1);
 	
+	/**
+	 * 最后更新跳台的位置
+	 */
 	private final Vector2 curPosition = new Vector2();
 
 	public Monstersystem (int priority) {
@@ -80,18 +85,15 @@ public class Monstersystem extends EntitySystem{
 	public void update (float deltaTime) {
 		
 		Entity hero = GlobalInline.instance.get("hero");
-		Vector2 heroPosition = MapperTools.physicsCM.get(hero).rigidBody.getPosition();
+		Vector2 heroPosition = MapperTools.transformCM.get(hero).position;
 		
 		// 第一次执行
-//		if(positionY == 0){
 		if(curPosition.y == 0){
-//			positionY = heroY + 20;
 			curPosition.x = heroPosition.x;
 			curPosition.y = heroPosition.y + 20;
 			getEngine().addEntityListener(new MonstersystemEntityListener());
 		}
 				
-//		if(positionY - heroY >= GameConfig.height)
 		if(curPosition.y - heroPosition.y >= GameConfig.height)
 			return;
 		
@@ -99,13 +101,7 @@ public class Monstersystem extends EntitySystem{
 		
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 				
-//		while(positionY < maxPositionY){
 		while(curPosition.y < maxPositionY){
-			
-//			Entity entity = ashleyManager.entityDao.createEntity2(MathUtils.random(100, GameConfig.width - 100), positionY, MathUtils.random(40, 40), 10);
-//			ashleyManager.engine.addEntity(entity);
-//			
-//			positionY += MathUtils.random(90, 90);
 			
 			Board board = randomBoard(curPosition);
 			Entity entity = ashleyManager.entityDao.createEntity2(board.x, board.y, board.width, Board.height);
@@ -167,8 +163,6 @@ public class Monstersystem extends EntitySystem{
 		index = (int)(MathUtils.random(factorRange - range*3, factorRange) / range);
 		index = MathUtils.clamp(index, 0, levelRange - 1);
 		board.y = curPosition.y + MathUtils.random((index == 0 ? Board.height : boardHeightOffset[index-1]), boardHeightOffset[index]);
-		
-		Gdx.app.log(this.toString(), "boardPool free:" + boardPool.getFree());
 		
 		return board;
 	}

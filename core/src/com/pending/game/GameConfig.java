@@ -7,8 +7,8 @@ public class GameConfig {
 	/**
 	 * 游戏设计分辨率
 	 */
-	public final static float width = 540;
-	public final static float height = 960;
+	public final static float width = 1080;
+	public final static float height = 1920;
 	
 	/**
 	 * 相机和角色的高度距离

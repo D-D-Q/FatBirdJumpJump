@@ -66,7 +66,8 @@ public class GameScreen extends ScreenAdapter {
 		ashleyManager.engine.addSystem(new RenderingSystem(30));
 		
 		// 英雄
-		Entity hero = ashleyManager.entityDao.createEntity(GAME.position.x, GAME.position.y, 20, 30);
+//		Entity hero = ashleyManager.entityDao.createEntity(GAME.position.x, GAME.position.y, 20, 30);
+		Entity hero = ashleyManager.entityDao.createEntity(GAME.position.x, GAME.position.y, 40, 60);
 		ashleyManager.engine.addEntity(hero);
 		MapperTools.physicsCM.get(hero).rigidBody.setBullet(true);
 		GlobalInline.instance.put("hero", hero);
@@ -130,7 +131,8 @@ public class GameScreen extends ScreenAdapter {
 		GameConfig.cameraOffset = GameConfig.height/2 - offset.y; // 相机和英雄的距离
 		
 		Entity hero = GlobalInline.instance.get("hero");
-		Vector2 position = MapperTools.physicsCM.get(hero).rigidBody.getPosition();
+		Vector2 position = MapperTools.transformCM.get(hero).position;
+//		Vector2 position = MapperTools.physicsCM.get(hero).rigidBody.getPosition();
 		
 		GAME.gameViewport.getCamera().position.set(position.x, position.y + GameConfig.cameraOffset, 0);  // 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间
 	}

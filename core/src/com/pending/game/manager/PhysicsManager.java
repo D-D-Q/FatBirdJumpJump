@@ -3,7 +3,9 @@ package com.pending.game.manager;
 import java.util.Iterator;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -14,6 +16,8 @@ import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pending.game.GameConfig;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.components.TransformComponent;
@@ -40,6 +44,11 @@ public class PhysicsManager {
 	 */
 	public static final int VELOCITY_ITERATIONS = 6;
 	public static final int POSITION_ITERATIONS = 2;
+	
+	/**
+	 * 单位比。表示物理世界1米等于多少像素
+	 */
+	public static final float UNIT_SCALE = 2;
 
 	/**
 	 * 物理引擎支持的最大速度
@@ -57,20 +66,27 @@ public class PhysicsManager {
 	 * 物理引擎debug绘制对象
 	 */
 	private Box2DDebugRenderer debugRenderer;
+	
+	private OrthographicCamera debugCamera;
 
 	public PhysicsManager() {
 		world = new World(new Vector2(0, 0), true);  // 参数：无重力, 休眠;
 		disableBody = new Array<>(false, 10);
-		if(GameConfig.physicsdebug)
+		if(GameConfig.physicsdebug){
 			debugRenderer = new Box2DDebugRenderer();
+			debugCamera = new OrthographicCamera(GameConfig.width/UNIT_SCALE, GameConfig.height/UNIT_SCALE);
+		}
 	}
 	
 	/**
 	 * 物理引擎debug绘制
 	 */
 	public void debugRender(Camera camera){
+		
 		if(GameConfig.physicsdebug){
-	    	debugRenderer.render(world, camera.combined);
+			debugCamera.position.set(pixelToMeter(camera.position.x), pixelToMeter(camera.position.y), 0);
+			debugCamera.update();
+	    	debugRenderer.render(world, debugCamera.combined);
 	    }
 	}
 	
@@ -87,7 +103,7 @@ public class PhysicsManager {
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
 		
 		Body body = create(physicsComponent.bodyType, physicsComponent.shape,
-				new Vector2(transformComponent.position.x, transformComponent.position.y));
+				new Vector2(pixelToMeter(transformComponent.position.x), pixelToMeter(transformComponent.position.y)));
 		body.setUserData(entity); // 刚体携带实体
 		
 		physicsComponent.rigidBody = body;
@@ -108,7 +124,7 @@ public class PhysicsManager {
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
 		
 		Body body = createSensor(physicsComponent.bodyType, physicsComponent.shape,
-				new Vector2(transformComponent.position.x, transformComponent.position.y));
+				new Vector2(pixelToMeter(transformComponent.position.x), pixelToMeter(transformComponent.position.y)));
 		body.setUserData(entity); // 刚体携带实体
 		
 		physicsComponent.rigidBody = body;
@@ -241,6 +257,27 @@ public class PhysicsManager {
 			iterator.remove();
 		}
 	}
+	
+	/**
+	 * 米转像素
+	 * 
+	 * @param meter
+	 * @return
+	 */
+	public static float meterToPixel(float meter){
+		return meter*UNIT_SCALE;
+	}
+	
+	/**
+	 * 像素转米
+	 * 
+	 * @param pixel
+	 * @return
+	 */
+	public static float pixelToMeter(float pixel){
+		return pixel/UNIT_SCALE;
+	}
+	
 	
 	/**
 	 * 销毁

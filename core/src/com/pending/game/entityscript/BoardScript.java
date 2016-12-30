@@ -1,9 +1,11 @@
 package com.pending.game.entityscript;
 
+import com.badlogic.gdx.math.Vector2;
 import com.pending.game.EntityScript;
 import com.pending.game.GAME;
 import com.pending.game.GameConfig;
 import com.pending.game.components.PhysicsComponent;
+import com.pending.game.components.TransformComponent;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.tools.MapperTools;
 
@@ -18,16 +20,18 @@ public class BoardScript extends EntityScript{
 	@Override
 	public void update(float deltaTime) {
 		
-		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
+		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
+		Vector2 position = transformComponent.position;
 		
 		Float boardMax = GlobalInline.instance.get("jumPBoardY");
 		
-		if(boardMax !=null && physicsComponent.rigidBody.getPosition().y <= boardMax){
+		if(boardMax !=null && position.y <= boardMax){
 			
-			if(physicsComponent.rigidBody.getPosition().y < GAME.gameViewport.getCamera().position.y - GameConfig.height/2){
+			if(position.y < GAME.gameViewport.getCamera().position.y - GameConfig.height/2){
 				GlobalInline.instance.getAshleyManager().engine.removeEntity(entity);
 			}
 			else{
+				PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 //				physicsComponent.rigidBody.setLinearVelocity(0, -PhysicsManager.MAX_SPEED);
 				physicsComponent.rigidBody.setAwake(true);
 				physicsComponent.rigidBody.setGravityScale(1);
