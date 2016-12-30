@@ -1,6 +1,7 @@
 package com.pending.game.entityscript;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
@@ -36,7 +37,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	private float continueHeight = 0;
 	
 	/**
-	 * 跳跃高度
+	 * 跳跃高度(米)
 	 */
 	private final float jumpHeight = 100;
 	
@@ -79,6 +80,11 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	 * 提升关卡需要增长的分数
 	 */
 	private final static int levelUpScore = 30;
+	
+	/**
+	 * 是否暂停
+	 */
+	private boolean isPause = false;
 	
 	// 超级跳，暂时不用了
 	private final float superJumpTime = 2.5f;
@@ -147,7 +153,19 @@ public class HeroScript extends EntityScript implements InputProcessor{
 
 	@Override
 	public boolean keyTyped(char character) {
-		return false;
+		
+		Game game = GlobalInline.instance.getGlobal("game");
+		
+		if(isPause){
+			isPause = false;
+			game.resume();
+		}
+		else{
+			isPause = true;
+			game.pause();
+		}
+		
+		return true;
 	}
 
 	@Override

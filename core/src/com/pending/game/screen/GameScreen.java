@@ -1,6 +1,7 @@
 package com.pending.game.screen;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
@@ -139,7 +140,13 @@ public class GameScreen extends ScreenAdapter {
 	
 	@Override
 	public void pause() {
-		super.pause();
+		
+		// 暂停
+		for(EntitySystem system : GlobalInline.instance.getAshleyManager().engine.getSystems()){
+			if(system instanceof RenderingSystem)
+				continue;
+			system.setProcessing(false);
+		}
 	}
 	
 	/**
@@ -149,7 +156,13 @@ public class GameScreen extends ScreenAdapter {
 	public void resume() {
 		
 		if(Assets.instance.update()){
-			// TODO 恢复完成
+			
+			// 恢复
+			for(EntitySystem system : GlobalInline.instance.getAshleyManager().engine.getSystems()){
+				if(system instanceof RenderingSystem)
+					continue;
+				system.setProcessing(true);
+			}
 		}
 		
 		// loadding

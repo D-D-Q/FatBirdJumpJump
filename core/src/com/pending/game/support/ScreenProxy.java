@@ -86,7 +86,7 @@ public class ScreenProxy{
 		/**
 		 * 真实对象
 		 */
-		private Object screen;
+		private Screen screen;
 		
 		public ScreenHandler() {
 		}

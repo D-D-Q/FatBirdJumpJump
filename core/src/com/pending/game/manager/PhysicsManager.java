@@ -3,7 +3,6 @@ package com.pending.game.manager;
 import java.util.Iterator;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
@@ -16,8 +15,6 @@ import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pending.game.GameConfig;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.components.TransformComponent;

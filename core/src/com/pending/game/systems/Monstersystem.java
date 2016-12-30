@@ -65,7 +65,7 @@ public class Monstersystem extends EntitySystem{
 	/**
 	 * 当前关卡, 从0开始，显示的时候+1
 	 */
-	private int level = 1;
+	private int level = 0;
 	
 	/**
 	 * 不必总new新的Board
