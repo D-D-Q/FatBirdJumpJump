@@ -7,6 +7,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.I18NBundle;
@@ -136,6 +137,14 @@ public class GameScreen extends ScreenAdapter {
 //		Vector2 position = MapperTools.physicsCM.get(hero).rigidBody.getPosition();
 		
 		GAME.gameViewport.getCamera().position.set(position.x, position.y + GameConfig.cameraOffset, 0);  // 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间
+	}
+	
+	@Override
+	public void show() {
+		
+		// 切换移入动画
+		UIstage.getRoot().getColor().a = 0;
+		UIstage.getRoot().addAction(Actions.fadeIn(0.5f));
 	}
 	
 	@Override

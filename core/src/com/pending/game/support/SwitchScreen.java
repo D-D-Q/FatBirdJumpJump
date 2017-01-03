@@ -27,11 +27,27 @@ public class SwitchScreen extends ScreenAdapter {
 	
 	private Game game;
 	private Class<? extends Screen> screen;
+	private Screen instance;
 	
 	private Stage UIstage;
 	private ProgressBar progressBar;
 	
+//	private Action action; // 切换动画
+	
 	public SwitchScreen(Game game, Class<? extends Screen> screen, Class<?> screenAssets) {
+		this(game, screen, screenAssets, true);
+	}
+	
+	/**
+	 * 切换屏幕
+	 * 
+	 * @param game
+	 * @param screen 目标屏幕
+	 * @param screenAssets 目标屏幕资源类
+	 * @param isShowProgress 是否显示加载进度条(很快时不必显示)
+	 */
+	public SwitchScreen(Game game, Class<? extends Screen> screen, Class<?> screenAssets, boolean isShowProgress) {
+		
 		this.game = game;
 		this.screen = screen;
 		
@@ -45,8 +61,20 @@ public class SwitchScreen extends ScreenAdapter {
 			Gdx.app.exit();
 		}
 		
-		UIstage = new Stage(GAME.UIViewport, GAME.batch);
-//		Skin skin = Assets.instance.get(GameScreenAssets.default_skin, Skin.class); // 获得皮肤
+		if(isShowProgress){
+			UIstage = new Stage(GAME.UIViewport, GAME.batch);
+//			Skin skin = Assets.instance.get(GameScreenAssets.default_skin, Skin.class); // 获得皮肤
+			initUI();
+		}
+		else{
+			Assets.instance.finishLoading();
+		}
+	}
+	
+	/**
+	 * 创建UI
+	 */
+	private void initUI(){
 		
 		Pixmap pixmap1 = new Pixmap(1, 16, Format.RGB888);
 		pixmap1.setColor(Color.WHITE);
@@ -72,8 +100,9 @@ public class SwitchScreen extends ScreenAdapter {
 	@Override
 	public void render(float delta) {
 		
-		if(Assets.instance.update() && progressBar.getVisualValue() == 1){ // 判断加载完成 && 也显示100%
-			Screen instance = null;
+		// 判断加载完成 && 未创建屏幕 &&  显示100%
+		if(Assets.instance.update() && instance == null && (progressBar == null || progressBar.getVisualValue() == 1)){ 
+			
 			try {
 				ScreenProxy.instance.disabledProxy(game.getScreen().getClass()); // TODO有问题 销毁原Screen代理
 				instance = ScreenProxy.instance.createScreen(screen); // 创建Screen代理
@@ -83,13 +112,29 @@ public class SwitchScreen extends ScreenAdapter {
 				e.printStackTrace();
 				Gdx.app.exit();
 			}
+			
+			// 切换移出动画
+//			UIstage.getRoot().getColor().a = 1;
+//		    SequenceAction sequenceAction = new SequenceAction();
+//		    sequenceAction.addAction(Actions.fadeOut(0.5f));
+//		    sequenceAction.addAction(Actions.run(new Runnable() {
+//		        @Override
+//		        public void run() {
+//		            game.setScreen(instance);
+//		        }
+//		    }));
+//		    UIstage.getRoot().addAction(sequenceAction);
+			
 			game.setScreen(instance);
 		}
 		
-		progressBar.setValue(Assets.instance.getProgress());
-		UIstage.getViewport().apply();
-		UIstage.act(delta);
-		UIstage.draw();
+		if(UIstage != null){
+			
+			progressBar.setValue(Assets.instance.getProgress());
+			UIstage.getViewport().apply();
+			UIstage.act(delta);
+			UIstage.draw();
+		}
 	}
 	
 	@Override
@@ -97,6 +142,7 @@ public class SwitchScreen extends ScreenAdapter {
 		Gdx.app.log(this.toString(), "dispose begin");
 		game = null;
 		screen = null;
-		UIstage.dispose();
+		instance = null;
+		if(UIstage != null) UIstage.dispose();
 	}
 }

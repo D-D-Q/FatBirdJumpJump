@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.pending.game.assets.GameScreenAssets;
+import com.pending.game.assets.LogoScreenAssets;
 import com.pending.game.manager.InputManager;
-import com.pending.game.screen.GameScreen;
+import com.pending.game.screen.LogoScreen;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.support.SwitchScreen;
 
@@ -43,7 +43,8 @@ public class GameMain extends Game {
 		
 		GlobalInline.instance.putGlobal("game", this);
 		
-		setScreen(new SwitchScreen(this, GameScreen.class, GameScreenAssets.class));
+//		setScreen(new SwitchScreen(this, GameScreen.class, GameScreenAssets.class));
+		setScreen(new LogoScreen(this));
 	}
 
 	@Override

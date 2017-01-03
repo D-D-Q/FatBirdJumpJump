@@ -2,6 +2,10 @@ package com.pending.game;
 
 import com.badlogic.gdx.Application;
 
+/**
+ * @author Administrator
+ * @date 2017年1月3日
+ */
 public class GameConfig {
 
 	/**
@@ -21,9 +25,15 @@ public class GameConfig {
 	public static float gameSpeed = 1;
 	
 	/**
+	 * 启动闪屏最短持续时间
+	 */
+	public final static float logoShowTime = 3;
+	
+	
+	/**
 	 * 日志级别
 	 */
-	public static int logLevel = Application.LOG_INFO;
+	public final static int logLevel = Application.LOG_INFO;
 	
 	/**
 	 * UI的debug模式
