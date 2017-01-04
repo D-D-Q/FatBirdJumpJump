@@ -7,6 +7,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.pending.game.Assets;
+import com.pending.game.manager.InputManager;
 
 /**
  * 屏幕切换, 可以使切换效果的中间屏
@@ -38,11 +39,8 @@ public class TransitionScreen extends ScreenAdapter {
 	 */
 	public TransitionScreen(Game game, Screen targetScreen, TransitionEffect transitionEffect) {
 		
-		this.game = game;
+		this(game, null, null, transitionEffect);
 		this.screen = targetScreen;
-		this.transitionEffect = transitionEffect;
-		
-		this.frameBufferTexture = ScreenUtils.getFrameBufferTexture();
 	}
 	
 	/**
@@ -52,7 +50,7 @@ public class TransitionScreen extends ScreenAdapter {
 	 * @param screenClass 目标屏幕
 	 * @param screenAssets 目标屏幕资源类
 	 */
-	public TransitionScreen(Game game, Screen currentScreen, Class<? extends Screen> targetScreen, Class<?> screenAssets, TransitionEffect transitionEffect) {
+	public TransitionScreen(Game game, Class<? extends Screen> targetScreen, Class<?> screenAssets, TransitionEffect transitionEffect) {
 		
 		this.game = game;
 		this.screenClass = targetScreen;
@@ -61,20 +59,19 @@ public class TransitionScreen extends ScreenAdapter {
 		this.frameBufferTexture = ScreenUtils.getFrameBufferTexture();
 		
 		// 开始加载资源
-		Assets.instance.loadAssets(screenAssets);
-		Assets.instance.update();
-		Assets.instance.finishLoading();
+		if(screenAssets != null){
+			Assets.instance.loadAssets(screenAssets);
+			Assets.instance.update();
+			Assets.instance.finishLoading();
+		}
 		
-		try {
+		if(targetScreen != null){
 			ScreenProxy.instance.disabledProxy(game.getScreen().getClass()); // TODO有问题 销毁原Screen代理
 			screen = ScreenProxy.instance.createScreen(screenClass); // 创建Screen代理
 			screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		} 
-		catch (Exception e) {
-			Gdx.app.error(this.toString(), "screen切换失败");
-			e.printStackTrace();
-			Gdx.app.exit();
 		}
+		
+		InputManager.instance.setDisabled(true);
 	}
 	
 	@Override
@@ -82,9 +79,11 @@ public class TransitionScreen extends ScreenAdapter {
 		
 		if(transitionEffect == null){
 			game.setScreen(screen);
+			InputManager.instance.setDisabled(false);
 		}
 		else if(transitionEffect.render(delta, frameBufferTexture, screen)){
 			game.setScreen(screen);
+			InputManager.instance.setDisabled(false);
 		}
 	}
 	

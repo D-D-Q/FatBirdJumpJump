@@ -37,7 +37,7 @@ public class GameMain extends Game {
 		
 		GAME.batch = new SpriteBatch();
 		
-		Gdx.input.setInputProcessor(InputManager.instance.inputMultiplexer); // 监听输入事件
+		Gdx.input.setInputProcessor(InputManager.instance); // 监听输入事件
 		
 		GAME.UIViewport = new FillViewport(GameConfig.width, GameConfig.height);
 		
