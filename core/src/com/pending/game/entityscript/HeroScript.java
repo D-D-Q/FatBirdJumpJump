@@ -255,7 +255,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		
 		// 更新摄像机y轴位置
 		Camera camera = GAME.gameViewport.getCamera();
-		float y = GameConfig.cameraOffset - (camera.position.y - entityPosition.y); 
+		float y = GAME.cameraOffset - (camera.position.y - entityPosition.y); 
 		if(y > 0) // 英雄最高位置与摄像机的距离小于cameraOffset
 			camera.position.y += y;
 		

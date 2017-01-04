@@ -68,21 +68,10 @@ public class GameScreen extends ScreenAdapter {
 		ashleyManager.engine.addSystem(new RenderingSystem(30));
 		
 		// 英雄
-//		Entity hero = ashleyManager.entityDao.createEntity(GAME.position.x, GAME.position.y, 20, 30);
 		Entity hero = ashleyManager.entityDao.createEntity(GAME.position.x, GAME.position.y, 40, 60);
 		ashleyManager.engine.addEntity(hero);
 		MapperTools.physicsCM.get(hero).rigidBody.setBullet(true);
 		GlobalInline.instance.put("hero", hero);
-		
-//		float cur = GAME.position.y;
-//		for(int i = 0; i < 200; ++i){
-//			
-//			Entity entity = ashleyManager.entityDao.createEntity2(MathUtils.random(0, GameConfig.width - 108), cur, 100, 10);
-//			ashleyManager.engine.addEntity(entity);
-//			MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
-//			
-//			cur += MathUtils.random(10, 100);
-//		}
 	}
 	
 	/**
@@ -125,26 +114,22 @@ public class GameScreen extends ScreenAdapter {
 	
 	@Override
 	public void resize(int width, int height) {
-		super.resize(width, height);
 		
 		GAME.gameViewport.update(width, height, false); // 设置屏幕宽高。必须！
 		
 		Vector3 offset = GAME.gameViewport.getCamera().unproject(new Vector3(0, Gdx.graphics.getHeight() * 0.618f, 0)); // 0.618是黄金分割点
-		GameConfig.cameraOffset = GameConfig.height/2 - offset.y; // 相机和英雄的距离
+		GAME.cameraOffset = GAME.gameViewport.getCamera().position.y - offset.y; // 相机和英雄要保持的距离
 		
 		Entity hero = GlobalInline.instance.get("hero");
 		Vector2 position = MapperTools.transformCM.get(hero).position;
-//		Vector2 position = MapperTools.physicsCM.get(hero).rigidBody.getPosition();
 		
-		GAME.gameViewport.getCamera().position.set(position.x, position.y + GameConfig.cameraOffset, 0);  // 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间
+		GAME.gameViewport.getCamera().position.set(position.x, position.y + GAME.cameraOffset, 0);  // 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间
 	}
 	
 	@Override
 	public void show() {
 		
 		// 切换移入动画
-		UIstage.getRoot().getColor().a = 0;
-		UIstage.getRoot().addAction(Actions.fadeIn(0.5f));
 	}
 	
 	@Override

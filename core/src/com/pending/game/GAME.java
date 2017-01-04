@@ -39,5 +39,13 @@ public class GAME {
 	 */
 	public static Skin skin;
 
+	/**
+	 * 英雄位置
+	 */
 	public final static Vector2 position = new Vector2(GameConfig.width/2, GameConfig.height/2);
+	
+	/**
+	 * 相机和角色的高度距离
+	 */
+	public static float cameraOffset = 0;
 }

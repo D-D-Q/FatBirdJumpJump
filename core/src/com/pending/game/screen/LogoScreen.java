@@ -2,15 +2,16 @@ package com.pending.game.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.pending.game.Assets;
 import com.pending.game.GAME;
-import com.pending.game.GameConfig;
 import com.pending.game.assets.GameScreenAssets;
 import com.pending.game.assets.LogoScreenAssets;
-import com.pending.game.support.SwitchScreen;
+import com.pending.game.support.FadeOutTransitionEffect;
+import com.pending.game.support.ScreenProxy;
+import com.pending.game.support.TransitionScreen;
 
 /**
  * 启动闪屏Logo
@@ -20,30 +21,34 @@ import com.pending.game.support.SwitchScreen;
  */
 public class LogoScreen extends ScreenAdapter {
 	
+	/**
+	 * 启动闪屏最短持续时间
+	 */
+	public final static float logoShowTime = 2;
+	
 	private Game game;
 	
 	private Texture texture;
 	
-	private float delta;
+	private float time;
+	
+	private boolean complete;
 	
 	public LogoScreen(Game game) {
 		Gdx.app.log(this.toString(), "create begin");
 		
 		this.game = game;
+		this.complete = false;
 		
-		try {
-			Assets.instance.loadAssets(LogoScreenAssets.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Gdx.app.error(this.toString(), "资源加载失败:" + e.getMessage());
-			Gdx.app.exit();
-		}
-		Assets.instance.update();
+		Assets.instance.loadAssets(LogoScreenAssets.class);
 		Assets.instance.finishLoading();
 
 		texture = Assets.instance.get(LogoScreenAssets.logo, Texture.class);
-
+		
+		// 闪屏之后的screen
+		Assets.instance.loadAssets(GameScreenAssets.class);
 	}
+	
 	@Override
 	public void render(float delta) {
 		
@@ -54,9 +59,16 @@ public class LogoScreen extends ScreenAdapter {
 		GAME.batch.draw(texture, 0, 0);
 		GAME.batch.end();
 		
-		this.delta += delta;
-		if(this.delta >= GameConfig.logoShowTime){
-			game.setScreen(new SwitchScreen(game, GameScreen.class, GameScreenAssets.class, false));
+		this.time += delta;
+		if(this.time >= logoShowTime && Assets.instance.update() && !complete){
+			
+			complete = true;
+			
+			ScreenProxy.instance.disabledProxy(game.getScreen().getClass()); // TODO有问题 销毁原Screen代理
+			Screen screen = ScreenProxy.instance.createScreen(GameScreen.class); // 创建Screen代理
+			screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			
+			game.setScreen(new TransitionScreen(game, screen, new FadeOutTransitionEffect()));
 		}
 	}
 	
@@ -94,7 +106,8 @@ public class LogoScreen extends ScreenAdapter {
 	@Override
 	public void hide() {
 		Gdx.app.log(this.toString(), "dispose begin");
-		
+		game = null;
+		texture = null;
 //		GlobalInline.instance.disabled();
 	}
 }

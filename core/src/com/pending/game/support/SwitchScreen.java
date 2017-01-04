@@ -52,14 +52,8 @@ public class SwitchScreen extends ScreenAdapter {
 		this.screen = screen;
 		
 		 // 开始加载资源
-		try {
-			Assets.instance.loadAssets(screenAssets);
-			Assets.instance.update();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Gdx.app.error(this.toString(), "资源加载失败:" + e.getMessage());
-			Gdx.app.exit();
-		}
+		Assets.instance.loadAssets(screenAssets);
+		Assets.instance.update();
 		
 		if(isShowProgress){
 			UIstage = new Stage(GAME.UIViewport, GAME.batch);
@@ -95,6 +89,9 @@ public class SwitchScreen extends ScreenAdapter {
 		progressBar.setPosition((GameConfig.width - progressBar.getWidth())/2, 100);
 		
 		UIstage.addActor(progressBar);
+		
+		pixmap1.dispose();
+		pixmap2.dispose();
 	}
 	
 	@Override

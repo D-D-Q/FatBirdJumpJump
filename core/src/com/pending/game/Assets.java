@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.reflect.Annotation;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Field;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.pending.game.annotation.Asset;
 
 /**
@@ -52,7 +53,7 @@ public class Assets extends AssetManager{
 	 * 加载屏幕资源
 	 * @throws Exception 
 	 */
-	public void loadAssets(Class<?> screen) throws Exception{
+	public void loadAssets(Class<?> screen){
 		
 		ObjectMap<String, Object> resources = new ObjectMap<>(2); // 字体资源，皮肤和资源管理器都需要
 		Field skin = null;
@@ -66,7 +67,13 @@ public class Assets extends AssetManager{
 					skin = field;
 					continue;
 				}
-				super.load(field.get(null).toString(), assetType.value());
+				try {
+					super.load(field.get(null).toString(), assetType.value());
+				} catch (ReflectionException e) {
+					e.printStackTrace();
+					Gdx.app.error(this.toString(), "资源加载失败:" + e.getMessage());
+					Gdx.app.exit();
+				}
 			}
 //			else if(field.isAnnotationPresent(AssetTTFFont.class)){ // 指定参数的ttf字体资源
 //				Annotation annotation = field.getDeclaredAnnotation(AssetTTFFont.class);
@@ -83,7 +90,13 @@ public class Assets extends AssetManager{
 		
 		if(skin != null){ // 皮肤最后加载
 			SkinParameter skinParameter = new SkinParameter(resources);
-			super.load(skin.get(null).toString(), Skin.class, skinParameter);
+			try {
+				super.load(skin.get(null).toString(), Skin.class, skinParameter);
+			} catch (ReflectionException e) {
+				e.printStackTrace();
+				Gdx.app.error(this.toString(), "资源加载失败:" + e.getMessage());
+				Gdx.app.exit();
+			}
 		}
 	
 		super.update();

@@ -1,0 +1,101 @@
+package com.pending.game.support;
+
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.pending.game.Assets;
+
+/**
+ * 屏幕切换, 可以使切换效果的中间屏
+ * 
+ * @author D
+ * @date 2017年1月4日
+ */
+public class TransitionScreen extends ScreenAdapter {
+	
+	private Game game;
+	private Class<? extends Screen> screenClass;
+	private Screen screen;
+	
+	/**
+	 * 当前屏幕的截图,用于效果操作
+	 */
+	private TextureRegion frameBufferTexture;
+	
+	/**
+	 * 效果对象
+	 */
+	public TransitionEffect transitionEffect;
+	
+	/**
+	 * 切换屏幕
+	 * 
+	 * @param game
+	 * @param screenClass 目标屏幕
+	 */
+	public TransitionScreen(Game game, Screen targetScreen, TransitionEffect transitionEffect) {
+		
+		this.game = game;
+		this.screen = targetScreen;
+		this.transitionEffect = transitionEffect;
+		
+		this.frameBufferTexture = ScreenUtils.getFrameBufferTexture();
+	}
+	
+	/**
+	 * 切换屏幕
+	 * 
+	 * @param game
+	 * @param screenClass 目标屏幕
+	 * @param screenAssets 目标屏幕资源类
+	 */
+	public TransitionScreen(Game game, Screen currentScreen, Class<? extends Screen> targetScreen, Class<?> screenAssets, TransitionEffect transitionEffect) {
+		
+		this.game = game;
+		this.screenClass = targetScreen;
+		this.transitionEffect = transitionEffect;
+		
+		this.frameBufferTexture = ScreenUtils.getFrameBufferTexture();
+		
+		// 开始加载资源
+		Assets.instance.loadAssets(screenAssets);
+		Assets.instance.update();
+		Assets.instance.finishLoading();
+		
+		try {
+			ScreenProxy.instance.disabledProxy(game.getScreen().getClass()); // TODO有问题 销毁原Screen代理
+			screen = ScreenProxy.instance.createScreen(screenClass); // 创建Screen代理
+			screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		} 
+		catch (Exception e) {
+			Gdx.app.error(this.toString(), "screen切换失败");
+			e.printStackTrace();
+			Gdx.app.exit();
+		}
+	}
+	
+	@Override
+	public void render(float delta) {
+		
+		if(transitionEffect == null){
+			game.setScreen(screen);
+		}
+		else if(transitionEffect.render(delta, frameBufferTexture, screen)){
+			game.setScreen(screen);
+		}
+	}
+	
+	@Override
+	public void hide() {
+		Gdx.app.log(this.toString(), "dispose begin");
+		game = null;
+		screenClass = null;
+		screen = null;
+		
+		frameBufferTexture = null;
+		transitionEffect = null;
+	}
+}

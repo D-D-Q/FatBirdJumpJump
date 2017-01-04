@@ -15,20 +15,9 @@ public class GameConfig {
 	public final static float height = 1920;
 	
 	/**
-	 * 相机和角色的高度距离
-	 */
-	public static float cameraOffset = 0;
-	
-	/**
 	 * 游戏速度
 	 */
 	public static float gameSpeed = 1;
-	
-	/**
-	 * 启动闪屏最短持续时间
-	 */
-	public final static float logoShowTime = 3;
-	
 	
 	/**
 	 * 日志级别
