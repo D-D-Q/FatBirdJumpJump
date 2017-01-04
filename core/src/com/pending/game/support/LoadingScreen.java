@@ -23,18 +23,16 @@ import com.pending.game.GameConfig;
  * @author D
  * @date 2016年9月2日 上午6:02:20
  */
-public class SwitchScreen extends ScreenAdapter {
+public class LoadingScreen extends ScreenAdapter {
 	
 	private Game game;
-	private Class<? extends Screen> screen;
-	private Screen instance;
+	private Class<? extends Screen> screenClass;
+	private Screen screen;
 	
 	private Stage UIstage;
 	private ProgressBar progressBar;
 	
-//	private Action action; // 切换动画
-	
-	public SwitchScreen(Game game, Class<? extends Screen> screen, Class<?> screenAssets) {
+	public LoadingScreen(Game game, Class<? extends Screen> screen, Class<?> screenAssets) {
 		this(game, screen, screenAssets, true);
 	}
 	
@@ -46,22 +44,18 @@ public class SwitchScreen extends ScreenAdapter {
 	 * @param screenAssets 目标屏幕资源类
 	 * @param isShowProgress 是否显示加载进度条(很快时不必显示)
 	 */
-	public SwitchScreen(Game game, Class<? extends Screen> screen, Class<?> screenAssets, boolean isShowProgress) {
+	public LoadingScreen(Game game, Class<? extends Screen> screen, Class<?> screenAssets, boolean isShowProgress) {
 		
 		this.game = game;
-		this.screen = screen;
+		this.screenClass = screen;
 		
-		 // 开始加载资源
+		 // 要加载的资源。调用Assets.instance.update()才是真正开始加载
 		Assets.instance.loadAssets(screenAssets);
-		Assets.instance.update();
 		
 		if(isShowProgress){
 			UIstage = new Stage(GAME.UIViewport, GAME.batch);
 //			Skin skin = Assets.instance.get(GameScreenAssets.default_skin, Skin.class); // 获得皮肤
 			initUI();
-		}
-		else{
-			Assets.instance.finishLoading();
 		}
 	}
 	
@@ -98,31 +92,12 @@ public class SwitchScreen extends ScreenAdapter {
 	public void render(float delta) {
 		
 		// 判断加载完成 && 未创建屏幕 &&  显示100%
-		if(Assets.instance.update() && instance == null && (progressBar == null || progressBar.getVisualValue() == 1)){ 
+		if(Assets.instance.update() && screen == null && (progressBar == null || progressBar.getVisualValue() == 1)){ 
 			
-			try {
-				ScreenProxy.instance.disabledProxy(game.getScreen().getClass()); // TODO有问题 销毁原Screen代理
-				instance = ScreenProxy.instance.createScreen(screen); // 创建Screen代理
-			} 
-			catch (Exception e) {
-				Gdx.app.error(this.toString(), "screen切换失败");
-				e.printStackTrace();
-				Gdx.app.exit();
-			}
+			ScreenProxy.instance.disabledProxy(game.getScreen().getClass()); // TODO有问题 销毁原Screen代理
+			screen = ScreenProxy.instance.createScreen(screenClass); // 创建Screen代理
 			
-			// 切换移出动画
-//			UIstage.getRoot().getColor().a = 1;
-//		    SequenceAction sequenceAction = new SequenceAction();
-//		    sequenceAction.addAction(Actions.fadeOut(0.5f));
-//		    sequenceAction.addAction(Actions.run(new Runnable() {
-//		        @Override
-//		        public void run() {
-//		            game.setScreen(instance);
-//		        }
-//		    }));
-//		    UIstage.getRoot().addAction(sequenceAction);
-			
-			game.setScreen(instance);
+			game.setScreen(screen);
 		}
 		
 		if(UIstage != null){
@@ -135,11 +110,20 @@ public class SwitchScreen extends ScreenAdapter {
 	}
 	
 	@Override
+	public void show() {
+		
+		// 不显示载入页面，必须加载完资源
+		if(UIstage == null){
+			Assets.instance.finishLoading();
+		}
+	}
+	
+	@Override
 	public void hide() {
 		Gdx.app.log(this.toString(), "dispose begin");
 		game = null;
+		screenClass = null;
 		screen = null;
-		instance = null;
 		if(UIstage != null) UIstage.dispose();
 	}
 }

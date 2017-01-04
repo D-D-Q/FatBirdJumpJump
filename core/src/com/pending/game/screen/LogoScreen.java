@@ -39,14 +39,6 @@ public class LogoScreen extends ScreenAdapter {
 		
 		this.game = game;
 		this.complete = false;
-		
-		Assets.instance.loadAssets(LogoScreenAssets.class);
-		Assets.instance.finishLoading();
-
-		texture = Assets.instance.get(LogoScreenAssets.logo, Texture.class);
-		
-		// 闪屏之后的screen
-		Assets.instance.loadAssets(GameScreenAssets.class);
 	}
 	
 	@Override
@@ -73,18 +65,15 @@ public class LogoScreen extends ScreenAdapter {
 	}
 	
 	@Override
-	public void resize(int width, int height) {
-		super.resize(width, height);
-	}
-	
-	@Override
 	public void show() {
 		
-	}
-	
-	@Override
-	public void pause() {
+		Assets.instance.loadAssets(LogoScreenAssets.class);
+		Assets.instance.finishLoading();
+
+		texture = Assets.instance.get(LogoScreenAssets.logo, Texture.class);
 		
+		// 闪屏之后的screen
+		Assets.instance.loadAssets(GameScreenAssets.class);
 	}
 	
 	/**

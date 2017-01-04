@@ -11,6 +11,7 @@ import com.pending.game.manager.InputManager;
 
 /**
  * 屏幕切换, 可以使切换效果的中间屏
+ * 		TODO 可以继承Game类，在game切换Screen的时候执行切换效果。这个版本不做了先
  * 
  * @author D
  * @date 2017年1月4日
@@ -19,6 +20,7 @@ public class TransitionScreen extends ScreenAdapter {
 	
 	private Game game;
 	private Class<? extends Screen> screenClass;
+	private Class<?> screenAssets;
 	private Screen screen;
 	
 	/**
@@ -54,24 +56,32 @@ public class TransitionScreen extends ScreenAdapter {
 		
 		this.game = game;
 		this.screenClass = targetScreen;
-		this.transitionEffect = transitionEffect;
+		this.screenAssets = screenAssets;
 		
+		this.transitionEffect = transitionEffect;
 		this.frameBufferTexture = ScreenUtils.getFrameBufferTexture();
 		
-		// 开始加载资源
-		if(screenAssets != null){
-			Assets.instance.loadAssets(screenAssets);
-			Assets.instance.update();
-			Assets.instance.finishLoading();
-		}
-		
-		if(targetScreen != null){
-			ScreenProxy.instance.disabledProxy(game.getScreen().getClass()); // TODO有问题 销毁原Screen代理
-			screen = ScreenProxy.instance.createScreen(screenClass); // 创建Screen代理
-			screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		}
-		
 		InputManager.instance.setDisabled(true);
+	}
+	
+	@Override
+	public void show() {
+		
+		if(screen == null){
+			
+			// 开始加载资源
+			if(screenAssets != null){
+				Assets.instance.loadAssets(screenAssets);
+				Assets.instance.finishLoading();
+			}
+			
+			// 实例化屏幕
+			if(screenClass != null){
+				ScreenProxy.instance.disabledProxy(game.getScreen().getClass()); // TODO有问题 销毁原Screen代理
+				screen = ScreenProxy.instance.createScreen(screenClass); // 创建Screen代理
+				screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			}
+		}
 	}
 	
 	@Override

@@ -39,11 +39,6 @@ public class GameScreenUI1 extends Table implements Telegraph {
 		this.setDebug(GameConfig.UIdebug);
 		this.setName("AttributesUI");
 //		this.setFillParent(true);
-//		this.setLayoutEnabled(false);
-//		this.setWidth(GAME.UIViewport.getScreenWidth());
-//		this.setHeight(GAME.UIViewport.getScreenHeight());
-//		float widthOffset = (GAME.UIViewport.getScreenWidth() - GameConfig.width)/2;
-//		float heightOffset = (GAME.UIViewport.getScreenWidth() - GameConfig.width)/2;
 //		this.pad(heightOffset, widthOffset, heightOffset, widthOffset);
 //		this.pad(-GAME.UIViewport.getScreenY(), -GAME.UIViewport.getScreenX(), -GAME.UIViewport.getScreenY(), -GAME.UIViewport.getScreenX());
 		
@@ -86,7 +81,6 @@ public class GameScreenUI1 extends Table implements Telegraph {
 		switch (msg.message) {
 		
 		case MSG_ADD_SCORE:{
-//			score += (long)msg.extraInfo;
 			score = (long)msg.extraInfo;
 			scoreLabel.setText(String.valueOf(score));
 		}

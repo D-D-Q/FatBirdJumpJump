@@ -11,7 +11,7 @@ import com.pending.game.assets.LogoScreenAssets;
 import com.pending.game.manager.InputManager;
 import com.pending.game.screen.LogoScreen;
 import com.pending.game.support.GlobalInline;
-import com.pending.game.support.SwitchScreen;
+import com.pending.game.support.LoadingScreen;
 
 public class GameMain extends Game {
 	
