@@ -153,19 +153,26 @@ public class HeroScript extends EntityScript implements InputProcessor{
 
 	@Override
 	public boolean keyTyped(char character) {
-		
+		return true;
+	}
+	
+	/**
+	 * 暂停和恢复
+	 * @return
+	 */
+	public boolean togglePause(){
 		Game game = GlobalInline.instance.getGlobal("game");
 		
 		if(isPause){
-			isPause = false;
 			game.resume();
 		}
 		else{
-			isPause = true;
 			game.pause();
 		}
 		
-		return true;
+		isPause = !isPause;
+		
+		return isPause;
 	}
 
 	@Override

@@ -34,7 +34,7 @@ public class AshleyManager{
 	private boolean isCopy = false;
 	
 	public AshleyManager() {
-		engine = new PooledEngine();
+		engine = new PooledEngine(); // TODO PooledEngine池大小
 		engine.addEntityListener(new AshleyManagerEntityListener());
 		entityDao = new EntityDao();
 	}

@@ -9,5 +9,10 @@
     	default: {
     		font: fzstk, fontColor: white 
     	}
+    },
+    com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+    	pause: {
+    		up: button0
+    	}
     }
 }

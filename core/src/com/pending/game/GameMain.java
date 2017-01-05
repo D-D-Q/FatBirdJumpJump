@@ -13,6 +13,13 @@ import com.pending.game.screen.LogoScreen;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.support.LoadingScreen;
 
+/**
+ * 解锁所有关卡
+ * 去除广告
+ * 视频广告
+ * 小横幅广告
+ * 
+ */
 public class GameMain extends Game {
 	
 	/**

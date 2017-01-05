@@ -27,7 +27,7 @@ public class GameConfig {
 	/**
 	 * UI的debug模式
 	 */
-	public final static boolean UIdebug = false;
+	public final static boolean UIdebug = true;
 	
 	/**
 	 * 物理引擎的debug模式

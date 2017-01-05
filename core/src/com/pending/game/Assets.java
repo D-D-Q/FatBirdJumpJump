@@ -44,7 +44,8 @@ public class Assets extends AssetManager{
 		// FreeType在android下会加载失败
 //		assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(assetManager.getFileHandleResolver())); // 设置ttf字体扩展的Loader
 //		assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(assetManager.getFileHandleResolver())); // 设置ttf字体扩展的Loader
-		super.setLoader(TiledMap.class, new TmxMapLoader(super.getFileHandleResolver())); //设置Tiled编辑器地图
+		
+//		super.setLoader(TiledMap.class, new TmxMapLoader(super.getFileHandleResolver())); //设置Tiled编辑器地图
 		
 		Texture.setAssetManager(this); // 设置游戏切出切回时候，资源管理器可以管理纹理
 	}
