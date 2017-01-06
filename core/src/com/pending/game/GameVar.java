@@ -2,8 +2,6 @@ package com.pending.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
@@ -12,7 +10,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * @author D
  * @date 2016年9月11日 下午2:08:56
  */
-public class GAME {
+public class GameVar {
 	
 	/**
 	 * 全局的openGL绘制对象
@@ -30,15 +28,10 @@ public class GAME {
 	public static Viewport UIViewport;
 	
 	/**
-	 * 国际化
+	 * 游戏速度
 	 */
-	public static I18NBundle i18NBundle;
+	public static float gameSpeed = 1;
 	
-	/**
-	 * 当前UI皮肤
-	 */
-	public static Skin skin;
-
 	/**
 	 * 英雄位置
 	 */

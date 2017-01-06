@@ -1,7 +1,6 @@
 package com.pending.game.entityscript;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
@@ -11,13 +10,14 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.pending.game.EntityScript;
-import com.pending.game.GAME;
 import com.pending.game.GameConfig;
+import com.pending.game.GameVar;
 import com.pending.game.Setting;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.components.TransformComponent;
 import com.pending.game.manager.MsgManager;
 import com.pending.game.manager.PhysicsManager;
+import com.pending.game.screen.GameScreen;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.systems.Monstersystem;
 import com.pending.game.tools.MapperTools;
@@ -80,11 +80,6 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	 * 提升关卡需要增长的分数
 	 */
 	private final static int levelUpScore = 30;
-	
-	/**
-	 * 是否暂停
-	 */
-	private boolean isPause = false;
 	
 	// 超级跳，暂时不用了
 	private final float superJumpTime = 2.5f;
@@ -155,30 +150,11 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	public boolean keyTyped(char character) {
 		return true;
 	}
-	
-	/**
-	 * 暂停和恢复
-	 * @return
-	 */
-	public boolean togglePause(){
-		Game game = GlobalInline.instance.getGlobal("game");
-		
-		if(isPause){
-			game.resume();
-		}
-		else{
-			game.pause();
-		}
-		
-		isPause = !isPause;
-		
-		return isPause;
-	}
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		
-		GAME.gameViewport.getCamera().unproject(touchPosition.set(screenX, screenY, 0));
+		GameVar.gameViewport.getCamera().unproject(touchPosition.set(screenX, screenY, 0));
 		return true;
 	}
 
@@ -211,7 +187,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		
-		GAME.gameViewport.getCamera().unproject(touchDraggedVector.set(screenX, screenY, 0));
+		GameVar.gameViewport.getCamera().unproject(touchDraggedVector.set(screenX, screenY, 0));
 		
 		offetX = (touchDraggedVector.x - touchPosition.x) * Setting.sensitivity;
 		touchPosition.set(touchDraggedVector);
@@ -238,9 +214,9 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		// 根据滑动更新x轴位置
 		Vector2 entityPosition = transformComponent.position;
 		float newX = MathUtils.clamp(entityPosition.x + offetX,0 + transformComponent.width / 2, GameConfig.width - transformComponent.width / 2);
-		offetX = 0;
 		Vector2 rigidBodyPosition = physicsComponent.rigidBody.getPosition();
 		physicsComponent.rigidBody.setTransform(PhysicsManager.pixelToMeter(newX), rigidBodyPosition.y, 0); 
+		offetX = 0;
 		
 //		if(num > superJumpNum){
 //			if(time >= deltaTime){
@@ -261,10 +237,9 @@ public class HeroScript extends EntityScript implements InputProcessor{
 //		}
 		
 		// 更新摄像机y轴位置
-		Camera camera = GAME.gameViewport.getCamera();
-		float y = GAME.cameraOffset - (camera.position.y - entityPosition.y); 
-		if(y > 0) // 英雄最高位置与摄像机的距离小于cameraOffset
-			camera.position.y += y;
+		Camera camera = GameVar.gameViewport.getCamera();
+		if(entityPosition.y + GameVar.cameraOffset > camera.position.y)
+			camera.position.y = entityPosition.y + GameVar.cameraOffset;
 		
 		if(!physicsComponent.rigidBody.getLinearVelocity().isZero())
 			Gdx.app.debug("速度", physicsComponent.rigidBody.getLinearVelocity().toString());
@@ -276,12 +251,13 @@ public class HeroScript extends EntityScript implements InputProcessor{
 			continueHeight = camera.position.y;
 			
 			// 继续游戏
-//			physicsComponent.rigidBody.setLinearVelocity(0, 60);
-			isContinue = true;
+//			isContinue = true;
 			
 			// 重新开始
 //			GameMain game = GlobalInline.instance.getGlobal("game");
 //			game.switchScreen = new SwitchScreen(game, GameScreen.class, GameScreenAssets.class);
+			GameScreen gameScreen = GlobalInline.instance.getScreen();
+			gameScreen.over();
 		}
 		
 		if(isContinue){
@@ -295,6 +271,12 @@ public class HeroScript extends EntityScript implements InputProcessor{
 				physicsComponent.rigidBody.setLinearVelocity(0, PhysicsManager.MAX_SPEED);
 			}
 		}
-		
 	}
+	
+	@Override
+	public void disabled() {
+		
+		GlobalInline.instance.remove("jumPBoardY");
+	}
+	
 }

@@ -21,6 +21,15 @@ public class AshleyManager{
 //	public static AshleyManager instance = new AshleyManager();
 	
 	/**
+	 * 标识有效的Entity
+	 */
+	public final static int VALID_ENTITY = 1;
+	/**
+	 * 标识无效的Entity
+	 */
+	public final static int INVALID_ENTITY = 0;
+	
+	/**
 	 * ashley组件实体系统引擎
 	 */
 	public PooledEngine engine;
@@ -90,6 +99,8 @@ public class AshleyManager{
 			if(isCopy)
 				return;
 			
+			entity.flags = VALID_ENTITY; // 设置成有效
+			
 			PhysicsSystem physicsSystem = engine.getSystem(PhysicsSystem.class);
 			
 			// 添加碰撞检测
@@ -111,9 +122,11 @@ public class AshleyManager{
 			if(isCopy)
 				return;
 			
+			entity.flags = INVALID_ENTITY; // 设置成无效
+			
 			PhysicsSystem physicsSystem = engine.getSystem(PhysicsSystem.class);
 			
-			// 添加碰撞检测
+			// 销毁碰撞检测
 			PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 			if(physicsComponent != null){
 				physicsSystem.physicsManager.addDisposeBody(physicsComponent.rigidBody);
@@ -122,6 +135,7 @@ public class AshleyManager{
 			// 脚本组件，移出输入监听
 			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
 			if(scriptComponent != null){
+				scriptComponent.script.disabled();
 				if(scriptComponent.script instanceof InputProcessor)
 					InputManager.instance.removeProcessor((InputProcessor)scriptComponent.script);
 			}

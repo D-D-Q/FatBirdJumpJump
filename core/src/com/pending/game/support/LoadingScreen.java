@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.pending.game.Assets;
-import com.pending.game.GAME;
+import com.pending.game.GameVar;
 import com.pending.game.GameConfig;
 
 /**
@@ -53,7 +53,7 @@ public class LoadingScreen extends ScreenAdapter {
 		Assets.instance.loadAssets(screenAssets);
 		
 		if(isShowProgress){
-			UIstage = new Stage(GAME.UIViewport, GAME.batch);
+			UIstage = new Stage(GameVar.UIViewport, GameVar.batch);
 //			Skin skin = Assets.instance.get(GameScreenAssets.default_skin, Skin.class); // 获得皮肤
 			initUI();
 		}

@@ -35,7 +35,6 @@ public class EntityDao {
 		
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		Entity entity = ashleyManager.engine.createEntity();
-		entity.flags = 999; // 标示英雄
 		
 		TransformComponent transformComponent = ashleyManager.engine.createComponent(TransformComponent.class);
 		transformComponent.position.set(positionX, positionY);
@@ -78,7 +77,6 @@ public class EntityDao {
 		
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		Entity entity = ashleyManager.engine.createEntity();
-		entity.flags = 1; // 设置成有效
 		
 		TransformComponent transformComponent = ashleyManager.engine.createComponent(TransformComponent.class);
 		transformComponent.position.set(positionX, positionY);

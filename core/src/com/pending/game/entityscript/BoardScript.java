@@ -2,7 +2,7 @@ package com.pending.game.entityscript;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pending.game.EntityScript;
-import com.pending.game.GAME;
+import com.pending.game.GameVar;
 import com.pending.game.GameConfig;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.components.TransformComponent;
@@ -27,7 +27,7 @@ public class BoardScript extends EntityScript{
 		
 		if(boardMax !=null && position.y <= boardMax){
 			
-			if(position.y < GAME.gameViewport.getCamera().position.y - GameConfig.height/2){
+			if(position.y < GameVar.gameViewport.getCamera().position.y - GameConfig.height/2){
 				GlobalInline.instance.getAshleyManager().engine.removeEntity(entity);
 			}
 			else{

@@ -104,6 +104,8 @@ public class ScreenProxy{
 				Gdx.app.exit();
 			}
 			
+			GlobalInline.instance.putScreen(screen);
+			
 			GlobalInline.instance.exit();
 		}
 

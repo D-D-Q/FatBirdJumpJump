@@ -13,6 +13,12 @@
     com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
     	pause: {
     		up: button0
+    	},
+    	resume: {
+    		up: button0
+    	},
+    	restart: {
+    		up: button0
     	}
     }
 }

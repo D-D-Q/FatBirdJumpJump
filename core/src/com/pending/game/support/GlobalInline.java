@@ -1,5 +1,6 @@
 package com.pending.game.support;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.Array;
@@ -188,28 +189,20 @@ public class GlobalInline<T> {
 	}
 	
 	/**
-	 * 当前域的AshleyManager
+	 * 添加游戏主体
 	 * 
-	 * @param ashleyManager
+	 * @param game
 	 */
-	public void putAshleyManager(AshleyManager ashleyManager){
-		
-		ObjectMap<Object,Object> objectMap = domainMap.get(getCurDomain());
-		if(objectMap == null)
-			domainMap.put(domainStack.peek(), (objectMap = new ObjectMap<Object,Object>(16)));
-		
-		objectMap.put("ashleyManager", ashleyManager);
+	public void putGame(Game game){
+		putGlobal("game", game);
 	}
 	
 	/**
-	 * 当前域的AshleyManager
-	 * 
+	 * 获得游戏主体
 	 * @return
 	 */
-	public AshleyManager getAshleyManager(){
-		
-		ObjectMap<Object,Object> objectMap = domainMap.get(getCurDomain());
-		return (AshleyManager)objectMap.get("ashleyManager");
+	public <E extends Game> E getGame(){
+		return getGlobal("game");
 	}
 	
 	/**
@@ -252,5 +245,41 @@ public class GlobalInline<T> {
 		
 		ObjectMap<Object, Object> objectMap = domainMap.get(getCurDomain());
 		return (E)objectMap.remove(key);
+	}
+	
+	/**
+	 * 加入当前Screen
+	 * 	ScreenProxy创建Screen时会添加
+	 * 
+	 * @param screen
+	 */
+	public void putScreen(Screen screen){
+		put("screen", screen);
+	}
+	
+	/**
+	 * 获得当前Screen
+	 * @return
+	 */
+	public <E extends Screen> E getScreen(){
+		return get("screen");
+	}
+	
+	/**
+	 * 当前域的AshleyManager
+	 * 
+	 * @param ashleyManager
+	 */
+	public void putAshleyManager(AshleyManager ashleyManager){
+		put("ashleyManager", ashleyManager);
+	}
+	
+	/**
+	 * 当前域的AshleyManager
+	 * 
+	 * @return
+	 */
+	public AshleyManager getAshleyManager(){
+		return get("ashleyManager");
 	}
 }

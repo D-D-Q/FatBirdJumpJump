@@ -7,11 +7,9 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.pending.game.assets.LogoScreenAssets;
 import com.pending.game.manager.InputManager;
 import com.pending.game.screen.LogoScreen;
 import com.pending.game.support.GlobalInline;
-import com.pending.game.support.LoadingScreen;
 
 /**
  * 解锁所有关卡
@@ -28,7 +26,7 @@ public class GameMain extends Game {
 	FPSLogger fpsLog;
 	
 	/**
-	 * 因为EMS系统的各系统顺序执行无法中断，所以要切换的Screen标示在此
+	 * 因为EMS各系统的执行无法中断，所以直接切换Screen会销毁资源影响执行, 要切换的Screen标示在此
 	 */
 	public Screen switchScreen = null;
 	
@@ -36,19 +34,18 @@ public class GameMain extends Game {
 	public void create () {
 		
 		Gdx.app.setLogLevel(GameConfig.logLevel); // 日志级别
+		Gdx.app.log(this.toString(), "create begin");
 		
 		if(GameConfig.fpsDebug)
 			fpsLog = new FPSLogger();
 		
-		Gdx.app.log(this.toString(), "create begin");
-		
-		GAME.batch = new SpriteBatch();
+		GameVar.batch = new SpriteBatch();
 		
 		Gdx.input.setInputProcessor(InputManager.instance); // 监听输入事件
 		
-		GAME.UIViewport = new FillViewport(GameConfig.width, GameConfig.height);
+		GameVar.UIViewport = new FillViewport(GameConfig.width, GameConfig.height);
 		
-		GlobalInline.instance.putGlobal("game", this);
+		GlobalInline.instance.putGame(this);
 		
 //		setScreen(new SwitchScreen(this, GameScreen.class, GameScreenAssets.class));
 		setScreen(new LogoScreen(this));
@@ -80,7 +77,7 @@ public class GameMain extends Game {
 		Gdx.app.log(this.toString(), "resize " + width + "," + height);
 		super.resize(width, height);
 		
-		GAME.UIViewport.update(width, height, true); // true表示设置相机的位置在:(设计分辨率宽/2, 设计分辨率高/2)。这样起始显示屏幕左下角就是虚拟世界坐标原点0,0了
+		GameVar.UIViewport.update(width, height, true); // true表示设置相机的位置在:(设计分辨率宽/2, 设计分辨率高/2)。这样起始显示屏幕左下角就是虚拟世界坐标原点0,0了
 	}
 	
 	@Override
@@ -91,7 +88,7 @@ public class GameMain extends Game {
 		
 		GlobalInline.instance.disabledALL();
 		
-		GAME.batch.dispose();
+		GameVar.batch.dispose();
 		Assets.instance.dispose();
 	}
 }

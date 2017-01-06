@@ -76,4 +76,9 @@ public class EntityScript  {
 	 */
 	public void update(float deltaTime){}
 	
+	/**
+	 * 销毁
+	 */
+	public void disabled(){}
+	
 }

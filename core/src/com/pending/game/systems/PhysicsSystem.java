@@ -89,12 +89,12 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 		
 		float frameTime = Math.min(deltaTime, 0.25f); // 最大帧间隔时间0.25，防止死亡螺旋（spiral of death）
 	    accumulator += frameTime;
-	    
+	   
+	    physicsManager.disposeBody();
 	    while (accumulator >= TIME_STEP) {
 	    	physicsManager.world.step(TIME_STEP, PhysicsManager.VELOCITY_ITERATIONS, PhysicsManager.POSITION_ITERATIONS); // 更新
 	    	accumulator -= TIME_STEP;
 	    }
-	    physicsManager.disposeBody();
 	    
 	    super.update(deltaTime); // 更新精灵实体
 	}

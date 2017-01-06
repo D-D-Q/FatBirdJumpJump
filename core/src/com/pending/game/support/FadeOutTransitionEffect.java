@@ -2,7 +2,7 @@ package com.pending.game.support;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.pending.game.GAME;
+import com.pending.game.GameVar;
 import com.pending.game.GameConfig;
 
 /**
@@ -38,13 +38,13 @@ public class FadeOutTransitionEffect implements TransitionEffect {
 		
 		nextScreen.render(delta);
 		
-		GAME.UIViewport.apply();
-		GAME.batch.setProjectionMatrix(GAME.UIViewport.getCamera().combined);
+		GameVar.UIViewport.apply();
+		GameVar.batch.setProjectionMatrix(GameVar.UIViewport.getCamera().combined);
 		
-		GAME.batch.begin();
-		GAME.batch.setColor(1, 1, 1, begin + (end-begin) * (complete?1:time/duration));
-		GAME.batch.draw(frameBufferTexture, 0, 0, GameConfig.width, GameConfig.height);
-		GAME.batch.end();
+		GameVar.batch.begin();
+		GameVar.batch.setColor(1, 1, 1, begin + (end-begin) * (complete?1:time/duration));
+		GameVar.batch.draw(frameBufferTexture, 0, 0, GameConfig.width, GameConfig.height);
+		GameVar.batch.end();
 		
 		return complete;
 	}

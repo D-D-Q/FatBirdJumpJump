@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.pending.game.EntityScript;
 
 /**
- * 所有脚本对象管理
+ * 所有脚本对象管理, 暂时不用了
  * 
  * @author D
  * @date 2017年1月5日

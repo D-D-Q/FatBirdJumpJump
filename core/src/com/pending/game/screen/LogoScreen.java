@@ -5,8 +5,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.pending.game.Assets;
-import com.pending.game.GAME;
+import com.pending.game.GameVar;
+import com.pending.game.GameConfig;
 import com.pending.game.assets.GameScreenAssets;
 import com.pending.game.assets.LogoScreenAssets;
 import com.pending.game.support.FadeOutTransitionEffect;
@@ -44,12 +47,12 @@ public class LogoScreen extends ScreenAdapter {
 	@Override
 	public void render(float delta) {
 		
-		GAME.UIViewport.apply();
-		GAME.batch.setProjectionMatrix(GAME.UIViewport.getCamera().combined);
+		GameVar.UIViewport.apply();
+		GameVar.batch.setProjectionMatrix(GameVar.UIViewport.getCamera().combined);
 		
-		GAME.batch.begin();
-		GAME.batch.draw(texture, 0, 0);
-		GAME.batch.end();
+		GameVar.batch.begin();
+		GameVar.batch.draw(texture, 0, 0);
+		GameVar.batch.end();
 		
 		this.time += delta;
 		if(this.time >= logoShowTime && Assets.instance.update() && !complete){
@@ -71,6 +74,10 @@ public class LogoScreen extends ScreenAdapter {
 		Assets.instance.finishLoading();
 
 		texture = Assets.instance.get(LogoScreenAssets.logo, Texture.class);
+		
+		// 皮肤资源
+		Assets.instance.load(GameConfig.i18NBundle, I18NBundle.class);
+		Assets.instance.load(GameConfig.skin, Skin.class);
 		
 		// 闪屏之后的screen
 		Assets.instance.loadAssets(GameScreenAssets.class);

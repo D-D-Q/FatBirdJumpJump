@@ -15,9 +15,14 @@ public class GameConfig {
 	public final static float height = 1920;
 	
 	/**
-	 * 游戏速度
+	 * 国际化配置
 	 */
-	public static float gameSpeed = 1;
+	public final static String i18NBundle = "i18n/GameScreenMessage";
+	
+	/**
+	 * UI皮肤配置
+	 */
+	public final static String skin = "skin/defaultUI.json";
 	
 	/**
 	 * 日志级别

@@ -168,6 +168,17 @@ public class Monstersystem extends EntitySystem{
 	}
 	
 	/**
+	 * 开始
+	 * 
+	 * @param level
+	 */
+	public void start(int level){
+		
+		if(level >= 0 && level <= maxLevel) this.level = level;
+		curPosition.setZero();
+	}
+	
+	/**
 	 * 关卡提升
 	 */
 	public void levelUp(){
@@ -176,10 +187,6 @@ public class Monstersystem extends EntitySystem{
 			 ++level;
 			 Gdx.app.log(this.toString(), "level up:" + level);
 		}
-	}
-	
-	public void setlevel(int level){
-		if(level >= 0 && level <= maxLevel) this.level = level;
 	}
 	
 	public int getLevel(){

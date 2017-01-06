@@ -7,7 +7,7 @@ import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.pending.game.GAME;
+import com.pending.game.GameVar;
 import com.pending.game.components.TextureComponent;
 import com.pending.game.components.TransformComponent;
 import com.pending.game.support.GlobalInline;
@@ -44,7 +44,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 	        }
 		}, priority);
 		
-		subtitleStage = new Stage(GAME.gameViewport, GAME.batch);
+		subtitleStage = new Stage(GameVar.gameViewport, GameVar.batch);
 	}
 	
 	@Override
@@ -53,16 +53,16 @@ public class RenderingSystem extends SortedIteratingSystem {
 		GlobalInline.instance.mark();
 		
 		// 更新相机数据，并设置相机数据给batch
-		GAME.gameViewport.getCamera().update();
-		GAME.batch.setProjectionMatrix(GAME.gameViewport.getCamera().combined);
+		GameVar.gameViewport.getCamera().update();
+		GameVar.batch.setProjectionMatrix(GameVar.gameViewport.getCamera().combined);
 		
 		forceSort(); // 绘制排序
 		
-		GAME.batch.begin();
+		GameVar.batch.begin();
 		
 		super.update(deltaTime);
 		
-		GAME.batch.end();
+		GameVar.batch.end();
 		
 		// 字幕
 		subtitleStage.act();
@@ -70,7 +70,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 		
 		PhysicsSystem physicsSystem = GlobalInline.instance.getAshleyManager().engine.getSystem(PhysicsSystem.class);
 		if(physicsSystem != null)
-			physicsSystem.physicsManager.debugRender(GAME.gameViewport.getCamera());
+			physicsSystem.physicsManager.debugRender(GameVar.gameViewport.getCamera());
 	}
 	
 	@Override
@@ -87,7 +87,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 		if(textureComponent.textureRegion instanceof Sprite){ // 绘制精灵
 			Sprite sprite = (Sprite)textureComponent.textureRegion;
 			sprite.setPosition(transformComponent.getRenderPositionX(), transformComponent.getRenderPositionY());
-			sprite.draw(GAME.batch);
+			sprite.draw(GameVar.batch);
 		}
 		else{  // 绘制纹理
 	        /*
@@ -98,7 +98,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 	         *  float scaleX, float scaleY, 缩放，1是原始大小。从锚点向四周缩放
 	         *  float rotation, 旋转，正数是逆时针。以锚点为圆心旋转
 	         */
-			GAME.batch.draw(textureComponent.textureRegion, 
+			GameVar.batch.draw(textureComponent.textureRegion, 
 					transformComponent.getRenderPositionX(), transformComponent.getRenderPositionY(), 
 					transformComponent.origin.x, transformComponent.origin.y,
 					transformComponent.getWidth(), transformComponent.getHeight(),

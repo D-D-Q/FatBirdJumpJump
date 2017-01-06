@@ -2,18 +2,13 @@ package com.pending.game.ui;
 
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.pending.game.GameConfig;
 import com.pending.game.manager.MsgManager;
-import com.pending.game.support.GlobalInline;
-import com.pending.game.tools.MapperTools;
 
 /**
  * 
@@ -35,7 +30,7 @@ public class GameScreenUI1 extends Table implements Telegraph {
 		
 		this.setDebug(GameConfig.UIdebug);
 		this.setName("GameScreenUI1");
-//		this.setFillParent(true);
+		this.setFillParent(true);
 //		this.pad(heightOffset, widthOffset, heightOffset, widthOffset);
 //		this.pad(-GAME.UIViewport.getScreenY(), -GAME.UIViewport.getScreenX(), -GAME.UIViewport.getScreenY(), -GAME.UIViewport.getScreenX());
 		
@@ -46,15 +41,6 @@ public class GameScreenUI1 extends Table implements Telegraph {
 		this.add(scoreLabel).colspan(1).expandY().top();
 		
 		this.row();
-		
-		Button button = new Button(skin, "pause");
-		button.addListener(new ClickListener(){
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				// TODO 通过反射执行事件 需要一个保存所有脚本对象的容器
-			}
-		});
-		this.add(button).colspan(1).bottom().expandX().left();
 		
 		// TODO 替换资源
 //		Pixmap pixmap1 = new Pixmap(1, 8, Format.RGB888);

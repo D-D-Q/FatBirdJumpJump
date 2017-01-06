@@ -14,9 +14,4 @@ public class GameScreenAssets {
 //	@Asset(BitmapFont.class)
 //	public final static String font0 = "fonts/fzstk.fnt";
 	
-	@Asset(I18NBundle.class)
-	public final static String i18NBundle = "i18n/GameScreenMessage";
-	
-	@Asset(Skin.class)
-	public final static String default_skin = "skin/defaultUI.json";
 }
