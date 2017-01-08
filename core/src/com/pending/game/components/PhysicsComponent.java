@@ -5,6 +5,11 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.pending.game.manager.AshleyManager;
+import com.pending.game.manager.PhysicsManager;
+import com.pending.game.support.GlobalInline;
+import com.pending.game.systems.PhysicsSystem;
+import com.pending.game.tools.MapperTools;
 
 /**
  * 物理组件。
@@ -40,6 +45,17 @@ public class PhysicsComponent  implements Component, Poolable {
 	 */
 	@Override
 	public void reset() {
-//		radius = 0f;
+		
+//		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
+//		PhysicsSystem physicsSystem = ashleyManager.engine.getSystem(PhysicsSystem.class);
+//		
+//		// 销毁碰撞检测
+//		if(rigidBody != null){
+//			physicsSystem.physicsManager.addDisposeBody(rigidBody);
+//		}
+//		
+		rigidBody = null;
+		bodyType = null;
+		shape = null;
 	}
 }	

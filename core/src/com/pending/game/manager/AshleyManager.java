@@ -71,6 +71,30 @@ public class AshleyManager{
 	}
 	
 	/**
+	 * 初始化组件相关
+	 * 
+	 * @param entity
+	 */
+	public void initComponent(Entity entity){
+		
+		entity.flags = VALID_ENTITY; // 设置成有效
+		
+		PhysicsSystem physicsSystem = engine.getSystem(PhysicsSystem.class);
+		
+		// 添加碰撞检测
+		if(MapperTools.physicsCM.get(entity) != null){
+			physicsSystem.physicsManager.addPhysicsRigidBody(entity);
+		}
+		
+		// 脚本组件
+		ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
+		if(scriptComponent != null){
+			if(scriptComponent.script instanceof InputProcessor)
+				InputManager.instance.addProcessor((InputProcessor)scriptComponent.script); // 输入事件
+		}
+	}
+	
+	/**
 	 * 销毁
 	 */
 	public void disabled(){
@@ -98,22 +122,6 @@ public class AshleyManager{
 			
 			if(isCopy)
 				return;
-			
-			entity.flags = VALID_ENTITY; // 设置成有效
-			
-			PhysicsSystem physicsSystem = engine.getSystem(PhysicsSystem.class);
-			
-			// 添加碰撞检测
-			if(MapperTools.physicsCM.get(entity) != null){
-				physicsSystem.physicsManager.addPhysicsRigidBody(entity);
-			}
-			
-			// 脚本组件
-			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
-			if(scriptComponent != null){
-				if(scriptComponent.script instanceof InputProcessor)
-					InputManager.instance.addProcessor((InputProcessor)scriptComponent.script); // 输入事件
-			}
 		}
 
 		@Override

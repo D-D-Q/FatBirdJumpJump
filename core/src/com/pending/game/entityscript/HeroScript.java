@@ -248,7 +248,8 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		if(entityPosition.y < camera.position.y - GameConfig.height/2 - transformComponent.height){
 			
 			physicsComponent.rigidBody.setGravityScale(0);
-			continueHeight = camera.position.y;
+			physicsComponent.rigidBody.setLinearVelocity(Vector2.Zero);
+//			continueHeight = camera.position.y;
 			
 			// 继续游戏
 //			isContinue = true;
@@ -260,17 +261,17 @@ public class HeroScript extends EntityScript implements InputProcessor{
 			gameScreen.over();
 		}
 		
-		if(isContinue){
-			
-			if(entityPosition.y >= continueHeight){
-				
-				physicsComponent.rigidBody.setGravityScale(1);
-				isContinue = false;
-			}
-			else{
-				physicsComponent.rigidBody.setLinearVelocity(0, PhysicsManager.MAX_SPEED);
-			}
-		}
+//		if(isContinue){
+//			
+//			if(entityPosition.y >= continueHeight){
+//				
+//				physicsComponent.rigidBody.setGravityScale(1);
+//				isContinue = false;
+//			}
+//			else{
+//				physicsComponent.rigidBody.setLinearVelocity(0, PhysicsManager.MAX_SPEED);
+//			}
+//		}
 	}
 	
 	@Override

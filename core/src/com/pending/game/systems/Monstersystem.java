@@ -1,7 +1,6 @@
 package com.pending.game.systems;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
@@ -91,7 +90,6 @@ public class Monstersystem extends EntitySystem{
 		if(curPosition.y == 0){
 			curPosition.x = heroPosition.x;
 			curPosition.y = heroPosition.y + 20;
-			getEngine().addEntityListener(new MonstersystemEntityListener());
 		}
 				
 		if(curPosition.y - heroPosition.y >= GameConfig.height)
@@ -105,6 +103,7 @@ public class Monstersystem extends EntitySystem{
 			
 			Board board = randomBoard(curPosition);
 			Entity entity = ashleyManager.entityDao.createEntity2(board.x, board.y, board.width, Board.height);
+			MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
 			ashleyManager.engine.addEntity(entity);
 			
 			curPosition.set(board.x, board.y);
@@ -211,25 +210,6 @@ public class Monstersystem extends EntitySystem{
 			width = 0;
 			x = 0;
 			y = 0;
-		}
-	}
-	
-	/**
-	 * engine.addEntity并不是实时添加, 所以只能在添加后才能操作刚体
-	 * 
-	 * @author D
-	 * @date 2016年12月19日
-	 */
-	private class MonstersystemEntityListener implements EntityListener{
-		
-		@Override
-		public void entityAdded(Entity entity) {
-			MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
-		}
-
-		@Override
-		public void entityRemoved(Entity entity) {
-			
 		}
 	}
 }

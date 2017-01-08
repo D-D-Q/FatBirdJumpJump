@@ -62,6 +62,8 @@ public class EntityDao {
 		scriptComponent.script.entity = entity;
 		entity.add(scriptComponent);
 		
+		GlobalInline.instance.getAshleyManager().initComponent(entity);
+		
 		Assets.instance.finishLoading();
 		
 		return entity;
@@ -99,6 +101,8 @@ public class EntityDao {
 		scriptComponent.script = new BoardScript();
 		scriptComponent.script.entity = entity;
 		entity.add(scriptComponent);
+		
+		GlobalInline.instance.getAshleyManager().initComponent(entity);
 		
 		Assets.instance.finishLoading();
 		
