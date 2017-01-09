@@ -17,6 +17,7 @@ import com.pending.game.GameVar;
 import com.pending.game.manager.AshleyManager;
 import com.pending.game.manager.InputManager;
 import com.pending.game.manager.MsgManager;
+import com.pending.game.support.GameUtil;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.systems.GeneralSystem;
 import com.pending.game.systems.Monstersystem;
@@ -81,20 +82,7 @@ public class GameScreen extends ScreenAdapter {
 	 */
 	private void initUI(){
 		
-		// ScreenX和ScreenY谁是0，谁就是可以全部显示的
-		float scale = GameVar.UIViewport.getScreenX() == 0 ? GameVar.UIViewport.getScreenWidth()/GameConfig.width : GameVar.UIViewport.getScreenHeight()/GameConfig.height; //
-		
-		// 实际屏幕上能显示出来的宽高
-		float displayWidth = (GameVar.UIViewport.getScreenWidth() - Math.abs(GameVar.UIViewport.getScreenX()) * 2) / scale;
-		float displayHeight = (GameVar.UIViewport.getScreenHeight() - Math.abs(GameVar.UIViewport.getScreenY()) * 2) / scale;
-		
-		Table defaultTable = new Table();
-		defaultTable.setFillParent(true);
-		defaultTable.defaults().size(displayWidth, displayHeight).center();
-		UIstage.addActor(defaultTable);
-		
-		screenUI = new Group();
-		defaultTable.add(screenUI);
+		screenUI = GameUtil.createDisplaySizeGroup(UIstage, GameVar.UIViewport);
 		
 		screenUI.addActor(new GameScreenUI1(Assets.instance.get(GameConfig.skin), Assets.instance.get(GameConfig.i18NBundle)));
 		screenUI.addActor(new GamePauseUI(Assets.instance.get(GameConfig.skin), Assets.instance.get(GameConfig.i18NBundle)));
@@ -209,8 +197,8 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void hide() {
 		Gdx.app.log(this.toString(), "dispose begin");
-		UIstage.dispose();
 		
-		GlobalInline.instance.disabled();
+		InputManager.instance.removeProcessor(UIstage);
+		UIstage.dispose();
 	}
 }

@@ -11,6 +11,9 @@
     	}
     },
     com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+    	start: {
+    		up: button0
+    	},
     	pause: {
     		up: button0
     	},

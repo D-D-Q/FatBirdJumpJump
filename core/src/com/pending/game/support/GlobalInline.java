@@ -107,13 +107,36 @@ public class GlobalInline<T> {
 	
 	/**
 	 * 销毁当前域所有变量
+	 * 	销毁之后 不能存在了 又调用exit有问题
 	 */
+	@Deprecated
 	public void disabled(){
 		
 		if(domainStack.size == 0)
 			throw new RuntimeException("GlobalInline的enter方法必须先被调用");
 		
 		T domain = domainStack.peek();
+		
+		// 先获取销毁元素
+		ObjectMap<Object,Object> objectMap = domainMap.get(domain);
+		if(objectMap == null){
+			Gdx.app.log(this.toString(), "not have to disabled " + domain);
+			return;
+		}
+		
+		Object object = objectMap.get("ashleyManager");
+		if(object != null)
+			((AshleyManager)object).disabled();
+		
+		domainMap.remove(domain); // 再移除
+		
+		Gdx.app.log(this.toString(), "disabled " + domain);
+	}
+	
+	/**
+	 * 销毁当前域所有变量
+	 */
+	public void disabled(T domain){
 		
 		// 先获取销毁元素
 		ObjectMap<Object,Object> objectMap = domainMap.get(domain);

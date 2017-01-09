@@ -121,6 +121,10 @@ public class ScreenProxy{
 			
 			GlobalInline.instance.exit();
 			
+			if("hide".equals(method.getName())){
+				GlobalInline.instance.disabled(screen.getClass());
+			}
+			
 			return object;
 		}
 	}

@@ -8,9 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.pending.game.Assets;
-import com.pending.game.GameVar;
 import com.pending.game.GameConfig;
-import com.pending.game.assets.GameScreenAssets;
+import com.pending.game.GameVar;
 import com.pending.game.assets.LogoScreenAssets;
 import com.pending.game.support.FadeOutTransitionEffect;
 import com.pending.game.support.ScreenProxy;
@@ -30,6 +29,8 @@ public class LogoScreen extends ScreenAdapter {
 	public final static float logoShowTime = 2;
 	
 	private Game game;
+	private Class<? extends Screen> screenClass;
+	private Class<?> screenAssetsClass;
 	
 	private Texture texture;
 	
@@ -37,10 +38,12 @@ public class LogoScreen extends ScreenAdapter {
 	
 	private boolean complete;
 	
-	public LogoScreen(Game game) {
+	public LogoScreen(Game game, Class<? extends Screen> screenClass, Class<?> screenAssetsClass) {
 		Gdx.app.log(this.toString(), "create begin");
 		
 		this.game = game;
+		this.screenClass = screenClass;
+		this.screenAssetsClass = screenAssetsClass;
 		this.complete = false;
 	}
 	
@@ -60,7 +63,7 @@ public class LogoScreen extends ScreenAdapter {
 			complete = true;
 			
 			ScreenProxy.instance.disabledProxy(game.getScreen().getClass()); // TODO有问题 销毁原Screen代理
-			Screen screen = ScreenProxy.instance.createScreen(GameScreen.class); // 创建Screen代理
+			Screen screen = ScreenProxy.instance.createScreen(screenClass); // 创建Screen代理
 			screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			
 			game.setScreen(new TransitionScreen(game, screen, new FadeOutTransitionEffect()));
@@ -80,7 +83,7 @@ public class LogoScreen extends ScreenAdapter {
 		Assets.instance.load(GameConfig.skin, Skin.class);
 		
 		// 闪屏之后的screen
-		Assets.instance.loadAssets(GameScreenAssets.class);
+		Assets.instance.loadAssets(screenAssetsClass);
 	}
 	
 	/**
