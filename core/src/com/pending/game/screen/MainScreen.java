@@ -9,6 +9,8 @@ import com.pending.game.GameConfig;
 import com.pending.game.GameVar;
 import com.pending.game.manager.InputManager;
 import com.pending.game.support.GameUtil;
+import com.pending.game.ui.GameLevelUI;
+import com.pending.game.ui.GameSettingUI;
 import com.pending.game.ui.MainScreenUI;
 
 public class MainScreen extends ScreenAdapter {
@@ -36,8 +38,17 @@ public class MainScreen extends ScreenAdapter {
 		
 		screenUI = GameUtil.createDisplaySizeGroup(UIstage, GameVar.UIViewport);
 		
-		screenUI.addActor(new MainScreenUI(this, Assets.instance.get(GameConfig.skin), Assets.instance.get(GameConfig.i18NBundle)));
+		GameSettingUI gameSettingUI = new GameSettingUI(this, Assets.instance.get(GameConfig.skin), Assets.instance.get(GameConfig.i18NBundle));
+		gameSettingUI.setPosition(-GameUtil.getDisplayWidth(GameVar.UIViewport), 0);
 		
+		MainScreenUI mainScreenUI = new MainScreenUI(this, Assets.instance.get(GameConfig.skin), Assets.instance.get(GameConfig.i18NBundle));
+		
+		GameLevelUI gameLevelUI = new GameLevelUI(this, Assets.instance.get(GameConfig.skin), Assets.instance.get(GameConfig.i18NBundle));
+		gameLevelUI.setPosition(GameUtil.getDisplayWidth(GameVar.UIViewport), 0);
+		
+		screenUI.addActor(gameSettingUI);
+		screenUI.addActor(mainScreenUI);
+		screenUI.addActor(gameLevelUI);
 	}
 	
 	@Override
@@ -54,5 +65,9 @@ public class MainScreen extends ScreenAdapter {
 		
 		InputManager.instance.removeProcessor(UIstage);
 		UIstage.dispose();
+	}
+
+	public Group getScreenUI() {
+		return screenUI;
 	}
 }

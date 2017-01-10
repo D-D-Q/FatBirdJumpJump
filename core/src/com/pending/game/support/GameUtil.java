@@ -8,6 +8,14 @@ import com.pending.game.GameConfig;
 
 public class GameUtil {
 
+	public static float getDisplayWidth(Viewport viewport){
+		
+		// ScreenX和ScreenY谁是0，谁就是可以全部显示的，使用的就是该边的比例
+		float scale = viewport.getScreenX() == 0 ? viewport.getScreenWidth()/GameConfig.width : viewport.getScreenHeight()/GameConfig.height; //
+				
+		return (viewport.getScreenWidth() - Math.abs(viewport.getScreenX()) * 2) / scale;
+	}
+	
 	/**
 	 * 创建一个实际屏幕显示大小的UI根
 	 * 

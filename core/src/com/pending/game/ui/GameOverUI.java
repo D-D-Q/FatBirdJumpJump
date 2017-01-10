@@ -1,5 +1,6 @@
 package com.pending.game.ui;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -9,7 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.pending.game.GameConfig;
+import com.pending.game.assets.MainScreenAssets;
 import com.pending.game.screen.GameScreen;
+import com.pending.game.screen.MainScreen;
+import com.pending.game.support.GlobalInline;
+import com.pending.game.support.LoadingScreen;
 
 /**
  * 游戏结束弹出
@@ -43,8 +48,21 @@ public class GameOverUI extends Table implements Telegraph {
 				gameScreen.restart();
 			}
 		});
-		
 		this.add(restartButton).colspan(1).expand().center();
+		
+		this.row();
+		
+		Button backButton = new Button(skin, "restart");
+		backButton.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				
+				// 开始游戏
+				Game game = GlobalInline.instance.getGame();
+				game.setScreen(new LoadingScreen(game, MainScreen.class, MainScreenAssets.class, false));
+			}
+		});
+		this.add(backButton).colspan(1).expand().center();
 	}
 	
 
