@@ -25,6 +25,11 @@ public class GameConfig {
 	public final static String skin = "skin/defaultUI.json";
 	
 	/**
+	 * 记录和设置保存文件名
+	 */
+	public final static String settingsFileName = "pending.data";
+	
+	/**
 	 * 日志级别
 	 */
 	public final static int logLevel = Application.LOG_INFO;

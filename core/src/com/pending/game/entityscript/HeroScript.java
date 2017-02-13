@@ -8,11 +8,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.pending.game.EntityScript;
 import com.pending.game.GameConfig;
 import com.pending.game.GameVar;
-import com.pending.game.Setting;
+import com.pending.game.Settings;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.components.TransformComponent;
 import com.pending.game.manager.MsgManager;
@@ -71,16 +72,6 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	 */
 	private float offetX = 0;;
 	
-	/**
-	 * 分数
-	 */
-	private long score;
-	
-	/**
-	 * 提升关卡需要增长的分数
-	 */
-	private final static int levelUpScore = 30;
-	
 	// 超级跳，暂时不用了
 	private final float superJumpTime = 2.5f;
 	public final static int superJumpNum = 30;
@@ -118,22 +109,21 @@ public class HeroScript extends EntityScript implements InputProcessor{
 			GlobalInline.instance.put("jumPBoardY", targetPosition.y);
 			++num;
 			
-			score = (long)position.y/100;
-			
+			// 更新分数
 			Monstersystem monstersystem = GlobalInline.instance.getAshleyManager().engine.getSystem(Monstersystem.class);
-			
-			// 关卡
-			if(score > levelUpScore * (monstersystem.getLevel() + 1)){
-				
-				monstersystem.levelUp();
+			if(monstersystem.updateScore(position.y)){
 				
 				jumpTime = maxJumpTime - (maxJumpTime-minJumpTime)/Monstersystem.maxLevel * monstersystem.getLevel();
 				speed = 2 * jumpHeight / jumpTime;
 				physicsComponent.rigidBody.getWorld().setGravity(new Vector2(0, -speed/jumpTime));
 			}
 			
-			MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_ADD_SCORE, score); // 高度
 		}
+	}
+	
+	@Override
+	public void postSolve(Contact contact, ContactImpulse impulse, Entity target) {
+		
 	}
 	
 	@Override
@@ -173,6 +163,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		 * */
 		speed = 2 * jumpHeight / jumpTime;
 		physicsComponent.rigidBody.getWorld().setGravity(new Vector2(0, -speed/jumpTime));
+		physicsComponent.rigidBody.setGravityScale(1);
 		physicsComponent.rigidBody.setLinearVelocity(0, speed);
 		
 		isStart = true;
@@ -189,7 +180,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		
 		GameVar.gameViewport.getCamera().unproject(touchDraggedVector.set(screenX, screenY, 0));
 		
-		offetX = (touchDraggedVector.x - touchPosition.x) * Setting.sensitivity;
+		offetX = (touchDraggedVector.x - touchPosition.x) * Settings.instance.sensitivity;
 		touchPosition.set(touchDraggedVector);
 		
 		return true;

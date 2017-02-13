@@ -8,12 +8,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.pending.game.Assets;
 import com.pending.game.GameConfig;
 import com.pending.game.GameVar;
+import com.pending.game.Settings;
 import com.pending.game.manager.AshleyManager;
 import com.pending.game.manager.InputManager;
 import com.pending.game.manager.MsgManager;
@@ -23,6 +23,7 @@ import com.pending.game.systems.GeneralSystem;
 import com.pending.game.systems.Monstersystem;
 import com.pending.game.systems.PhysicsSystem;
 import com.pending.game.systems.RenderingSystem;
+import com.pending.game.systems.Monstersystem.Board;
 import com.pending.game.tools.MapperTools;
 import com.pending.game.ui.GameOverUI;
 import com.pending.game.ui.GamePauseUI;
@@ -54,7 +55,7 @@ public class GameScreen extends ScreenAdapter {
 		
 		// 游戏视口，分辨率匹配
 		GameVar.gameViewport = new ScalingViewport(Scaling.fillX, GameConfig.width, GameConfig.height); // 默认扩大显示
-		GameVar.gameViewport.getCamera().position.set(GameVar.position.x, GameVar.position.y, 0);
+//		GameVar.gameViewport.getCamera().position.set(GameVar.position.x, GameVar.position.y, 0);
 		
 		// UI
 		UIstage = new Stage(GameVar.UIViewport, GameVar.batch); // 创建UI根节点，注意它会重置相机的位置到(设计分辨率宽/2, 设计分辨率高/2)
@@ -70,11 +71,7 @@ public class GameScreen extends ScreenAdapter {
 		ashleyManager.engine.addSystem(new Monstersystem(20));
 		ashleyManager.engine.addSystem(new RenderingSystem(30));
 		
-		// 英雄
-		Entity hero = ashleyManager.entityDao.createEntity(GameVar.position.x, GameVar.position.y, 40, 60);
-		ashleyManager.engine.addEntity(hero);
-		MapperTools.physicsCM.get(hero).rigidBody.setBullet(true);
-		GlobalInline.instance.put("hero", hero);
+		start();
 	}
 	
 	/**
@@ -119,6 +116,27 @@ public class GameScreen extends ScreenAdapter {
 	}
 	
 	/**
+	 * 初始化英雄
+	 */
+	public void start(){
+		
+		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
+		
+		Monstersystem monstersystem = ashleyManager.engine.getSystem(Monstersystem.class);
+		monstersystem.start(Settings.instance.level);
+		
+		// 英雄
+		float y = monstersystem.getScore() * Monstersystem.scoreScale + Board.height/2 + 60/2;
+		Entity hero = ashleyManager.entityDao.createEntity(GameConfig.width/2, y, 40, 60);
+		MapperTools.physicsCM.get(hero).rigidBody.setGravityScale(0);
+		MapperTools.physicsCM.get(hero).rigidBody.setBullet(true);
+		ashleyManager.engine.addEntity(hero);
+		GlobalInline.instance.put("hero", hero);
+		
+		GameVar.gameViewport.getCamera().position.set(GameConfig.width/2, y + GameVar.cameraOffset, 0);
+	}
+	
+	/**
 	 * 游戏结束
 	 */
 	public void over(){
@@ -141,20 +159,11 @@ public class GameScreen extends ScreenAdapter {
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		ashleyManager.engine.removeAllEntities();
 		
-		// 英雄
-		Entity hero = ashleyManager.entityDao.createEntity(GameVar.position.x, GameVar.position.y, 40, 60); // TODO 读取关卡数据计算人物位置
-		ashleyManager.engine.addEntity(hero);
-		MapperTools.physicsCM.get(hero).rigidBody.setBullet(true);
-		GlobalInline.instance.put("hero", hero);
-		
-		GameVar.gameViewport.getCamera().position.set(GameVar.position.x, GameVar.position.y + GameVar.cameraOffset, 0);
-				
-		Monstersystem monstersystem = ashleyManager.engine.getSystem(Monstersystem.class);
-		monstersystem.start(0); // TODO 读取关卡数据
-		
 		screenUI.clear();
 		screenUI.addActor(new GameScreenUI1(Assets.instance.get(GameConfig.skin), Assets.instance.get(GameConfig.i18NBundle)));
 		screenUI.addActor(new GamePauseUI(Assets.instance.get(GameConfig.skin), Assets.instance.get(GameConfig.i18NBundle)));
+		
+		start();
 		
 		for (EntitySystem system : GlobalInline.instance.getAshleyManager().engine.getSystems()) {
 			if (system instanceof RenderingSystem)

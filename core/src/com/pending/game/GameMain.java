@@ -2,6 +2,7 @@ package com.pending.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -43,11 +44,13 @@ public class GameMain extends Game {
 		
 		GameVar.batch = new SpriteBatch();
 		
-		Gdx.input.setInputProcessor(InputManager.instance); // 监听输入事件
-		
 		GameVar.UIViewport = new FillViewport(GameConfig.width, GameConfig.height);
 		
+		Gdx.input.setInputProcessor(InputManager.instance); // 监听输入事件
+		
 		GlobalInline.instance.putGame(this);
+		
+		Settings.instance.load();
 		
 //		setScreen(new SwitchScreen(this, GameScreen.class, GameScreenAssets.class));
 		setScreen(new LogoScreen(this, MainScreen.class, MainScreenAssets.class));

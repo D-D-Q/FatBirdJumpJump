@@ -10,18 +10,29 @@
     		font: fzstk, fontColor: white 
     	}
     },
+    com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+    	start: {
+    		font: fzstk,
+    		up: blue_button00,
+    		down: blue_button01
+    	}
+    },
     com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
     	start: {
-    		up: button0
+    		up: blue_button00,
+    		down: blue_button01
     	},
     	pause: {
-    		up: button0
+    		up: blue_button00
     	},
     	resume: {
-    		up: button0
+    		up: blue_button00
     	},
     	restart: {
-    		up: button0
+    		up: blue_button00
+    	},
+    	setting: {
+    		up: blue_button00
     	}
     }
 }

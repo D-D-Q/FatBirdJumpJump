@@ -9,9 +9,13 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.pending.game.GameConfig;
+import com.pending.game.Settings;
+import com.pending.game.entityscript.BoardScript;
 import com.pending.game.manager.AshleyManager;
+import com.pending.game.manager.MsgManager;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.tools.MapperTools;
+import com.pending.game.ui.GameScreenUI1;
 
 /**
  * 障碍系统
@@ -62,9 +66,24 @@ public class Monstersystem extends EntitySystem{
 	}
 	
 	/**
+	 * 高度和分数比例
+	 */
+	public final static int scoreScale = 100;
+	
+	/**
+	 * 提升关卡需要增长的分数
+	 */
+	public final static int levelUpScore = 30;
+	
+	/**
+	 * 分数
+	 */
+	private long score;
+	
+	/**
 	 * 当前关卡, 从0开始，显示的时候+1
 	 */
-	private int level = 0;
+	private int level;
 	
 	/**
 	 * 不必总new新的Board
@@ -173,8 +192,47 @@ public class Monstersystem extends EntitySystem{
 	 */
 	public void start(int level){
 		
-		if(level >= 0 && level <= maxLevel) this.level = level;
-		curPosition.setZero();
+		
+		if(level >= 0 && level <= maxLevel){
+			this.level = level;
+		}
+		else{
+			this.level = 0;
+		}
+		
+		this.score = level * levelUpScore;
+		MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_ADD_SCORE, this.score); // 更新UI
+		
+		curPosition.set(GameConfig.width/2, this.score * scoreScale);
+		
+		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
+		
+		Entity entity = ashleyManager.entityDao.createEntity2(curPosition.x, curPosition.y, boardWidth[0], Board.height);
+		entity.flags = BoardScript.FIXED_ENTITY;
+		MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
+		ashleyManager.engine.addEntity(entity);
+	}
+	
+	/**
+	 * 更新分数
+	 * 
+	 * @param score
+	 * @return true 关卡变化
+	 */
+	public boolean updateScore(float score){
+		
+		this.score = (long)score/scoreScale;
+		
+		Settings.instance.updateScore(this.score);
+		MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_ADD_SCORE, this.score); // 更新UI
+		
+		// 关卡
+		if(score > levelUpScore * (level + 1)){
+			
+			levelUp();
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -183,11 +241,18 @@ public class Monstersystem extends EntitySystem{
 	public void levelUp(){
 		
 		if(level < maxLevel){
+			
 			 ++level;
+			 Settings.instance.updateLevel(level);
+			 
 			 Gdx.app.log(this.toString(), "level up:" + level);
 		}
 	}
 	
+	public long getScore() {
+		return score;
+	}
+
 	public int getLevel(){
 		return level;
 	}
