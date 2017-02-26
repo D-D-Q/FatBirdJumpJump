@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -13,7 +15,6 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.pending.game.Assets;
 import com.pending.game.GameConfig;
 import com.pending.game.GameVar;
-import com.pending.game.Settings;
 import com.pending.game.manager.AshleyManager;
 import com.pending.game.manager.InputManager;
 import com.pending.game.manager.MsgManager;
@@ -21,9 +22,9 @@ import com.pending.game.support.GameUtil;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.systems.GeneralSystem;
 import com.pending.game.systems.Monstersystem;
+import com.pending.game.systems.Monstersystem.Board;
 import com.pending.game.systems.PhysicsSystem;
 import com.pending.game.systems.RenderingSystem;
-import com.pending.game.systems.Monstersystem.Board;
 import com.pending.game.tools.MapperTools;
 import com.pending.game.ui.GameOverUI;
 import com.pending.game.ui.GamePauseUI;
@@ -48,6 +49,11 @@ public class GameScreen extends ScreenAdapter {
 	 */
 	private Group screenUI;
 	
+	/**
+	 * 手势事件
+	 */
+	private GestureDetector gestureDetector;
+	
 	public GameScreen() {
 		Gdx.app.log(this.toString(), "create begin");
 
@@ -61,6 +67,19 @@ public class GameScreen extends ScreenAdapter {
 		UIstage = new Stage(GameVar.UIViewport, GameVar.batch); // 创建UI根节点，注意它会重置相机的位置到(设计分辨率宽/2, 设计分辨率高/2)
 		initUI();
 		InputManager.instance.addProcessor(UIstage); // UI事件
+		
+		gestureDetector = new GestureDetector(new GestureAdapter() {
+			
+			@Override
+			public boolean tap(float x, float y, int count, int button) {
+				if(count >= 2){
+					pause(); // 双击暂停
+					return true;
+				}
+				return false;
+			}
+		});
+		InputManager.instance.addProcessor(gestureDetector); // 手势事件
 				
 		// ECS系统
 		AshleyManager ashleyManager = new AshleyManager();
@@ -123,7 +142,8 @@ public class GameScreen extends ScreenAdapter {
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		
 		Monstersystem monstersystem = ashleyManager.engine.getSystem(Monstersystem.class);
-		monstersystem.start(Settings.instance.level);
+//		monstersystem.start(Settings.instance.level);
+		monstersystem.start(0);
 		
 		// 英雄
 		float y = monstersystem.getScore() * Monstersystem.scoreScale + Board.height/2 + 60/2;
@@ -208,6 +228,7 @@ public class GameScreen extends ScreenAdapter {
 		Gdx.app.log(this.toString(), "dispose begin");
 		
 		InputManager.instance.removeProcessor(UIstage);
+		InputManager.instance.removeProcessor(gestureDetector);
 		UIstage.dispose();
 	}
 }

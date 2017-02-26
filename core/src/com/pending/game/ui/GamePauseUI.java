@@ -52,14 +52,14 @@ public class GamePauseUI extends Table implements Telegraph  {
 		MsgManager.instance.addListener(this, MSG_PAUSE);
 		
 		// 暂停按钮
-		pauseButton = new Button(skin, "pause");
-		pauseButton.addListener(new ClickListener(){
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				pause();
-			}
-		});
-		this.add(pauseButton).colspan(1).expand().bottom().left();
+//		pauseButton = new Button(skin, "pause");
+//		pauseButton.addListener(new ClickListener(){
+//			@Override
+//			public void clicked(InputEvent event, float x, float y) {
+//				pause();
+//			}
+//		});
+//		this.add(pauseButton).colspan(1).expand().bottom().left();
 		
 		// 恢复按钮
 		resumeButton = new Button(skin, "resume");

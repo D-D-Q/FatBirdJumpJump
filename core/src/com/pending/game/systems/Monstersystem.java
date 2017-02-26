@@ -33,6 +33,8 @@ import com.pending.game.ui.GameScreenUI1;
  * 		0.2秒的话 最高是60 起跳速度是极限600 
  *  	0.3秒的话 最高时90 起跳速度是极限600 最慢0.5秒 *
  *  
+ *  TODO 增加会移动的平台，有操作难度。增加有怪物的平台，上去就over
+ *  
  * @author D
  * @date 2016年11月29日 下午8:52:18
  * 
@@ -227,7 +229,7 @@ public class Monstersystem extends EntitySystem{
 		MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_ADD_SCORE, this.score); // 更新UI
 		
 		// 关卡
-		if(score > levelUpScore * (level + 1)){
+		if(this.score > levelUpScore * (level + 1)){
 			
 			levelUp();
 			return true;
