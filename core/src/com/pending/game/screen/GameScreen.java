@@ -4,6 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 import com.badlogic.gdx.math.Vector2;
@@ -12,6 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.brashmonkey.spriter.Data;
+import com.brashmonkey.spriter.Drawer;
+import com.brashmonkey.spriter.Player;
+import com.brashmonkey.spriter.SCMLReader;
 import com.pending.game.Assets;
 import com.pending.game.GameConfig;
 import com.pending.game.GameVar;
@@ -20,6 +27,8 @@ import com.pending.game.manager.InputManager;
 import com.pending.game.manager.MsgManager;
 import com.pending.game.support.GameUtil;
 import com.pending.game.support.GlobalInline;
+import com.pending.game.support.spriter.SpriterLibGdxDrawer;
+import com.pending.game.support.spriter.SpriterLibGdxLoader;
 import com.pending.game.systems.GeneralSystem;
 import com.pending.game.systems.Monstersystem;
 import com.pending.game.systems.Monstersystem.Board;
@@ -54,6 +63,12 @@ public class GameScreen extends ScreenAdapter {
 	 */
 	private GestureDetector gestureDetector;
 	
+	
+	
+	Player player;
+	Drawer<Sprite> drawer;
+	SpriterLibGdxLoader loader;
+
 	public GameScreen() {
 		Gdx.app.log(this.toString(), "create begin");
 
@@ -90,6 +105,18 @@ public class GameScreen extends ScreenAdapter {
 		ashleyManager.engine.addSystem(new Monstersystem(20));
 		ashleyManager.engine.addSystem(new RenderingSystem(30));
 		
+		
+		FileHandle handle = Gdx.files.internal("data/bird_2_fat_bird.scml");
+		Data data = new SCMLReader(handle.read()).getData();
+
+		loader = new SpriterLibGdxLoader(data);
+		loader.load(handle.file());
+
+		drawer = new SpriterLibGdxDrawer(loader, GameVar.batch);
+
+		player = new Player(data.getEntity(0));
+		player.setAnimation("flap");
+		
 		start();
 	}
 	
@@ -114,6 +141,12 @@ public class GameScreen extends ScreenAdapter {
 		
 		// ECS系统
 		GlobalInline.instance.getAshleyManager().engine.update(delta);
+		
+		player.update();
+		GameVar.batch.begin();
+		drawer.draw(player);
+		GameVar.batch.end();
+		
 		
 		GameVar.UIViewport.apply();
 		UIstage.act(delta);
