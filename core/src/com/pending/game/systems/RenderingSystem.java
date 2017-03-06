@@ -4,9 +4,9 @@ import java.util.Comparator;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.brashmonkey.spriter.Drawer;
 import com.pending.game.GameVar;
 import com.pending.game.components.TextureComponent;
 import com.pending.game.components.TransformComponent;
@@ -22,6 +22,8 @@ import com.pending.game.tools.MapperTools;
  * @date 2016年8月28日 上午10:57:35
  */
 public class RenderingSystem extends SortedIteratingSystem {
+	
+	private Drawer<Sprite> drawer;
 	
 	/**
 	 * 显示效果
