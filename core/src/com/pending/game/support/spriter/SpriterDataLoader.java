@@ -33,6 +33,9 @@ public class SpriterDataLoader extends AsynchronousAssetLoader<Data, SpriterData
 		Loaders = new ObjectMap<>(4); // TODO 默认Spriter的scml文件数量
 	}
 
+	/**
+	 * 第二个执行,异步
+	 */
 	@Override
 	public void loadAsync(AssetManager manager, String fileName, FileHandle file, Parameters parameter) {
 		
@@ -42,8 +45,12 @@ public class SpriterDataLoader extends AsynchronousAssetLoader<Data, SpriterData
 		loader.load(file.file());
 		
 		Loaders.put(fileName, loader);
+		
 	}
 
+	/**
+	 * 第三个执行，同步。返回已加载的资源
+	 */
 	@Override
 	public Data loadSync(AssetManager manager, String fileName, FileHandle file, Parameters parameter) {
 		
@@ -51,6 +58,9 @@ public class SpriterDataLoader extends AsynchronousAssetLoader<Data, SpriterData
 		return null;
 	}
 
+	/**
+	 * 第一个执行,异步还是同步，取决于依赖资源的类型
+	 */
 	@Override
 	public Array<AssetDescriptor> getDependencies(String fileName, FileHandle file, Parameters parameter) {
 		
