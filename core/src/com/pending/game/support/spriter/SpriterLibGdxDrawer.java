@@ -17,7 +17,7 @@ public class SpriterLibGdxDrawer extends com.brashmonkey.spriter.Drawer<Sprite> 
 	ShapeRenderer renderer;
 	
 	public SpriterLibGdxDrawer(Loader<Sprite> loader, SpriteBatch batch){
-		this(loader, batch, new ShapeRenderer());
+		this(loader, batch, null);
 	}
 	
 	public SpriterLibGdxDrawer(Loader<Sprite> loader, SpriteBatch batch, ShapeRenderer renderer){

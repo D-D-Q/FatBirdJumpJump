@@ -2,12 +2,12 @@ package com.pending.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.assets.loaders.SkinLoader.SkinParameter;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -15,7 +15,10 @@ import com.badlogic.gdx.utils.reflect.Annotation;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Field;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
+import com.brashmonkey.spriter.Data;
+import com.brashmonkey.spriter.Player;
 import com.pending.game.annotation.Asset;
+import com.pending.game.support.spriter.SpriterDataLoader;
 
 /**
  * 所有资源管理
@@ -41,11 +44,15 @@ public class Assets extends AssetManager{
 	
 	private Assets() {
 		
+		super(new InternalFileHandleResolver());
+		
 		// FreeType在android下会加载失败
 //		assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(assetManager.getFileHandleResolver())); // 设置ttf字体扩展的Loader
 //		assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(assetManager.getFileHandleResolver())); // 设置ttf字体扩展的Loader
 		
-//		super.setLoader(TiledMap.class, new TmxMapLoader(super.getFileHandleResolver())); //设置Tiled编辑器地图
+//		super.setLoader(TiledMap.class, new TmxMapLoader(super.getFileHandleResolver())); // 设置Tiled编辑器地图
+		
+		super.setLoader(Data.class, new SpriterDataLoader(super.getFileHandleResolver())); // 设置Spriter的Data
 		
 		Texture.setAssetManager(this); // 设置游戏切出切回时候，资源管理器可以管理纹理
 	}
@@ -139,11 +146,41 @@ public class Assets extends AssetManager{
 	}
 	
 	/**
+	 * 获得Spriter的精灵
+	 * 
+	 * @param fileName
+	 * @param index
+	 * @return
+	 */
+	public Player getSpriterPlayer(String fileName, int index){
+		
+		Data data = super.get(fileName, Data.class);
+		return new Player(data.getEntity(index));
+	}
+	
+	/**
+	 * 获得Spriter的精灵
+	 * 
+	 * @param fileName
+	 * @param playerName
+	 * @return
+	 */
+	public Player getSpriterPlayer(String fileName, String playerName){
+		
+		Data data = super.get(fileName, Data.class);
+		return new Player(data.getEntity(playerName));
+	}
+	
+	/**
 	 * 销毁所有资源
 	 */
 	@Override
 	public void dispose () {
 		Gdx.app.log(this.toString(), "dispose begin");
+		
+		// spriter的loader需要销毁
+		SpriterDataLoader loader = (SpriterDataLoader)super.getLoader(Data.class);
+		loader.dispose();
 		
 		super.dispose();
 	}

@@ -3,8 +3,10 @@ package com.pending.game;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.pending.game.assets.MainScreenAssets;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.components.ScriptComponent;
+import com.pending.game.components.SpriterPlayerComponent;
 import com.pending.game.components.TextureComponent;
 import com.pending.game.components.TransformComponent;
 import com.pending.game.entityscript.BoardScript;
@@ -40,20 +42,24 @@ public class EntityDao {
 		transformComponent.position.set(positionX, positionY);
 		transformComponent.width = width;
 		transformComponent.height = height;
+		transformComponent.offsetY = 30;
 		entity.add(transformComponent);
 		
-		TextureComponent textureComponent = ashleyManager.engine.createComponent(TextureComponent.class);
-		entity.add(textureComponent);
+//		TextureComponent textureComponent = ashleyManager.engine.createComponent(TextureComponent.class);
+//		entity.add(textureComponent);
+		
+		SpriterPlayerComponent spriterPlayerComponent = ashleyManager.engine.createComponent(SpriterPlayerComponent.class);
+		spriterPlayerComponent.player = Assets.instance.getSpriterPlayer(MainScreenAssets.spriterData, 0);
+		spriterPlayerComponent.player.setScale(0.1f);
+		entity.add(spriterPlayerComponent);
 		
 		PhysicsComponent physicsComponent = ashleyManager.engine.createComponent(PhysicsComponent.class);
-		
 //		CircleShape circle = new CircleShape(); // 圆形
 //		circle.setRadius(10);
 //		physicsComponent.shape = circle;
 		PolygonShape polygon = new PolygonShape();
 		polygon.setAsBox(PhysicsManager.pixelToMeter(width/2), PhysicsManager.pixelToMeter(height/2));
 		physicsComponent.shape = polygon;
-		
 		physicsComponent.bodyType = BodyType.DynamicBody;
 		entity.add(physicsComponent);
 		

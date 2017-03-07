@@ -6,11 +6,17 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.brashmonkey.spriter.Data;
 import com.brashmonkey.spriter.Drawer;
+import com.pending.game.Assets;
 import com.pending.game.GameVar;
+import com.pending.game.assets.MainScreenAssets;
+import com.pending.game.components.SpriterPlayerComponent;
 import com.pending.game.components.TextureComponent;
 import com.pending.game.components.TransformComponent;
 import com.pending.game.support.GlobalInline;
+import com.pending.game.support.spriter.SpriterDataLoader;
+import com.pending.game.support.spriter.SpriterLibGdxDrawer;
 import com.pending.game.tools.FamilyTools;
 import com.pending.game.tools.MapperTools;
 
@@ -45,6 +51,9 @@ public class RenderingSystem extends SortedIteratingSystem {
 				return y;
 	        }
 		}, priority);
+		
+		SpriterDataLoader dataLoader = (SpriterDataLoader)Assets.instance.getLoader(Data.class);
+		drawer = new SpriterLibGdxDrawer(dataLoader.getLoader(MainScreenAssets.spriterData), GameVar.batch);
 		
 		subtitleStage = new Stage(GameVar.gameViewport, GameVar.batch);
 	}
@@ -81,31 +90,42 @@ public class RenderingSystem extends SortedIteratingSystem {
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
 		
 		TextureComponent textureComponent = MapperTools.textureCM.get(entity);
-		if(textureComponent.textureRegion == null){
-//			Gdx.app.log(this.toString(), "textureRegion is null");
-			return;
+		if(textureComponent != null){
+			if(textureComponent.textureRegion == null){
+	//			Gdx.app.log(this.toString(), "textureRegion is null");
+			}
+			else if(textureComponent.textureRegion instanceof Sprite){ // 绘制精灵
+				Sprite sprite = (Sprite)textureComponent.textureRegion;
+				sprite.setPosition(transformComponent.getRenderPositionX(), transformComponent.getRenderPositionY());
+				sprite.draw(GameVar.batch);
+			}
+			else{  // 绘制纹理
+		        /*
+		         *  TextureRegion region, 绘制纹理
+		         *  float x, float y, 绘制位置，已左下角为原点，该位置是指纹理的左下角的要在位置
+		         *  float originX, float originY, 设置锚点，值是相对于原点（纹理左下角）的位置
+		         *  float width, float height, 纹理宽高
+		         *  float scaleX, float scaleY, 缩放，1是原始大小。从锚点向四周缩放
+		         *  float rotation, 旋转，正数是逆时针。以锚点为圆心旋转
+		         */
+				GameVar.batch.draw(textureComponent.textureRegion, 
+						transformComponent.getRenderPositionX(), transformComponent.getRenderPositionY(), 
+						transformComponent.origin.x, transformComponent.origin.y,
+						transformComponent.getWidth(), transformComponent.getHeight(),
+						transformComponent.scale.x, transformComponent.scale.y,
+						transformComponent.rotation);
+			}
 		}
 		
-		if(textureComponent.textureRegion instanceof Sprite){ // 绘制精灵
-			Sprite sprite = (Sprite)textureComponent.textureRegion;
-			sprite.setPosition(transformComponent.getRenderPositionX(), transformComponent.getRenderPositionY());
-			sprite.draw(GameVar.batch);
-		}
-		else{  // 绘制纹理
-	        /*
-	         *  TextureRegion region, 绘制纹理
-	         *  float x, float y, 绘制位置，已左下角为原点，该位置是指纹理的左下角的要在位置
-	         *  float originX, float originY, 设置锚点，值是相对于原点（纹理左下角）的位置
-	         *  float width, float height, 纹理宽高
-	         *  float scaleX, float scaleY, 缩放，1是原始大小。从锚点向四周缩放
-	         *  float rotation, 旋转，正数是逆时针。以锚点为圆心旋转
-	         */
-			GameVar.batch.draw(textureComponent.textureRegion, 
-					transformComponent.getRenderPositionX(), transformComponent.getRenderPositionY(), 
-					transformComponent.origin.x, transformComponent.origin.y,
-					transformComponent.getWidth(), transformComponent.getHeight(),
-					transformComponent.scale.x, transformComponent.scale.y,
-					transformComponent.rotation);
+		SpriterPlayerComponent spriterPlayerComponent = MapperTools.SpriterPlayerCM.get(entity);
+		if(spriterPlayerComponent != null){
+			spriterPlayerComponent.player.setPosition(transformComponent.getRenderPositionX(), transformComponent.getRenderPositionY());
+			spriterPlayerComponent.player.update();
+			// 1是未翻过 -1是亿翻过
+			if(spriterPlayerComponent.player.flippedX() == 1 && transformComponent.flipX || spriterPlayerComponent.player.flippedX() == -1 && !transformComponent.flipX)
+				spriterPlayerComponent.player.flipX();
+			
+			drawer.draw(spriterPlayerComponent.player);
 		}
 	}
 }

@@ -1,11 +1,10 @@
 package com.pending.game.support.spriter;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.SynchronousAssetLoader;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
@@ -21,7 +20,7 @@ import com.brashmonkey.spriter.SCMLReader;
  * @author D
  * @date 2017年3月6日
  */
-public class SpriterDataLoader extends AsynchronousAssetLoader<Data, SpriterDataLoader.Parameters> {
+public class SpriterDataLoader extends SynchronousAssetLoader<Data, SpriterDataLoader.Parameters> {
 	
 	/**
 	 * scml文件和对应的Loader
@@ -34,41 +33,46 @@ public class SpriterDataLoader extends AsynchronousAssetLoader<Data, SpriterData
 	}
 
 	/**
-	 * 第二个执行,异步
+	 * 第二个执行，同步。返回已加载的资源
 	 */
 	@Override
-	public void loadAsync(AssetManager manager, String fileName, FileHandle file, Parameters parameter) {
+	public Data load(AssetManager assetManager, String fileName, FileHandle file, Parameters parameter) {
 		
-		Data data = new SCMLReader(file.read()).getData();
+		Data spriterData = new SCMLReader(file.read()).getData();
 
-		Loader<Sprite> loader = new SpriterLibGdxLoader(data);
+		Loader<Sprite> loader = new SpriterLibGdxLoader(spriterData);
 		loader.load(file.file());
 		
 		Loaders.put(fileName, loader);
 		
+		return spriterData;
 	}
-
+	
 	/**
-	 * 第三个执行，同步。返回已加载的资源
+	 * 获得Spriter的loader
+	 * 
+	 * @param scml
+	 * @return
 	 */
-	@Override
-	public Data loadSync(AssetManager manager, String fileName, FileHandle file, Parameters parameter) {
-		
-		Loader<Sprite> loader = Loaders.get(fileName);
-		return null;
+	public Loader<Sprite> getLoader(String scml){
+		return Loaders.get(scml);
 	}
-
+	
+	/**
+	 * 销毁
+	 */
+	public void dispose(){
+		
+		for(Loader<Sprite> loader : Loaders.values())
+			loader.dispose();
+	}
+	
 	/**
 	 * 第一个执行,异步还是同步，取决于依赖资源的类型
 	 */
 	@Override
 	public Array<AssetDescriptor> getDependencies(String fileName, FileHandle file, Parameters parameter) {
-		
 		return null;
-	}
-	
-	public Loader<Sprite> getLoader(String scml){
-		return Loaders.get(scml);
 	}
 	
 	public static class Parameters extends AssetLoaderParameters<Data> {

@@ -45,6 +45,11 @@ public class TransformComponent implements Component, Poolable  {
 	 */
 	public float spriteWidth;
 	
+	/**
+	 * 是否翻转
+	 */
+	public boolean flipX = false;
+	
 //-------------------------------------------------------------暂时没用start
 	/**
 	 * 引擎锚点位置，缩放、旋转使用
@@ -101,6 +106,7 @@ public class TransformComponent implements Component, Poolable  {
 		temp.height = this.height;
 		temp.offsetX = this.offsetX;
 		temp.offsetY = this.offsetY;
+		temp.flipX = this.flipX;
 		temp.origin.set(this.origin);
 		temp.scale.set(this.scale);
 		temp.rotation = this.rotation;
@@ -120,6 +126,7 @@ public class TransformComponent implements Component, Poolable  {
 		offsetX = 0;
 		offsetY = 0;
 		spriteHeight = 0;
+		flipX = false;
 		
 		origin.setZero();
 		scale.set(1.0f, 1.0f);

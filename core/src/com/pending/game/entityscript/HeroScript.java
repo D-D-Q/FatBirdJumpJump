@@ -10,11 +10,13 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.brashmonkey.spriter.Animation;
 import com.pending.game.EntityScript;
 import com.pending.game.GameConfig;
 import com.pending.game.GameVar;
 import com.pending.game.Settings;
 import com.pending.game.components.PhysicsComponent;
+import com.pending.game.components.SpriterPlayerComponent;
 import com.pending.game.components.TransformComponent;
 import com.pending.game.manager.MsgManager;
 import com.pending.game.manager.PhysicsManager;
@@ -118,13 +120,32 @@ public class HeroScript extends EntityScript implements InputProcessor{
 				physicsComponent.rigidBody.getWorld().setGravity(new Vector2(0, -speed/jumpTime));
 			}
 			
+//			SpriterPlayerComponent spriterPlayerComponent = MapperTools.SpriterPlayerCM.get(entity);
+//			spriterPlayerComponent.player.setAnimation(0);
+//			Animation animation = spriterPlayerComponent.player.getAnimation();
+//			animation.prepare();
 		}
 	}
 	
 	@Override
-	public void postSolve(Contact contact, ContactImpulse impulse, Entity target) {
+	public boolean beginContact(Contact contact, Entity target){
 		
+//		SpriterPlayerComponent spriterPlayerComponent = MapperTools.SpriterPlayerCM.get(entity);
+//		spriterPlayerComponent.player.setAnimation("fly");
+//		Animation animation = spriterPlayerComponent.player.getAnimation();
+//		animation.prepare();
+		
+		return true;
 	}
+	
+	@Override
+	public boolean endContact(Contact contact, Entity target){
+		
+		
+		
+		return true;
+	}
+	
 	
 	@Override
 	public boolean keyDown (int keycode) {
@@ -207,6 +228,13 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		float newX = MathUtils.clamp(entityPosition.x + offetX,0 + transformComponent.width / 2, GameConfig.width - transformComponent.width / 2);
 		Vector2 rigidBodyPosition = physicsComponent.rigidBody.getPosition();
 		physicsComponent.rigidBody.setTransform(PhysicsManager.pixelToMeter(newX), rigidBodyPosition.y, 0); 
+		
+		// 精灵朝向
+		if(offetX > 0)
+			transformComponent.flipX = true; // 朝右
+		else if(offetX < 0)
+			transformComponent.flipX = false; // 朝左(默认)  
+		
 		offetX = 0;
 		
 //		if(num > superJumpNum){
