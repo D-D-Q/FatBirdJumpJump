@@ -14,6 +14,7 @@ import com.pending.game.entityscript.HeroScript;
 import com.pending.game.manager.AshleyManager;
 import com.pending.game.manager.PhysicsManager;
 import com.pending.game.support.GlobalInline;
+import com.pending.game.systems.Monstersystem.Board;
 
 /**
  * 生产指定实体
@@ -76,12 +77,12 @@ public class EntityDao {
 	}
 
 	/**
-	 * 创建角色实体
+	 * 创建跳台实体
 	 * 
 	 * @param
 	 * @return
 	 */
-	public Entity createEntity2(float positionX, float positionY, float width, float height){
+	public Entity createBoard(float positionX, float positionY, float width, float height){
 		
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		Entity entity = ashleyManager.engine.createEntity();
@@ -103,10 +104,16 @@ public class EntityDao {
 		physicsComponent.bodyType = BodyType.DynamicBody;
 		entity.add(physicsComponent);
 		
+		Entity boardSensor = createBoardSensor(positionX, positionY + height, width, height);
+		
 		ScriptComponent scriptComponent = ashleyManager.engine.createComponent(ScriptComponent.class);
-		scriptComponent.script = new BoardScript();
-		scriptComponent.script.entity = entity;
+		BoardScript boardScript = new BoardScript();
+		boardScript.entity = entity;
+		boardScript.sensor = boardSensor;
+		scriptComponent.script = boardScript;
 		entity.add(scriptComponent);
+		
+		ashleyManager.engine.addEntity(boardSensor);
 		
 		GlobalInline.instance.getAshleyManager().initComponent(entity);
 		
@@ -114,4 +121,42 @@ public class EntityDao {
 		
 		return entity;
 	}
+	
+
+	/**
+	 * 创建跳台感应器
+	 * 
+	 * @param
+	 * @return
+	 */
+	public Entity createBoardSensor(float positionX, float positionY, float width, float height){
+		
+		height = height * 4;
+		
+		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
+		Entity entity = ashleyManager.engine.createEntity();
+		
+		TransformComponent transformComponent = ashleyManager.engine.createComponent(TransformComponent.class);
+		transformComponent.position.set(positionX, positionY);
+		transformComponent.width = width;
+		transformComponent.height = height;
+		entity.add(transformComponent);
+		
+		PhysicsComponent physicsComponent = ashleyManager.engine.createComponent(PhysicsComponent.class);
+		PolygonShape polygon = new PolygonShape();
+		polygon.setAsBox(PhysicsManager.pixelToMeter(width/2), PhysicsManager.pixelToMeter(height/2));
+		physicsComponent.shape = polygon;
+		physicsComponent.bodyType = BodyType.StaticBody;
+		physicsComponent.isSensor = true;
+		entity.add(physicsComponent);
+		
+		GlobalInline.instance.getAshleyManager().initComponent(entity);
+		
+		entity.flags = 100; //TODO 100表示传感器
+		
+		Assets.instance.finishLoading();
+		
+		return entity;
+	}
+	
 }

@@ -119,7 +119,6 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	
 	/**
 	 * 进入碰撞，最先调用
-	 * 只给碰撞检测(CollisionComponent)刚体的实体转发碰撞事件
 	 * 
 	 * @see com.badlogic.gdx.physics.box2d.ContactListener#beginContact(com.badlogic.gdx.physics.box2d.Contact)
 	 */
@@ -147,7 +146,7 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	
 	/**
 	 * 计算碰撞之前调用。未产生效果和力, 通常用来改变效果和力
-	 * 只给碰撞检测(CollisionComponent)刚体的实体转发碰撞事件
+	 * 碰撞传感器不会触发此方法
 	 * 
 	 * @see com.badlogic.gdx.physics.box2d.ContactListener#preSolve(com.badlogic.gdx.physics.box2d.Contact, com.badlogic.gdx.physics.box2d.Manifold)
 	 */
@@ -175,6 +174,8 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 
 	/**
 	 * 计算碰撞之后调用。已产生效果和力，通常用来使用效果和力
+	 * 碰撞传感器不会触发此方法
+	 * 
 	 * @see com.badlogic.gdx.physics.box2d.ContactListener#postSolve(com.badlogic.gdx.physics.box2d.Contact, com.badlogic.gdx.physics.box2d.ContactImpulse)
 	 */
 	@Override
@@ -201,7 +202,6 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 
 	/**
 	 * 离开碰撞
-	 * 只给碰撞检测(CollisionComponent)刚体的实体转发碰撞事件
 	 * 
 	 * @see com.badlogic.gdx.physics.box2d.ContactListener#endContact(com.badlogic.gdx.physics.box2d.Contact)
 	 */

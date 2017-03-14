@@ -82,8 +82,12 @@ public class AshleyManager{
 		PhysicsSystem physicsSystem = engine.getSystem(PhysicsSystem.class);
 		
 		// 添加碰撞检测
-		if(MapperTools.physicsCM.get(entity) != null){
-			physicsSystem.physicsManager.addPhysicsRigidBody(entity);
+		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
+		if(physicsComponent != null){
+			if(physicsComponent.isSensor)
+				physicsSystem.physicsManager.addSensorRigidBody(entity);
+			else
+				physicsSystem.physicsManager.addPhysicsRigidBody(entity);
 		}
 		
 		// 脚本组件

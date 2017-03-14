@@ -89,7 +89,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold, Entity target) {
-		
+			
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		
 		if(physicsComponent.rigidBody.getLinearVelocity().y > 0){ // 上升过程
@@ -105,47 +105,85 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		
 		if(position.y - transformComponent.height/2 < targetPosition.y + targetTransformComponent.height/2){ // 精灵底部 < 台阶顶部
 			contact.setEnabled(false); // 禁用当前碰撞
+			return;
 		}
-		else if(isStart){
-			physicsComponent.rigidBody.setLinearVelocity(0, speed);
-			GlobalInline.instance.put("jumPBoardY", targetPosition.y);
-			++num;
+//		else if(isStart){
+//			physicsComponent.rigidBody.setLinearVelocity(0, speed);
+//			GlobalInline.instance.put("jumPBoardY", targetPosition.y);
+//			++num;
+//			
+//			// 更新分数
+//			Monstersystem monstersystem = GlobalInline.instance.getAshleyManager().engine.getSystem(Monstersystem.class);
+//			if(monstersystem.updateScore(position.y)){
+//				
+//				jumpTime = maxJumpTime - (maxJumpTime-minJumpTime)/Monstersystem.maxLevel * monstersystem.getLevel();
+//				speed = 2 * jumpHeight / jumpTime;
+//				physicsComponent.rigidBody.getWorld().setGravity(new Vector2(0, -speed/jumpTime));
+//			}
+//		}
+	}
+	
+	@Override
+	public void postSolve(Contact contact, ContactImpulse impulse, Entity target) {
+		
+		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
+		
+		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
+		Vector2 position = transformComponent.position;
+		
+		TransformComponent targetTransformComponent = MapperTools.transformCM.get(target);
+		Vector2 targetPosition = targetTransformComponent.position;
+		
+		physicsComponent.rigidBody.setLinearVelocity(0, speed);
+		GlobalInline.instance.put("jumPBoardY", targetPosition.y);
+		++num;
+		
+		// 更新分数
+		Monstersystem monstersystem = GlobalInline.instance.getAshleyManager().engine.getSystem(Monstersystem.class);
+		if(monstersystem.updateScore(position.y)){
 			
-			// 更新分数
-			Monstersystem monstersystem = GlobalInline.instance.getAshleyManager().engine.getSystem(Monstersystem.class);
-			if(monstersystem.updateScore(position.y)){
-				
-				jumpTime = maxJumpTime - (maxJumpTime-minJumpTime)/Monstersystem.maxLevel * monstersystem.getLevel();
-				speed = 2 * jumpHeight / jumpTime;
-				physicsComponent.rigidBody.getWorld().setGravity(new Vector2(0, -speed/jumpTime));
+			jumpTime = maxJumpTime - (maxJumpTime-minJumpTime)/Monstersystem.maxLevel * monstersystem.getLevel();
+			speed = 2 * jumpHeight / jumpTime;
+			physicsComponent.rigidBody.getWorld().setGravity(new Vector2(0, -speed/jumpTime));
+		}
+		
+		SpriterPlayerComponent spriterPlayerComponent = MapperTools.SpriterPlayerCM.get(entity);
+		spriterPlayerComponent.player.setAnimation("fly");
+		Animation animation = spriterPlayerComponent.player.getAnimation();
+		animation.prepare();
+		
+	}
+	
+	@Override
+	public boolean beginContact(Contact contact, Entity target) {
+		
+		if( target.flags == 100){ // 台阶传感器
+			
+			PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
+			
+			if(physicsComponent.rigidBody.getLinearVelocity().y > 0){ // 上升过程
+				return true;
 			}
 			
-//			SpriterPlayerComponent spriterPlayerComponent = MapperTools.SpriterPlayerCM.get(entity);
-//			spriterPlayerComponent.player.setAnimation(0);
-//			Animation animation = spriterPlayerComponent.player.getAnimation();
-//			animation.prepare();
+			TransformComponent transformComponent = MapperTools.transformCM.get(entity);
+			Vector2 position = transformComponent.position;
+			
+			TransformComponent targetTransformComponent = MapperTools.transformCM.get(target);
+			Vector2 targetPosition = targetTransformComponent.position;
+			
+			if(position.y - transformComponent.height/2 < targetPosition.y + targetTransformComponent.height/2 - targetTransformComponent.height){ // 精灵底部 < 台阶顶部(传感器顶部－传感器高度)
+				return true;
+			}
+			
+			SpriterPlayerComponent spriterPlayerComponent = MapperTools.SpriterPlayerCM.get(entity);
+			spriterPlayerComponent.player.setAnimation(0);
+			Animation animation = spriterPlayerComponent.player.getAnimation();
+			animation.prepare();
+			
 		}
-	}
-	
-	@Override
-	public boolean beginContact(Contact contact, Entity target){
-		
-//		SpriterPlayerComponent spriterPlayerComponent = MapperTools.SpriterPlayerCM.get(entity);
-//		spriterPlayerComponent.player.setAnimation("fly");
-//		Animation animation = spriterPlayerComponent.player.getAnimation();
-//		animation.prepare();
 		
 		return true;
 	}
-	
-	@Override
-	public boolean endContact(Contact contact, Entity target){
-		
-		
-		
-		return true;
-	}
-	
 	
 	@Override
 	public boolean keyDown (int keycode) {

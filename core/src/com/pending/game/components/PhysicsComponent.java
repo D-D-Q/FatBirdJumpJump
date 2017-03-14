@@ -39,6 +39,11 @@ public class PhysicsComponent  implements Component, Poolable {
 	 */
 	public Shape shape;
 	
+	/**
+	 * 是否是传感器
+	 */
+	public boolean isSensor;
+	
 	/** 
 	 * 对象池回收组件调用
 	 * @see com.badlogic.gdx.utils.Pool.Poolable#reset()
@@ -57,5 +62,6 @@ public class PhysicsComponent  implements Component, Poolable {
 		rigidBody = null;
 		bodyType = null;
 		shape = null;
+		isSensor = false;
 	}
 }	

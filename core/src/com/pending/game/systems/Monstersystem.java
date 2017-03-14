@@ -123,7 +123,7 @@ public class Monstersystem extends EntitySystem{
 		while(curPosition.y < maxPositionY){
 			
 			Board board = randomBoard(curPosition);
-			Entity entity = ashleyManager.entityDao.createEntity2(board.x, board.y, board.width, Board.height);
+			Entity entity = ashleyManager.entityDao.createBoard(board.x, board.y, board.width, Board.height);
 			MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
 			ashleyManager.engine.addEntity(entity);
 			
@@ -209,7 +209,7 @@ public class Monstersystem extends EntitySystem{
 		
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		
-		Entity entity = ashleyManager.entityDao.createEntity2(curPosition.x, curPosition.y, boardWidth[0], Board.height);
+		Entity entity = ashleyManager.entityDao.createBoard(curPosition.x, curPosition.y, boardWidth[0], Board.height);
 		entity.flags = BoardScript.FIXED_ENTITY;
 		MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
 		ashleyManager.engine.addEntity(entity);
