@@ -267,7 +267,7 @@ public class Monstersystem extends EntitySystem{
 	 */
 	public static class Board implements Poolable {
 
-		public final static float height = 10;
+		public final static float height = 30;
 		public float width;
 		public float x;
 		public float y;

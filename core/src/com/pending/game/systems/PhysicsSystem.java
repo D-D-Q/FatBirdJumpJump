@@ -2,6 +2,8 @@ package com.pending.game.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -114,6 +116,8 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 			Vector2 position = physicsComponent.rigidBody.getPosition();
 			transformComponent.position.x = PhysicsManager.meterToPixel(position.x);
 			transformComponent.position.y = PhysicsManager.meterToPixel(position.y);
+			
+			transformComponent.rotation = physicsComponent.rigidBody.getAngle() * MathUtils.radiansToDegrees; // 弧度转角度
 		}
 	}
 	

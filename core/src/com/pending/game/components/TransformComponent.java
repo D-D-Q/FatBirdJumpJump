@@ -62,7 +62,7 @@ public class TransformComponent implements Component, Poolable  {
 	public final Vector2 scale = new Vector2(1.0f, 1.0f);
 	 
 	/**
-	 * 逆时针旋转
+	 * 逆时针旋转角度
 	 */
 	public float rotation = 0.0f;
 	 
@@ -79,6 +79,7 @@ public class TransformComponent implements Component, Poolable  {
 	 */
 	public float getRenderPositionX(){
 		return this.position.x - this.offsetX;
+//		return this.position.x - this.offsetX * (width/spriteWidth);
 	}
 	
 	/**
@@ -87,6 +88,7 @@ public class TransformComponent implements Component, Poolable  {
 	 */
 	public float getRenderPositionY(){
 		return this.position.y - this.offsetY;
+//		return this.position.y - this.offsetY * (width/spriteWidth);
 	}
 	
 	public float getWidth() {

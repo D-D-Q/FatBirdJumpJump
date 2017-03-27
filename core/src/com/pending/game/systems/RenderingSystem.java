@@ -45,9 +45,14 @@ public class RenderingSystem extends SortedIteratingSystem {
 				TransformComponent e1TransformComponent = MapperTools.transformCM.get(e1);
 				TransformComponent e2TransformComponent = MapperTools.transformCM.get(e2);
 				
-				int y = (int)Math.signum(e2TransformComponent.position.y - e1TransformComponent.position.y); // 先按y轴算
+//				int y = (int)Math.signum(e2TransformComponent.position.y - e1TransformComponent.position.y); // 先按y轴算
+//				if(y == 0)
+//					return (int)Math.signum(e1TransformComponent.index_z - e2TransformComponent.index_z); // 再按z抽算
+				
+				int y = (int)Math.signum(e1TransformComponent.index_z - e2TransformComponent.index_z); // 先按z轴算
 				if(y == 0)
-					return (int)Math.signum(e1TransformComponent.index_z - e2TransformComponent.index_z); // 再按z抽算
+					return (int)Math.signum(e2TransformComponent.position.y - e1TransformComponent.position.y); // 再按y抽算
+				
 				return y;
 	        }
 		}, priority);

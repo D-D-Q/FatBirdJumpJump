@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 import com.badlogic.gdx.math.Vector2;
@@ -13,8 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.brashmonkey.spriter.Data;
-import com.brashmonkey.spriter.Drawer;
 import com.brashmonkey.spriter.Player;
 import com.pending.game.Assets;
 import com.pending.game.GameConfig;
@@ -25,8 +23,6 @@ import com.pending.game.manager.InputManager;
 import com.pending.game.manager.MsgManager;
 import com.pending.game.support.GameUtil;
 import com.pending.game.support.GlobalInline;
-import com.pending.game.support.spriter.SpriterDataLoader;
-import com.pending.game.support.spriter.SpriterLibGdxDrawer;
 import com.pending.game.systems.GeneralSystem;
 import com.pending.game.systems.Monstersystem;
 import com.pending.game.systems.Monstersystem.Board;
@@ -119,12 +115,13 @@ public class GameScreen extends ScreenAdapter {
 		// 游戏速度
 		delta *= GameVar.gameSpeed;
 		
+		Gdx.gl.glClearColor(166/255f, 228/255f, 227/255f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
 		GameVar.gameViewport.apply();
 		
 		// ECS系统
 		GlobalInline.instance.getAshleyManager().engine.update(delta);
-		
-		
 		
 		
 		GameVar.UIViewport.apply();
@@ -156,6 +153,14 @@ public class GameScreen extends ScreenAdapter {
 		Monstersystem monstersystem = ashleyManager.engine.getSystem(Monstersystem.class);
 //		monstersystem.start(Settings.instance.level);
 		monstersystem.start(0);
+		
+		// 背景
+		Entity bg = ashleyManager.entityDao.createBg(MainScreenAssets.bg1, 1);
+		ashleyManager.engine.addEntity(bg);
+		bg = ashleyManager.entityDao.createBg(MainScreenAssets.bg2, 2);
+		ashleyManager.engine.addEntity(bg);
+		bg = ashleyManager.entityDao.createBg(MainScreenAssets.bg3, 3);
+		ashleyManager.engine.addEntity(bg);
 		
 		// 英雄
 		float y = monstersystem.getScore() * Monstersystem.scoreScale + Board.height/2 + 60/2;

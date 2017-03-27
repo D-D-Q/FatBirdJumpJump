@@ -1,5 +1,6 @@
 package com.pending.game.assets;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.brashmonkey.spriter.Data;
 import com.pending.game.annotation.Asset;
 
@@ -13,4 +14,16 @@ public class MainScreenAssets {
 
 	@Asset(Data.class)
 	public final static String spriterData = "data/bird_2_fat_bird.scml";
+	
+	@Asset(Texture.class)
+	public final static String p = "data/p.png";
+	
+	@Asset(Texture.class)
+	public final static String bg1 = "data/bg1.png";
+	
+	@Asset(Texture.class)
+	public final static String bg2 = "data/bg2.png";
+	
+	@Asset(Texture.class)
+	public final static String bg3 = "data/bg3.png";
 }
