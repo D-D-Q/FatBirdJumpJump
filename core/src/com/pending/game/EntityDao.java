@@ -184,19 +184,19 @@ public class EntityDao {
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		Entity entity = ashleyManager.engine.createEntity();
 		
+		TextureComponent textureComponent = ashleyManager.engine.createComponent(TextureComponent.class);
+		Texture texture = Assets.instance.get(assets, Texture.class);
+//		texture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat); // 默认就是重复的
+		textureComponent.textureRegion = new TextureRegion(texture, (int)GameConfig.width, texture.getHeight());
+		entity.add(textureComponent);
+		
 		TransformComponent transformComponent = ashleyManager.engine.createComponent(TransformComponent.class);
 		transformComponent.position.set(0, 0);
-		transformComponent.width = 1024;
-		transformComponent.height = 968;
+		transformComponent.width = GameConfig.width;
+		transformComponent.height = texture.getHeight();
 		transformComponent.index_z = -index;
 		entity.add(transformComponent);
 		
-		TextureComponent textureComponent = ashleyManager.engine.createComponent(TextureComponent.class);
-		Texture texture = Assets.instance.get(assets, Texture.class);
-		texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-		textureComponent.textureRegion = new TextureRegion(texture, texture.getWidth() * 2, texture.getHeight());
-		
-		entity.add(textureComponent);
 		
 		ScriptComponent scriptComponent = ashleyManager.engine.createComponent(ScriptComponent.class);
 		BgScript bgScript = new BgScript();

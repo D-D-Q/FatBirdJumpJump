@@ -24,6 +24,8 @@ public class BgScript extends EntityScript{
 		
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
 		
-		transformComponent.position.set(0, GameVar.gameViewport.getCamera().position.y -  GameConfig.height/2 + index * 200);
+		float offet = GameVar.gameViewport.getCamera().position.y/100;
+		
+		transformComponent.position.set(0, GameVar.gameViewport.getCamera().position.y -  GameConfig.height/2 + (index-1) * 200 - offet);
 	}
 }
