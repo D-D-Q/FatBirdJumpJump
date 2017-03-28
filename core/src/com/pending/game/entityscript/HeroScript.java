@@ -89,7 +89,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold, Entity target) {
-			
+		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		
 		if(physicsComponent.rigidBody.getLinearVelocity().y > 0){ // 上升过程
@@ -125,6 +125,9 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse, Entity target) {
+		
+		if(!isStart)
+			return;
 		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		
@@ -176,7 +179,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 			}
 			
 			SpriterPlayerComponent spriterPlayerComponent = MapperTools.SpriterPlayerCM.get(entity);
-			spriterPlayerComponent.player.setAnimation(0);
+			spriterPlayerComponent.player.setAnimation("idle");
 			Animation animation = spriterPlayerComponent.player.getAnimation();
 			animation.prepare();
 			
@@ -203,15 +206,13 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		
-		GameVar.gameViewport.getCamera().unproject(touchPosition.set(screenX, screenY, 0));
-		return true;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		
 		if(isStart)
 			return false;
+		
+		GameVar.gameViewport.getCamera().unproject(touchPosition.set(screenX, screenY, 0));
+		
+		SpriterPlayerComponent spriterPlayerComponent = MapperTools.SpriterPlayerCM.get(entity);
+		spriterPlayerComponent.player.setAnimation("fly");
 		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		
@@ -229,6 +230,12 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		
 		if(speed > PhysicsManager.MAX_SPEED)
 			Gdx.app.error("", "速度大于极限速度");
+		
+		return true;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		
 		return true;
 	}
@@ -257,6 +264,11 @@ public class HeroScript extends EntityScript implements InputProcessor{
 
 	@Override
 	public void update(float deltaTime) {
+		
+		if(!isStart){
+			SpriterPlayerComponent spriterPlayerComponent = MapperTools.SpriterPlayerCM.get(entity);
+			spriterPlayerComponent.player.setAnimation("flap");
+		}
 		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
@@ -329,6 +341,14 @@ public class HeroScript extends EntityScript implements InputProcessor{
 //				physicsComponent.rigidBody.setLinearVelocity(0, PhysicsManager.MAX_SPEED);
 //			}
 //		}
+		
+		// 更新精灵
+		SpriterPlayerComponent spriterPlayerComponent = MapperTools.SpriterPlayerCM.get(entity);
+		spriterPlayerComponent.player.setPosition(transformComponent.getRenderPositionX(), transformComponent.getRenderPositionY());
+		spriterPlayerComponent.player.update();
+		// 1是未翻过 -1是已翻过
+		if(spriterPlayerComponent.player.flippedX() == 1 && transformComponent.flipX || spriterPlayerComponent.player.flippedX() == -1 && !transformComponent.flipX)
+			spriterPlayerComponent.player.flipX();
 	}
 	
 	@Override

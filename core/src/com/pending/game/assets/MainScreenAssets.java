@@ -26,4 +26,17 @@ public class MainScreenAssets {
 	
 	@Asset(Texture.class)
 	public final static String bg3 = "data/bg3.png";
+
+	@Asset(Texture.class)
+	public final static String cloud1 = "data/cloud1.png";
+
+	@Asset(Texture.class)
+	public final static String cloud2 = "data/cloud2.png";
+
+	@Asset(Texture.class)
+	public final static String cloud3 = "data/cloud3.png";
+
+	@Asset(Texture.class)
+	public final static String cloud4 = "data/cloud4.png";
+	
 }

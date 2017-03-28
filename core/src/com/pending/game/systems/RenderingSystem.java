@@ -94,6 +94,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 		
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
 		
+		// 绘制纹理
 		TextureComponent textureComponent = MapperTools.textureCM.get(entity);
 		if(textureComponent != null){
 			if(textureComponent.textureRegion == null){
@@ -122,14 +123,9 @@ public class RenderingSystem extends SortedIteratingSystem {
 			}
 		}
 		
+		// 绘制Spriter
 		SpriterPlayerComponent spriterPlayerComponent = MapperTools.SpriterPlayerCM.get(entity);
 		if(spriterPlayerComponent != null){
-			spriterPlayerComponent.player.setPosition(transformComponent.getRenderPositionX(), transformComponent.getRenderPositionY());
-			spriterPlayerComponent.player.update();
-			// 1是未翻过 -1是亿翻过
-			if(spriterPlayerComponent.player.flippedX() == 1 && transformComponent.flipX || spriterPlayerComponent.player.flippedX() == -1 && !transformComponent.flipX)
-				spriterPlayerComponent.player.flipX();
-			
 			drawer.draw(spriterPlayerComponent.player);
 		}
 	}

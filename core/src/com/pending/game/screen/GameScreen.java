@@ -162,6 +162,12 @@ public class GameScreen extends ScreenAdapter {
 		bg = ashleyManager.entityDao.createBg(MainScreenAssets.bg3, 3);
 		ashleyManager.engine.addEntity(bg);
 		
+		// 云朵
+		Entity cloud = ashleyManager.entityDao.createCloud(MainScreenAssets.cloud1, MainScreenAssets.cloud2);
+		ashleyManager.engine.addEntity(cloud);
+		cloud = ashleyManager.entityDao.createCloud(MainScreenAssets.cloud3, MainScreenAssets.cloud4);
+		ashleyManager.engine.addEntity(cloud);
+		
 		// 英雄
 		float y = monstersystem.getScore() * Monstersystem.scoreScale + Board.height/2 + 60/2;
 		Entity hero = ashleyManager.entityDao.createEntity(GameConfig.width/2, y, 40, 60);

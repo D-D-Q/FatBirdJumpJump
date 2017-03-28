@@ -1,9 +1,7 @@
 package com.pending.game;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -15,6 +13,7 @@ import com.pending.game.components.TextureComponent;
 import com.pending.game.components.TransformComponent;
 import com.pending.game.entityscript.BgScript;
 import com.pending.game.entityscript.BoardScript;
+import com.pending.game.entityscript.CloudScript;
 import com.pending.game.entityscript.HeroScript;
 import com.pending.game.manager.AshleyManager;
 import com.pending.game.manager.PhysicsManager;
@@ -47,7 +46,7 @@ public class EntityDao {
 		transformComponent.position.set(positionX, positionY);
 		transformComponent.width = width;
 		transformComponent.height = height;
-		transformComponent.offsetY = 30;
+		transformComponent.offsetY = 28;
 		transformComponent.index_z = 10000;
 		entity.add(transformComponent);
 		
@@ -203,6 +202,42 @@ public class EntityDao {
 		bgScript.entity = entity;
 		bgScript.index = index;
 		scriptComponent.script = bgScript;
+		entity.add(scriptComponent);
+		
+		GlobalInline.instance.getAshleyManager().initComponent(entity);
+		
+		Assets.instance.finishLoading();
+		
+		return entity;
+	}
+	
+
+	/**
+	 * 创建云朵
+	 * 
+	 * @return
+	 */
+	public Entity createCloud(String... assets){
+		
+		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
+		Entity entity = ashleyManager.engine.createEntity();
+		
+		TextureComponent textureComponent = ashleyManager.engine.createComponent(TextureComponent.class);
+		entity.add(textureComponent);
+		
+		TransformComponent transformComponent = ashleyManager.engine.createComponent(TransformComponent.class);
+		transformComponent.index_z = -1;
+		entity.add(transformComponent);
+		
+		ScriptComponent scriptComponent = ashleyManager.engine.createComponent(ScriptComponent.class);
+		CloudScript cloudScript = new CloudScript();
+		cloudScript.entity = entity;
+		cloudScript.clouds = new TextureRegion[assets.length];
+		for(int i=0; i<assets.length; ++i){
+			Texture texture = Assets.instance.get(assets[i], Texture.class);
+			cloudScript.clouds[i] = new TextureRegion(texture, texture.getWidth(), texture.getHeight());
+		}
+		scriptComponent.script = cloudScript;
 		entity.add(scriptComponent);
 		
 		GlobalInline.instance.getAshleyManager().initComponent(entity);
