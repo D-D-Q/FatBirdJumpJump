@@ -15,6 +15,11 @@ import com.pending.game.manager.InputManager;
 import com.pending.game.screen.MainScreen;
 import com.pending.game.support.GameUtil;
 
+/**
+ * 开始页面UI
+ * 
+ * @author D
+ */
 public class MainScreenUI extends Table {
 
 	public MainScreenUI(MainScreen mainScreen, Skin skin, I18NBundle i18NBundle) {
@@ -22,12 +27,11 @@ public class MainScreenUI extends Table {
 		this.setDebug(GameConfig.UIdebug);
 		this.setName("MainScreenUI");
 		this.setFillParent(true);
+		this.pad(360, 20 , 170, 10);
 		
 		// 开始按钮
-//		Button restartButton = new Button(skin, "start");
-		TextButton restartButton = new TextButton("start", skin, "start");
-		
-		restartButton.addListener(new ClickListener(){
+		Button startButton = new Button(skin, "start");
+		startButton.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				
@@ -45,11 +49,11 @@ public class MainScreenUI extends Table {
 								})));
 			}
 		});
-		this.add(restartButton).colspan(1).center().height(45);
+		this.add(startButton).colspan(4).expand().center();
 		
-		this.row();
+		this.row().bottom();
 		
-		// 开始按钮
+		// 设置
 		Button settingButton = new Button(skin, "setting");
 		settingButton.addListener(new ClickListener(){
 			@Override
@@ -69,6 +73,33 @@ public class MainScreenUI extends Table {
 								})));
 			}
 		});
-		this.add(settingButton).colspan(1).expand().center();
+		this.add(settingButton).colspan(1).center();
+		
+		// 排行
+		Button rankButton = new Button(skin, "rank");
+		rankButton.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+			}
+		});
+		this.add(rankButton).colspan(1).center();
+		
+		// 购买
+		Button shopButton = new Button(skin, "shop");
+		shopButton.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+			}
+		});
+		this.add(shopButton).colspan(1).center();
+		
+		// 喜欢
+		Button likeButton = new Button(skin, "like");
+		likeButton.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+			}
+		});
+		this.add(likeButton).colspan(1).center();
 	}
 }

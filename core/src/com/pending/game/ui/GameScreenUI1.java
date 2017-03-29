@@ -11,6 +11,7 @@ import com.pending.game.GameConfig;
 import com.pending.game.manager.MsgManager;
 
 /**
+ * 游戏进行时UI
  * 
  * @author D
  * @date 2016年12月22日
