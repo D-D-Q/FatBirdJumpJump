@@ -39,9 +39,6 @@ public class GameLevelUI extends Table {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				
-				// 开始游戏
-				Game game = GlobalInline.instance.getGame();
-				game.setScreen(new LoadingScreen(game, GameScreen.class, GameScreenAssets.class, false));
 			}
 		});
 		this.add(restartButton).colspan(1).expand().center();
