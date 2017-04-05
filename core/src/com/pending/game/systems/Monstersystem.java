@@ -52,7 +52,7 @@ public class Monstersystem extends EntitySystem{
 	private final static int levelRange = 5;
 	
 //	private final static float[] boardWidth = {100, 85, 70, 55, 40}; // 跳台宽度
-	private final static float[] boardWidth = {200, 170, 140, 110, 80}; // 跳台宽度
+	public final static float[] boardWidth = {200, 170, 140, 110, 80}; // 跳台宽度
 //	private final static float[] boardWidthOffset = {54, 108, 162, 216f, 270}; // 跳台宽间隔
 	
 	private final static float minBoardHeightOffset = 80; // 跳台高间隔最小值
@@ -206,13 +206,6 @@ public class Monstersystem extends EntitySystem{
 		MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_ADD_SCORE, this.score); // 更新UI
 		
 		curPosition.set(GameConfig.width/2, this.score * scoreScale);
-		
-		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
-		
-		Entity entity = ashleyManager.entityDao.createBoard(curPosition.x, curPosition.y, boardWidth[0], Board.height);
-		entity.flags = BoardScript.FIXED_ENTITY;
-		MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
-		ashleyManager.engine.addEntity(entity);
 	}
 	
 	/**

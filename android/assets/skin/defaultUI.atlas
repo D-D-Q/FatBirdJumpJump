@@ -6,46 +6,46 @@ filter: Nearest,Nearest
 repeat: none
 Button
   rotate: false
-  xy: 2, 198
+  xy: 2, 134
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: 109
 Button
   rotate: false
-  xy: 2, 68
+  xy: 2, 4
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 17
 Button
   rotate: false
-  xy: 260, 326
+  xy: 260, 262
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 125
+Button
+  rotate: false
+  xy: 132, 4
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 137
+Button
+  rotate: false
+  xy: 262, 132
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 145
 Button
   rotate: false
-  xy: 132, 68
+  xy: 262, 2
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 161
-Button
-  rotate: false
-  xy: 2, 2
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: 125
-Button
-  rotate: false
-  xy: 262, 196
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: 169
 
 defaultUI2.png
 size: 512,512
@@ -54,8 +54,15 @@ filter: Nearest,Nearest
 repeat: none
 Button
   rotate: false
-  xy: 2, 2
+  xy: 2, 132
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: 129
+Button
+  rotate: false
+  xy: 2, 2
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 169

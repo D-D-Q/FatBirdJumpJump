@@ -1,6 +1,7 @@
 package com.pending.game.ui;
 
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,8 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.pending.game.GameConfig;
+import com.pending.game.assets.MainScreenAssets;
 import com.pending.game.manager.MsgManager;
+import com.pending.game.screen.MainScreen;
 import com.pending.game.support.GlobalInline;
+import com.pending.game.support.LoadingScreen;
 import com.pending.game.systems.RenderingSystem;
 
 /**
@@ -38,6 +42,7 @@ public class GamePauseUI extends Table implements Telegraph  {
 	
 	private Button pauseButton;
 	private Button resumeButton;
+	private Button backButton;
 
 	private Skin skin;
 	
@@ -48,18 +53,19 @@ public class GamePauseUI extends Table implements Telegraph  {
 		this.setDebug(GameConfig.UIdebug);
 		this.setName("GameResume");
 		this.setFillParent(true);
+		this.pad(10);
 		
 		MsgManager.instance.addListener(this, MSG_PAUSE);
 		
 		// 暂停按钮
-//		pauseButton = new Button(skin, "pause");
-//		pauseButton.addListener(new ClickListener(){
-//			@Override
-//			public void clicked(InputEvent event, float x, float y) {
-//				pause();
-//			}
-//		});
-//		this.add(pauseButton).colspan(1).expand().bottom().left();
+		pauseButton = new Button(skin, "pause");
+		pauseButton.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				pause();
+			}
+		});
+		this.add(pauseButton).colspan(1).expand().bottom().left();
 		
 		// 恢复按钮
 		resumeButton = new Button(skin, "resume");
@@ -67,6 +73,17 @@ public class GamePauseUI extends Table implements Telegraph  {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				resume();
+			}
+		});
+		
+		// 返回按钮
+		backButton = new Button(skin, "main");
+		backButton.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				
+				Game game = GlobalInline.instance.getGame();
+				game.setScreen(new LoadingScreen(game, MainScreen.class, MainScreenAssets.class, false));
 			}
 		});
 	}
@@ -83,7 +100,9 @@ public class GamePauseUI extends Table implements Telegraph  {
 		}
 		
 		this.clear();
-		this.add(resumeButton).colspan(1).center();
+		this.add(resumeButton).colspan(1).expand().center();
+		this.row();
+		this.add(backButton).colspan(1).bottom().left();
 	}
 	
 	/**

@@ -36,9 +36,6 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	
 	private boolean isStart = false;
 	
-	private boolean isContinue = false;
-	private float continueHeight = 0;
-	
 	/**
 	 * 跳跃高度(米)
 	 */
@@ -90,6 +87,11 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold, Entity target) {
 		
+		if(!isStart){ // 未开始禁用一切碰撞
+			contact.setEnabled(false); 
+			return;
+		}
+		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		
 		if(physicsComponent.rigidBody.getLinearVelocity().y > 0){ // 上升过程
@@ -138,7 +140,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		Vector2 targetPosition = targetTransformComponent.position;
 		
 		physicsComponent.rigidBody.setLinearVelocity(0, speed);
-		GlobalInline.instance.put("jumPBoardY", targetPosition.y);
+		GlobalInline.instance.put("jumpBoardPosition", targetPosition.cpy());
 		++num;
 		
 		// 更新分数
@@ -206,10 +208,10 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		
+		GameVar.gameViewport.getCamera().unproject(touchPosition.set(screenX, screenY, 0));
+		
 		if(isStart)
 			return false;
-		
-		GameVar.gameViewport.getCamera().unproject(touchPosition.set(screenX, screenY, 0));
 		
 		SpriterPlayerComponent spriterPlayerComponent = MapperTools.SpriterPlayerCM.get(entity);
 		spriterPlayerComponent.player.setAnimation("fly");
@@ -318,29 +320,12 @@ public class HeroScript extends EntityScript implements InputProcessor{
 			
 			physicsComponent.rigidBody.setGravityScale(0);
 			physicsComponent.rigidBody.setLinearVelocity(Vector2.Zero);
-//			continueHeight = camera.position.y;
 			
-			// 继续游戏
-//			isContinue = true;
+			isStart = false;
 			
-			// 重新开始
-//			GameMain game = GlobalInline.instance.getGlobal("game");
-//			game.switchScreen = new SwitchScreen(game, GameScreen.class, GameScreenAssets.class);
 			GameScreen gameScreen = GlobalInline.instance.getScreen();
 			gameScreen.over();
 		}
-		
-//		if(isContinue){
-//			
-//			if(entityPosition.y >= continueHeight){
-//				
-//				physicsComponent.rigidBody.setGravityScale(1);
-//				isContinue = false;
-//			}
-//			else{
-//				physicsComponent.rigidBody.setLinearVelocity(0, PhysicsManager.MAX_SPEED);
-//			}
-//		}
 		
 		// 更新精灵
 		SpriterPlayerComponent spriterPlayerComponent = MapperTools.SpriterPlayerCM.get(entity);
@@ -354,7 +339,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	@Override
 	public void disabled() {
 		
-		GlobalInline.instance.remove("jumPBoardY");
+		GlobalInline.instance.remove("jumpBoardPosition");
 	}
 	
 }

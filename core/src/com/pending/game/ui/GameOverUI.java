@@ -52,12 +52,25 @@ public class GameOverUI extends Table implements Telegraph {
 		
 		this.row();
 		
+		// 继续游戏
+		Button continueButton = new Button(skin, "restart");
+		continueButton.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				
+				gameScreen.continueStart();
+			}
+		});
+		this.add(continueButton).colspan(1).expand().center();
+		
+		this.row();
+		
+		// 返回按钮
 		Button backButton = new Button(skin, "restart");
 		backButton.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				
-				// 开始游戏
 				Game game = GlobalInline.instance.getGame();
 				game.setScreen(new LoadingScreen(game, MainScreen.class, MainScreenAssets.class, false));
 			}

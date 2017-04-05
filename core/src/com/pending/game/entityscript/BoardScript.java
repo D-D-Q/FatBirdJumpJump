@@ -18,23 +18,17 @@ import com.pending.game.tools.MapperTools;
  */
 public class BoardScript extends EntityScript{
 	
-	public final static int FIXED_ENTITY = 99;
-	
 	public Entity sensor;
 	
 	@Override
 	public void update(float deltaTime) {
 		
-		// 这个是起跳板 不动
-		if(entity.flags == BoardScript.FIXED_ENTITY)
-			return;
-		
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
 		Vector2 position = transformComponent.position;
 		
-		Float boardMax = GlobalInline.instance.get("jumPBoardY");
+		Vector2 jumpBoardPosition = GlobalInline.instance.get("jumpBoardPosition");
 		
-		if(boardMax !=null && position.y <= boardMax){
+		if(jumpBoardPosition !=null && position.y < jumpBoardPosition.y){
 			
 			if(position.y < GameVar.gameViewport.getCamera().position.y - GameConfig.height/2){
 				if(entity != null){

@@ -18,9 +18,11 @@ import com.pending.game.Assets;
 import com.pending.game.GameConfig;
 import com.pending.game.GameVar;
 import com.pending.game.assets.MainScreenAssets;
+import com.pending.game.components.PhysicsComponent;
 import com.pending.game.manager.AshleyManager;
 import com.pending.game.manager.InputManager;
 import com.pending.game.manager.MsgManager;
+import com.pending.game.manager.PhysicsManager;
 import com.pending.game.support.GameUtil;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.systems.GeneralSystem;
@@ -90,10 +92,10 @@ public class GameScreen extends ScreenAdapter {
 		AshleyManager ashleyManager = new AshleyManager();
 		GlobalInline.instance.putAshleyManager(ashleyManager);
 		
-		ashleyManager.engine.addSystem(new GeneralSystem(0));
 		ashleyManager.engine.addSystem(new PhysicsSystem(10));
 		ashleyManager.engine.addSystem(new Monstersystem(20));
 		ashleyManager.engine.addSystem(new RenderingSystem(30));
+		ashleyManager.engine.addSystem(new GeneralSystem(40));
 		
 		start();
 	}
@@ -169,12 +171,19 @@ public class GameScreen extends ScreenAdapter {
 		ashleyManager.engine.addEntity(cloud);
 		
 		// 英雄
-		float y = monstersystem.getScore() * Monstersystem.scoreScale + Board.height/2 + 60/2;
-		Entity hero = ashleyManager.entityDao.createEntity(GameConfig.width/2, y, 40, 60);
+		float x = GameConfig.width/2;
+		float y = monstersystem.getScore() * Monstersystem.scoreScale ;
+		Entity hero = ashleyManager.entityDao.createEntity(GameConfig.width/2, y + Board.height/2+60/2, 40, 60);
 		MapperTools.physicsCM.get(hero).rigidBody.setGravityScale(0);
 		MapperTools.physicsCM.get(hero).rigidBody.setBullet(true);
 		ashleyManager.engine.addEntity(hero);
 		GlobalInline.instance.put("hero", hero);
+		
+		// 第一个跳台
+		Entity entity = ashleyManager.entityDao.createBoard(x, y, Monstersystem.boardWidth[0], Board.height);
+		MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
+		ashleyManager.engine.addEntity(entity);
+		GlobalInline.instance.put("jumpBoardPosition", new Vector2(x, y));
 		
 		GameVar.gameViewport.getCamera().position.set(GameConfig.width/2, y + GameVar.cameraOffset, 0);
 	}
@@ -214,6 +223,37 @@ public class GameScreen extends ScreenAdapter {
 			system.setProcessing(true);
 		}
 	}
+	
+	/**
+	 * 继续
+	 */
+	public void continueStart() {
+		
+		Vector2 jumpBoardPosition = GlobalInline.instance.get("jumpBoardPosition");
+		
+		// 跳台
+		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
+		Entity entity = ashleyManager.entityDao.createBoard(jumpBoardPosition.x, jumpBoardPosition.y, Monstersystem.boardWidth[0], Board.height);
+		MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
+		ashleyManager.engine.addEntity(entity);
+		
+		// 英雄
+		Entity hero = GlobalInline.instance.get("hero");
+		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(hero);
+		float y = PhysicsManager.pixelToMeter(jumpBoardPosition.y + Board.height/2 + 60/2);
+		physicsComponent.rigidBody.setTransform(PhysicsManager.pixelToMeter(jumpBoardPosition.x), y, 0); 
+		
+		screenUI.clear();
+		screenUI.addActor(new GameScreenUI1(Assets.instance.get(GameConfig.skin), Assets.instance.get(GameConfig.i18NBundle)));
+		screenUI.addActor(new GamePauseUI(Assets.instance.get(GameConfig.skin), Assets.instance.get(GameConfig.i18NBundle)));
+		
+		for (EntitySystem system : GlobalInline.instance.getAshleyManager().engine.getSystems()) {
+			if (system instanceof RenderingSystem)
+				continue;
+			system.setProcessing(true);
+		}
+	}
+	 
 	
 	@Override
 	public void pause() {

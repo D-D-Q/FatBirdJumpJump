@@ -34,6 +34,10 @@
     	},
     	restart: {
     		up: Button_129
+    	},
+    	main: {
+    		up: Button_137
     	}
+    	
     }
 }
