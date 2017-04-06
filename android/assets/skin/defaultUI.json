@@ -37,7 +37,9 @@
     	},
     	main: {
     		up: Button_137
+    	},
+    	share: {
+    		up: Button_77
     	}
-    	
     }
 }

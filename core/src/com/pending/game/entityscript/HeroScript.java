@@ -14,6 +14,7 @@ import com.brashmonkey.spriter.Animation;
 import com.pending.game.EntityScript;
 import com.pending.game.GameConfig;
 import com.pending.game.GameVar;
+import com.pending.game.GlobalInlineVar;
 import com.pending.game.Settings;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.components.SpriterPlayerComponent;
@@ -140,7 +141,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		Vector2 targetPosition = targetTransformComponent.position;
 		
 		physicsComponent.rigidBody.setLinearVelocity(0, speed);
-		GlobalInline.instance.put("jumpBoardPosition", targetPosition.cpy());
+		GlobalInline.instance.put(GlobalInlineVar.jumpBoardPosition, targetPosition.cpy());
 		++num;
 		
 		// 更新分数
@@ -339,7 +340,7 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	@Override
 	public void disabled() {
 		
-		GlobalInline.instance.remove("jumpBoardPosition");
+		GlobalInline.instance.remove(GlobalInlineVar.jumpBoardPosition);
 	}
 	
 }

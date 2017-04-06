@@ -65,7 +65,7 @@ public class GamePauseUI extends Table implements Telegraph  {
 				pause();
 			}
 		});
-		this.add(pauseButton).colspan(1).expand().bottom().left();
+		this.add(pauseButton).colspan(1).expand().bottom().right();;
 		
 		// 恢复按钮
 		resumeButton = new Button(skin, "resume");
@@ -102,7 +102,7 @@ public class GamePauseUI extends Table implements Telegraph  {
 		this.clear();
 		this.add(resumeButton).colspan(1).expand().center();
 		this.row();
-		this.add(backButton).colspan(1).bottom().left();
+		this.add(backButton).colspan(1).bottom().right();
 	}
 	
 	/**
@@ -128,7 +128,7 @@ public class GamePauseUI extends Table implements Telegraph  {
 					}
 					
 					GamePauseUI.this.clear();
-					GamePauseUI.this.add(pauseButton).colspan(1).expand().bottom().left();
+					GamePauseUI.this.add(pauseButton).colspan(1).expand().bottom().right();;
 					
 				} else {
 					label.setText(String.format("%.0f", --delay));

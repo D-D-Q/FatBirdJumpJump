@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
- * 游戏逻辑需求的变量
+ * 游戏引擎变量
  * 
  * @author D
  * @date 2016年9月11日 下午2:08:56

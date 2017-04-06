@@ -17,6 +17,7 @@ import com.brashmonkey.spriter.Player;
 import com.pending.game.Assets;
 import com.pending.game.GameConfig;
 import com.pending.game.GameVar;
+import com.pending.game.GlobalInlineVar;
 import com.pending.game.assets.MainScreenAssets;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.manager.AshleyManager;
@@ -183,7 +184,7 @@ public class GameScreen extends ScreenAdapter {
 		Entity entity = ashleyManager.entityDao.createBoard(x, y, Monstersystem.boardWidth[0], Board.height);
 		MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
 		ashleyManager.engine.addEntity(entity);
-		GlobalInline.instance.put("jumpBoardPosition", new Vector2(x, y));
+		GlobalInline.instance.put(GlobalInlineVar.jumpBoardPosition, new Vector2(x, y));
 		
 		GameVar.gameViewport.getCamera().position.set(GameConfig.width/2, y + GameVar.cameraOffset, 0);
 	}
@@ -229,7 +230,7 @@ public class GameScreen extends ScreenAdapter {
 	 */
 	public void continueStart() {
 		
-		Vector2 jumpBoardPosition = GlobalInline.instance.get("jumpBoardPosition");
+		Vector2 jumpBoardPosition = GlobalInline.instance.get(GlobalInlineVar.jumpBoardPosition);
 		
 		// 跳台
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
