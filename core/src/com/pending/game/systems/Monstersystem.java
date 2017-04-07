@@ -10,7 +10,6 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.pending.game.GameConfig;
 import com.pending.game.Settings;
-import com.pending.game.entityscript.BoardScript;
 import com.pending.game.manager.AshleyManager;
 import com.pending.game.manager.MsgManager;
 import com.pending.game.support.GlobalInline;
@@ -218,7 +217,9 @@ public class Monstersystem extends EntitySystem{
 		
 		this.score = (long)score/scoreScale;
 		
-		Settings.instance.updateScore(this.score);
+		if(this.score > Settings.instance.score)
+			Settings.instance.score = this.score;
+		
 		MsgManager.instance.dispatchMessage(GameScreenUI1.MSG_ADD_SCORE, this.score); // 更新UI
 		
 		// 关卡
@@ -238,7 +239,8 @@ public class Monstersystem extends EntitySystem{
 		if(level < maxLevel){
 			
 			 ++level;
-			 Settings.instance.updateLevel(level);
+			 if(level > Settings.instance.level)
+					Settings.instance.level = this.level;
 			 
 			 Gdx.app.log(this.toString(), "level up:" + level);
 		}

@@ -3,6 +3,8 @@ package com.pending.game.screen;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.input.GestureDetector;
@@ -43,7 +45,7 @@ import com.pending.game.ui.GameScreenUI1;
  * @author D
  * @date 2016年8月29日 下午9:40:56
  */
-public class GameScreen extends ScreenAdapter {
+public class GameScreen extends ScreenAdapter implements InputProcessor{
 	
 	/**
 	 * UI根节点
@@ -88,6 +90,8 @@ public class GameScreen extends ScreenAdapter {
 			}
 		});
 		InputManager.instance.addProcessor(gestureDetector); // 手势事件
+		
+		InputManager.instance.addProcessor(this); // 事件
 				
 		// ECS系统
 		AshleyManager ashleyManager = new AshleyManager();
@@ -268,12 +272,13 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void resume() {
 		
-		if(Assets.instance.update()){
-			
-			
-		}
-		
+//		if(Assets.instance.update()){
+//			
+//			
+//		}
 		// loadding
+		
+		Assets.instance.finishLoading();
 	}
 
 	public Stage getUIstage() {
@@ -294,5 +299,55 @@ public class GameScreen extends ScreenAdapter {
 		InputManager.instance.removeProcessor(UIstage);
 		InputManager.instance.removeProcessor(gestureDetector);
 		UIstage.dispose();
+	}
+
+	/**
+	 * android返回键
+	 */
+	@Override
+	public boolean keyDown(int keycode) {
+		
+		if(Input.Keys.BACK == keycode){
+			
+			pause();
+			return true;
+		}
+		
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		return false;
 	}
 }

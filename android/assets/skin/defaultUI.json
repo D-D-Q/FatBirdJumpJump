@@ -40,6 +40,22 @@
     	},
     	share: {
     		up: Button_77
+    	},
+    	back: {
+    		up: Button_21
+    	}
+    },
+    com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
+    	sound: {
+    		checkboxOn: Button_157,
+    		checkboxOff: Button_160,
+    		font: fzstk, fontColor: white 
+    	}
+    },
+    com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+    	sensitivity: {
+    		background: Bar_4,
+    		knob: Button_61
     	}
     }
 }

@@ -1,74 +1,103 @@
 
 defaultUI.png
-size: 512,512
+size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+Bar
+  rotate: true
+  xy: 390, 520
+  size: 128, 55
+  orig: 128, 55
+  offset: 0, 0
+  index: 4
 Button
   rotate: false
-  xy: 2, 134
+  xy: 2, 650
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: 21
+Button
+  rotate: false
+  xy: 2, 392
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: 109
 Button
   rotate: false
-  xy: 2, 4
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: 17
-Button
-  rotate: false
-  xy: 260, 262
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: 77
-Button
-  rotate: false
-  xy: 132, 4
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: 125
-Button
-  rotate: false
-  xy: 262, 132
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: 137
-Button
-  rotate: false
-  xy: 262, 2
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: 145
-
-defaultUI2.png
-size: 512,512
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
-Button
-  rotate: false
-  xy: 2, 132
+  xy: 260, 650
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: 129
 Button
   rotate: false
+  xy: 2, 262
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 17
+Button
+  rotate: false
+  xy: 260, 520
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 61
+Button
+  rotate: false
+  xy: 518, 778
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 77
+Button
+  rotate: false
+  xy: 2, 132
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 125
+Button
+  rotate: false
+  xy: 648, 778
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 137
+Button
+  rotate: false
   xy: 2, 2
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 145
+Button
+  rotate: false
+  xy: 778, 778
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 157
+Button
+  rotate: false
+  xy: 132, 262
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 160
+Button
+  rotate: false
+  xy: 132, 132
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 161
 Button
   rotate: false
-  xy: 260, 260
+  xy: 132, 2
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

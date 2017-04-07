@@ -22,6 +22,7 @@ import com.pending.game.systems.RenderingSystem;
 
 /**
  * 恢复游戏延时
+ * 暂停时有广告
  * 
  * @author D
  * @date 2017年1月6日

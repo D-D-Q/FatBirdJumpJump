@@ -1,5 +1,6 @@
 package com.pending.game.manager;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 
 /**
@@ -14,6 +15,10 @@ public class InputManager extends InputMultiplexer{
 	public static InputManager instance = new InputManager();
 	
 	private boolean disabled = false;
+	
+	public InputManager() {
+		Gdx.input.setCatchBackKey(true);
+	}
 	
 	public boolean isDisabled(){
 		return disabled;

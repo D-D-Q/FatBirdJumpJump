@@ -55,18 +55,19 @@ public class MainScreenUI extends Table {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				
-				InputManager.instance.setDisabled(true);
-				
-				Group screenUI = mainScreen.getScreenUI();
-				screenUI.addAction(
-						Actions.sequence(Actions.moveBy(GameUtil.getDisplayWidth(GameVar.UIViewport), 0, 0.3f),
-								Actions.run(new Runnable() {
-
-									@Override
-									public void run() {
-										InputManager.instance.setDisabled(false);
-									}
-								})));
+//				InputManager.instance.setDisabled(true);
+//				
+//				Group screenUI = mainScreen.getScreenUI();
+//				screenUI.addAction(
+//						Actions.sequence(Actions.moveBy(GameUtil.getDisplayWidth(GameVar.UIViewport), 0, 0.3f),
+//								Actions.run(new Runnable() {
+//
+//									@Override
+//									public void run() {
+//										InputManager.instance.setDisabled(false);
+//									}
+//								})));
+				mainScreen.scrollUITo(-1);
 			}
 		});
 		this.add(settingButton).colspan(1).center();
@@ -86,16 +87,17 @@ public class MainScreenUI extends Table {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				
-				Group screenUI = mainScreen.getScreenUI();
-				screenUI.addAction(
-						Actions.sequence(Actions.moveBy(-GameUtil.getDisplayWidth(GameVar.UIViewport), 0, 0.3f),
-								Actions.run(new Runnable() {
-
-									@Override
-									public void run() {
-										InputManager.instance.setDisabled(false);
-									}
-								})));
+//				Group screenUI = mainScreen.getScreenUI();
+//				screenUI.addAction(
+//						Actions.sequence(Actions.moveBy(-GameUtil.getDisplayWidth(GameVar.UIViewport), 0, 0.3f),
+//								Actions.run(new Runnable() {
+//
+//									@Override
+//									public void run() {
+//										InputManager.instance.setDisabled(false);
+//									}
+//								})));
+				mainScreen.scrollUITo(1);
 			}
 		});
 		this.add(shopButton).colspan(1).center();

@@ -50,18 +50,19 @@ public class GameLevelUI extends Table {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				
-				InputManager.instance.setDisabled(true);
-				
-				Group screenUI = mainScreen.getScreenUI();
-				screenUI.addAction(
-						Actions.sequence(Actions.moveBy(GameUtil.getDisplayWidth(GameVar.UIViewport), 0, 0.3f),
-								Actions.run(new Runnable() {
-
-									@Override
-									public void run() {
-										InputManager.instance.setDisabled(false);
-									}
-								})));
+//				InputManager.instance.setDisabled(true);
+//				
+//				Group screenUI = mainScreen.getScreenUI();
+//				screenUI.addAction(
+//						Actions.sequence(Actions.moveBy(GameUtil.getDisplayWidth(GameVar.UIViewport), 0, 0.3f),
+//								Actions.run(new Runnable() {
+//
+//									@Override
+//									public void run() {
+//										InputManager.instance.setDisabled(false);
+//									}
+//								})));
+				mainScreen.scrollUITo(0);
 			}
 		});
 		this.add(backButton).colspan(1).expand().center();

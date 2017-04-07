@@ -19,13 +19,11 @@ import com.pending.game.Settings;
 import com.pending.game.components.PhysicsComponent;
 import com.pending.game.components.SpriterPlayerComponent;
 import com.pending.game.components.TransformComponent;
-import com.pending.game.manager.MsgManager;
 import com.pending.game.manager.PhysicsManager;
 import com.pending.game.screen.GameScreen;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.systems.Monstersystem;
 import com.pending.game.tools.MapperTools;
-import com.pending.game.ui.GameScreenUI1;
 
 /**
  * 英雄脚本
@@ -73,11 +71,11 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	private float offetX = 0;;
 	
 	// 超级跳，暂时不用了
-	private final float superJumpTime = 2.5f;
-	public final static int superJumpNum = 30;
-	
+//	private final float superJumpTime = 2.5f;
+//	public final static int superJumpNum = 30;
+//	
 	private int num = 0;
-	private float time = superJumpTime;
+//	private float time = superJumpTime;
 	
 	public HeroScript() {
 		
@@ -323,6 +321,8 @@ public class HeroScript extends EntityScript implements InputProcessor{
 			physicsComponent.rigidBody.setLinearVelocity(Vector2.Zero);
 			
 			isStart = false;
+			
+			Settings.instance.updateScore();
 			
 			GameScreen gameScreen = GlobalInline.instance.getScreen();
 			gameScreen.over();
