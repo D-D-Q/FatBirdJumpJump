@@ -73,6 +73,15 @@ public class GameScreen extends ScreenAdapter implements InputProcessor{
 		GameVar.gameViewport = new ScalingViewport(Scaling.fillX, GameConfig.width, GameConfig.height); // 默认扩大显示
 //		GameVar.gameViewport.getCamera().position.set(GameVar.position.x, GameVar.position.y, 0);
 		
+		// ECS系统
+		AshleyManager ashleyManager = new AshleyManager();
+		GlobalInline.instance.putAshleyManager(ashleyManager);
+		
+		ashleyManager.engine.addSystem(new PhysicsSystem(10));
+		ashleyManager.engine.addSystem(new Monstersystem(20));
+		ashleyManager.engine.addSystem(new RenderingSystem(30));
+		ashleyManager.engine.addSystem(new GeneralSystem(40));
+				
 		// UI
 		UIstage = new Stage(GameVar.UIViewport, GameVar.batch); // 创建UI根节点，注意它会重置相机的位置到(设计分辨率宽/2, 设计分辨率高/2)
 		initUI();
@@ -93,15 +102,6 @@ public class GameScreen extends ScreenAdapter implements InputProcessor{
 		
 		InputManager.instance.addProcessor(this); // 事件
 				
-		// ECS系统
-		AshleyManager ashleyManager = new AshleyManager();
-		GlobalInline.instance.putAshleyManager(ashleyManager);
-		
-		ashleyManager.engine.addSystem(new PhysicsSystem(10));
-		ashleyManager.engine.addSystem(new Monstersystem(20));
-		ashleyManager.engine.addSystem(new RenderingSystem(30));
-		ashleyManager.engine.addSystem(new GeneralSystem(40));
-		
 		start();
 	}
 	

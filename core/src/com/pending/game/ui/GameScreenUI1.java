@@ -3,12 +3,13 @@ package com.pending.game.ui;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.pending.game.GameConfig;
 import com.pending.game.manager.MsgManager;
+import com.pending.game.support.GlobalInline;
+import com.pending.game.systems.Monstersystem;
 
 /**
  * 游戏进行时UI
@@ -21,25 +22,27 @@ public class GameScreenUI1 extends Table implements Telegraph {
 	public final static int MSG_ADD_SCORE = 10001;
 	public final static int MSG_SET_POWER = 10002;
 	
-	private long score = 0;
+//	private long score = 0;
 	
 	private Label scoreLabel;
 	
-	private ProgressBar powerProgress;
+//	private ProgressBar powerProgress;
 
 	public GameScreenUI1(Skin skin, I18NBundle i18NBundle) {
 		
 		this.setDebug(GameConfig.UIdebug);
 		this.setName("GameScreenUI1");
 		this.setFillParent(true);
+		this.pad(35);
 //		this.pad(heightOffset, widthOffset, heightOffset, widthOffset);
 //		this.pad(-GAME.UIViewport.getScreenY(), -GAME.UIViewport.getScreenX(), -GAME.UIViewport.getScreenY(), -GAME.UIViewport.getScreenX());
 		
 		MsgManager.instance.addListener(this, MSG_ADD_SCORE);
 		MsgManager.instance.addListener(this, MSG_SET_POWER);
 		
-		scoreLabel = new Label(String.valueOf(score) , skin);
-		this.add(scoreLabel).colspan(1).expandY().top();
+		Monstersystem monstersystem = GlobalInline.instance.getAshleyManager().engine.getSystem(Monstersystem.class);
+		scoreLabel = new Label(String.valueOf(monstersystem.getScore()) , skin);
+		this.add(scoreLabel).colspan(1).expand().top().right();
 		
 		this.row();
 		
@@ -70,15 +73,16 @@ public class GameScreenUI1 extends Table implements Telegraph {
 		switch (msg.message) {
 		
 		case MSG_ADD_SCORE:{
-			score = (long)msg.extraInfo;
-			scoreLabel.setText(String.valueOf(score));
+//			score = (long)msg.extraInfo;
+//			scoreLabel.setText(String.valueOf(score));
+			scoreLabel.setText(String.valueOf((long)msg.extraInfo));
 		}
 		break;
 
-		case MSG_SET_POWER:{
-			powerProgress.setValue((float)msg.extraInfo);
-		}
-		break;
+//		case MSG_SET_POWER:{
+//			powerProgress.setValue((float)msg.extraInfo);
+//		}
+//		break;
 		
 		default:
 			break;

@@ -1,22 +1,16 @@
 package com.pending.game.ui;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.pending.game.GameConfig;
-import com.pending.game.GameVar;
 import com.pending.game.assets.GameScreenAssets;
-import com.pending.game.manager.InputManager;
 import com.pending.game.screen.GameScreen;
 import com.pending.game.screen.MainScreen;
-import com.pending.game.support.GameUtil;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.support.LoadingScreen;
 
