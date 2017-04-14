@@ -1,9 +1,13 @@
 {
 	com.badlogic.gdx.graphics.Color: {
-        white: { r: 1, g: 1, b: 1, a: 1 }
+        white: { r: 1, g: 1, b: 1, a: 1 },
+        delay: { r: 1, g: 0.96, b: 0.56, a: 1 }
     },
     com.badlogic.gdx.graphics.g2d.BitmapFont: {
         number: { file: number.fnt }
+    },
+    com.badlogic.gdx.graphics.g2d.BitmapFont: {
+        delay: { file: delay.fnt }
     },
     com.badlogic.gdx.graphics.g2d.BitmapFont: {
         fzstk: { file: fzstk.fnt }
@@ -11,6 +15,9 @@
     com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
     	default: {
     		font: number, fontColor: white 
+    	},
+    	delay: {
+    		font: delay, fontColor: delay 
     	}
     },
     com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {

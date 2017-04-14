@@ -114,7 +114,7 @@ public class GamePauseUI extends Table implements Telegraph  {
 		delay = resumeDelay;
 		
 		// 恢复延迟
-		Label label = new Label(String.format("%.0f", delay), skin);
+		Label label = new Label(String.format("%.0f", delay), skin, "delay");
 		label.addAction(Actions.repeat(3, Actions.delay(1, Actions.run(new Runnable() {
 
 			@Override
@@ -138,7 +138,8 @@ public class GamePauseUI extends Table implements Telegraph  {
 		}))));
 		
 		this.clear();
-		this.add(label).center();
+		this.row().pad(300, 0, 0, 0);
+		this.add(label).expand().top();
 	}
 
 	@Override

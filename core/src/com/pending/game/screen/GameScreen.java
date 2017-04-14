@@ -15,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.brashmonkey.spriter.Player;
 import com.pending.game.Assets;
 import com.pending.game.GameConfig;
 import com.pending.game.GameVar;
@@ -62,8 +61,6 @@ public class GameScreen extends ScreenAdapter implements InputProcessor{
 	 */
 	private GestureDetector gestureDetector;
 	
-	Player player;
-
 	public GameScreen() {
 		Gdx.app.log(this.toString(), "create begin");
 
@@ -161,6 +158,9 @@ public class GameScreen extends ScreenAdapter implements InputProcessor{
 //		monstersystem.start(Settings.instance.level);
 		monstersystem.start(0);
 		
+		// 继续游戏次数重置
+		GlobalInline.instance.put(GlobalInlineVar.continueNum, 0);
+		
 		// 背景
 		Entity bg = ashleyManager.entityDao.createBg(MainScreenAssets.bg1, 1);
 		ashleyManager.engine.addEntity(bg);
@@ -235,6 +235,10 @@ public class GameScreen extends ScreenAdapter implements InputProcessor{
 	public void continueStart() {
 		
 		Vector2 jumpBoardPosition = GlobalInline.instance.get(GlobalInlineVar.jumpBoardPosition);
+		
+		// 继续游戏次数加1
+		int continueNum = GlobalInline.instance.get(GlobalInlineVar.continueNum);
+		GlobalInline.instance.put(GlobalInlineVar.continueNum, ++continueNum);
 		
 		// 跳台
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();

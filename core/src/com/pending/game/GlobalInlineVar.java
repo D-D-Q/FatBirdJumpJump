@@ -8,5 +8,9 @@ package com.pending.game;
  */
 public class GlobalInlineVar {
 
-	public final static String jumpBoardPosition = "jumpBoardPosition";
+	public final static String jumpBoardPosition = "jumpBoardPosition"; // 跳跃位置
+	
+	public final static String continueNum = "continueNum"; // 继续游戏次数
+	
+	
 }

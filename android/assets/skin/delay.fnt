@@ -1,0 +1,10 @@
+info face="Knubbel" size=256 bold=0 italic=0 charset="" unicode=0 stretchH=100 smooth=1 aa=1 padding=1,1,1,1 spacing=-2,-2
+common lineHeight=259 base=193 scaleW=512 scaleH=256 pages=1 packed=0
+page id=0 file="delay.png"
+chars count=5
+char id=0       x=0    y=0    width=0    height=0    xoffset=-1   yoffset=0    xadvance=128  page=0    chnl=0 
+char id=32      x=0    y=0    width=0    height=0    xoffset=-1   yoffset=0    xadvance=128  page=0    chnl=0 
+char id=49      x=124  y=0    width=131  height=196  xoffset=5    yoffset=-2   xadvance=152  page=0    chnl=0 
+char id=50      x=255  y=0    width=153  height=195  xoffset=5    yoffset=0    xadvance=157  page=0    chnl=0 
+char id=51      x=0    y=0    width=124  height=198  xoffset=5    yoffset=-2   xadvance=176  page=0    chnl=0 
+kernings count=0

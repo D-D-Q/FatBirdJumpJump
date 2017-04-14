@@ -10,9 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.pending.game.GameConfig;
+import com.pending.game.GameVar;
+import com.pending.game.GlobalInlineVar;
 import com.pending.game.assets.MainScreenAssets;
 import com.pending.game.screen.GameScreen;
 import com.pending.game.screen.MainScreen;
+import com.pending.game.support.GameUtil;
 import com.pending.game.support.GlobalInline;
 import com.pending.game.support.LoadingScreen;
 
@@ -39,32 +42,43 @@ public class GameOverUI extends Table implements Telegraph {
 		this.setDebug(GameConfig.UIdebug);
 		this.setName("GameOverUI");
 		this.setFillParent(true);
-		this.pad(10, 20 , 170, 10);
+		this.pad(10, 20, 170, 20);
 		
 		// 重新开始按钮
 		Button restartButton = new Button(skin, "restart");
 		restartButton.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				
 				gameScreen.restart();
 			}
 		});
-		this.add(restartButton).colspan(5).expand().center();
+					
+		int continueNum = GlobalInline.instance.get(GlobalInlineVar.continueNum);
+		if(continueNum == 0){ // 可以继续游戏
+			
+			Table startTable = new Table();
+			startTable.setDebug(GameConfig.UIdebug);
+			this.add(startTable).colspan(5).expand().fill().padTop(350).padLeft((GameUtil.getDisplayWidth(GameVar.UIViewport)-20-20)/3);
+			
+			startTable.add(restartButton).expand().center();
+			
+			// 继续游戏按钮
+			Button continueButton = new Button(skin, "restart");
+			continueButton.addListener(new ClickListener(){
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					
+					gameScreen.continueStart();
+				}
+			});
+			startTable.add(continueButton).expand().center();
+		}
+		else{
+			this.add(restartButton).colspan(5).expand().padTop(350).center();
+		}
 		
 		this.row();
-		
-		// 继续游戏
-		Button continueButton = new Button(skin, "restart");
-		continueButton.addListener(new ClickListener(){
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				
-				gameScreen.continueStart();
-			}
-		});
-		this.add(continueButton).colspan(5).expand().center();
-		
-		this.row().bottom();
 		
 		// 返回
 		Button backButton = new Button(skin, "main");
