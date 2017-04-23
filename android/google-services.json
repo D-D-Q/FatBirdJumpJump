@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "672143993521",
+    "firebase_url": "https://game-c6686.firebaseio.com",
+    "project_id": "game-c6686",
+    "storage_bucket": "game-c6686.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672143993521:android:4730b02ebb86fe0c",
+        "android_client_info": {
+          "package_name": "com.huanshi.game.fatbirdjumpjump"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "672143993521-no0kgcfrvodfsdd06bhvtuf959cbao59.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZQ1PmAm4aAHZ5SstJ6odUtsXmpDCDv1I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
