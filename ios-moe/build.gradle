@@ -43,7 +43,7 @@ moe {
     mainClassName 'IOSMoeLauncher'
     xcode {
         mainTarget 'ios-moe'
-        packageName 'com.pending.game'
+        packageName 'com.huanshi.game.fatbirdjumpjump'
         deploymentTarget = '9.0'
         xcodeProjectDirPath 'xcode'
         generateProject false
