@@ -51,8 +51,9 @@ public class Monstersystem extends EntitySystem{
 	private final static int levelRange = 5;
 	
 //	private final static float[] boardWidth = {100, 85, 70, 55, 40}; // 跳台宽度
-	public final static float[] boardWidth = {200, 170, 140, 110, 80}; // 跳台宽度
+	public final static float[] boardWidthRange = {200, 170, 140, 110, 80}; // 跳台宽度
 //	private final static float[] boardWidthOffset = {54, 108, 162, 216f, 270}; // 跳台宽间隔
+	public final static float[] speedRange = {50, 60, 70, 80, 100};
 	
 	private final static float minBoardHeightOffset = 80; // 跳台高间隔最小值
 	private final static float maxBoardHeightOffset = 168; // 跳台高间隔最大值
@@ -122,7 +123,7 @@ public class Monstersystem extends EntitySystem{
 		while(curPosition.y < maxPositionY){
 			
 			Board board = randomBoard(curPosition);
-			Entity entity = ashleyManager.entityDao.createBoard(board.x, board.y, board.width, Board.height);
+			Entity entity = ashleyManager.entityDao.createBoard(board);
 			MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
 			ashleyManager.engine.addEntity(entity);
 			
@@ -157,7 +158,7 @@ public class Monstersystem extends EntitySystem{
 		
 		// 宽随机
 		int index = (int)(MathUtils.random(factorRange - range*3, factorRange) / range);
-		board.width = boardWidth[MathUtils.clamp(index, 0, levelRange - 1)];
+		board.width = boardWidthRange[MathUtils.clamp(index, 0, levelRange - 1)];
 		
 //		index = (int)(MathUtils.random(factorRange - range*3, factorRange) / range);
 //		float widthOffset = boardWidthOffset[MathUtils.clamp(index, 0, levelRange - 1)];
@@ -182,6 +183,10 @@ public class Monstersystem extends EntitySystem{
 		index = (int)(MathUtils.random(factorRange - range*3, factorRange) / range);
 		index = MathUtils.clamp(index, 0, levelRange - 1);
 		board.y = curPosition.y + MathUtils.random((index == 0 ? Board.height : boardHeightOffset[index-1]), boardHeightOffset[index]);
+		
+		// 速度随机
+		index = (int)(MathUtils.random(factorRange - range*3, factorRange) / range);
+		board.speed = speedRange[MathUtils.clamp(index, 0, levelRange - 1)];
 		
 		return board;
 	}
@@ -266,12 +271,14 @@ public class Monstersystem extends EntitySystem{
 		public float width;
 		public float x;
 		public float y;
+		public float speed; 
 		
 		@Override
 		public void reset() {
 			width = 0;
 			x = 0;
 			y = 0;
+			speed = 0;
 		}
 	}
 }

@@ -185,7 +185,12 @@ public class GameScreen extends ScreenAdapter implements InputProcessor{
 		GlobalInline.instance.put("hero", hero);
 		
 		// 第一个跳台
-		Entity entity = ashleyManager.entityDao.createBoard(x, y, Monstersystem.boardWidth[0], Board.height);
+		Board board = new Board();
+		board.x = x;
+		board.y = y;
+		board.width = Monstersystem.boardWidthRange[0];
+		board.speed = 0;
+		Entity entity = ashleyManager.entityDao.createBoard(board);
 		MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
 		ashleyManager.engine.addEntity(entity);
 		GlobalInline.instance.put(GlobalInlineVar.jumpBoardPosition, new Vector2(x, y));
@@ -242,7 +247,12 @@ public class GameScreen extends ScreenAdapter implements InputProcessor{
 		
 		// 跳台
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
-		Entity entity = ashleyManager.entityDao.createBoard(jumpBoardPosition.x, jumpBoardPosition.y, Monstersystem.boardWidth[0], Board.height);
+		Board board = new Board();
+		board.x = jumpBoardPosition.x;
+		board.y = jumpBoardPosition.y;
+		board.width = Monstersystem.boardWidthRange[0];
+		board.speed = 0;
+		Entity entity = ashleyManager.entityDao.createBoard(board);
 		MapperTools.physicsCM.get(entity).rigidBody.setGravityScale(0);
 		ashleyManager.engine.addEntity(entity);
 		

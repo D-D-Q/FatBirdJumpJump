@@ -18,6 +18,7 @@ import com.huanshi.game.entityscript.HeroScript;
 import com.huanshi.game.manager.AshleyManager;
 import com.huanshi.game.manager.PhysicsManager;
 import com.huanshi.game.support.GlobalInline;
+import com.huanshi.game.systems.Monstersystem.Board;
 
 /**
  * 生产指定实体
@@ -86,7 +87,12 @@ public class EntityDao {
 	 * @param
 	 * @return
 	 */
-	public Entity createBoard(float positionX, float positionY, float width, float height){
+	public Entity createBoard(Board board){
+		
+		float positionX = board.x;
+		float positionY = board.y;
+		float width = board.width;
+		float height = Board.height;
 		
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		Entity entity = ashleyManager.engine.createEntity();
@@ -122,6 +128,7 @@ public class EntityDao {
 		BoardScript boardScript = new BoardScript();
 		boardScript.entity = entity;
 		boardScript.sensor = boardSensor;
+		boardScript.speed = board.speed;
 		scriptComponent.script = boardScript;
 		entity.add(scriptComponent);
 		

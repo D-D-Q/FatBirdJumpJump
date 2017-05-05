@@ -23,7 +23,7 @@ public class BoardScript extends EntityScript{
 	
 	public Entity sensor; // 传感器
 	
-	public float speed = 100; // 移动速度 
+	public float speed; // 移动速度 
 	
 	@Override
 	public void update(float deltaTime) {
@@ -53,7 +53,7 @@ public class BoardScript extends EntityScript{
 				}
 			}
 		}
-		else{
+		else if(speed != 0){
 			
 			if((position.x + transformComponent.getWidth()/2 >= GameConfig.width && speed > 0) // 右移动超出屏幕
 					|| (position.x - transformComponent.getWidth()/2 <= 0 && speed < 0)){ // 左移动超出屏幕
