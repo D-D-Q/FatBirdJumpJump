@@ -25,9 +25,9 @@ import com.huanshi.game.ui.GameScreenUI1;
  * 平台高度 20
  * 
  * 难度提升点
- * 	跳台宽度 (100,85,70,55,40)
- * 	跳台高间隔 左右0到屏幕宽/2(左右0-270) ()
- * 	跳台宽间隔  平台高+角色高 到 跳跃最高点-平台高/2-1 = (40-84)
+ * 	跳台宽度
+ * 	跳台高间隔 平台高+角色高 到 跳跃最高点-平台高/2-1 = (40-84)
+ * 	跳台宽间隔  左右0到屏幕宽/2(左右0-270) ()
  * 	跳跃时间  
  * 		0.2秒的话 最高是60 起跳速度是极限600 
  *  	0.3秒的话 最高时90 起跳速度是极限600 最慢0.5秒 *
@@ -50,12 +50,13 @@ public class Monstersystem extends EntitySystem{
 	 */
 	private final static int levelRange = 5;
 	
-//	private final static float[] boardWidth = {100, 85, 70, 55, 40}; // 跳台宽度
-	public final static float[] boardWidthRange = {200, 170, 140, 110, 80}; // 跳台宽度
+//	public final static float[] boardWidthRange = {200, 170, 140, 110, 80}; // 跳台宽度
+	public final static float[] boardWidthRange = {250, 220, 190, 160, 130}; // 跳台宽度
 //	private final static float[] boardWidthOffset = {54, 108, 162, 216f, 270}; // 跳台宽间隔
 	public final static float[] speedRange = {50, 60, 70, 80, 100};
 	
-	private final static float minBoardHeightOffset = 80; // 跳台高间隔最小值
+//	private final static float minBoardHeightOffset = 80; // 跳台高间隔最小值
+	private final static float minBoardHeightOffset = 140; // 跳台高间隔最小值
 	private final static float maxBoardHeightOffset = 168; // 跳台高间隔最大值
 	
 	private static float[] boardHeightOffset; // 难度阶数数组
@@ -197,7 +198,6 @@ public class Monstersystem extends EntitySystem{
 	 * @param level
 	 */
 	public void start(int level){
-		
 		
 		if(level >= 0 && level <= maxLevel){
 			this.level = level;
